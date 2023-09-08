@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'gray': '#F7F7FB',
-        'darkgray': '#4B4B4B',
-        'orange': '#EC744A',
-        'yellow': '#FBBB57',
-        'green': '#025146',
+        'Gray': '#F7F7FB',
+        'Darkgray': '#4B4B4B',
+        'Orange': '#EC744A',
+        'Yellow': '#FBBB57',
+        'Green': '#025146',
       }
     },
 
