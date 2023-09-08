@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 // Page
-import TestNavigator from './navigation/Navigator';
+import TestNavigator from './src/navigation/Navigator';
 
 
 export default function App() {
