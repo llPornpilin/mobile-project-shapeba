@@ -1,21 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
 
-const listFood = (food, gram, cal) => {
+
+const ListFood = ({ item }) => {
     return (
-        <View className="flex-row justify-between  ">
-            <View className="flex-row gap-6 pl-3 items-center">
-                <Text className="font-normal text-base text-darkgray">{food}</Text>
+        <>
+            <View className="flex-row justify-between p-4">
+                <View className="flex-row gap-6 pl-3 items-center">
+                    <Text className="font-medium text-base text-Darkgray">{item.name} </Text>
+                </View>
+                <Text className="font-medium text-base text-Darkgray mr-3">{item.gram} g {item.cal} cals</Text>
             </View>
-            <Text className="font-normal text-base text-darkgray mr-3">{gram} g {cal} cals</Text>
-        </View>
+            <View className="border-b  border-Darkgray opacity-20" />
+        </>
+
     )
 }
 
 const DashboardWeekScreen = () => {
+    const data = [
+        { name: 'Oatmeal', gram: 150, cal: 780 },
+        { name: 'Tuna rice', gram: 150, cal: 780 },
+        { name: 'Salad bacon', gram: 150, cal: 780 },
+        { name: 'Chocmint', gram: 150, cal: 780 },
+        { name: 'Chocmint', gram: 150, cal: 780 },
+    ];
     return (
-        <SafeAreaView>
-            <ScrollView>
+        <SafeAreaView >
+            <ScrollView >
                 <View style={styles.container}>
                     <View style={[styles.content, styles.c2]}>
 
@@ -23,16 +35,9 @@ const DashboardWeekScreen = () => {
                     <View style={[styles.content, styles.c1]}>
                         <Text className="text-white text-base font-bold p-2 pl-4" >Food Highest in calories</Text>
                         <View style={[styles.content, styles.c3]}>
-                            <View className="gap-4">
-                                {listFood("Oatmeal", 150, 780)}
-                                <View className="border-b  border-Darkgray opacity-50" />
-                                {listFood("Oatmeal", 150, 780)}
-                                <View className="border-b  border-Darkgray opacity-50" />
-                                {listFood("Oatmeal", 150, 780)}
-                                <View className="border-b  border-Darkgray opacity-50" />
-                                {listFood("Oatmeal", 150, 780)}
-
-                            </View>
+                            {
+                                data.map((item) => <ListFood item={item} />)
+                            }
                         </View>
                     </View>
                 </View>
@@ -59,8 +64,6 @@ const styles = StyleSheet.create({
     c1: {
         backgroundColor: '#EC744A',
         elevation: 10,
-
-        // height: 200
     },
 
     c2: {
@@ -72,7 +75,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginTop: 0,
         marginBottom: -20,
-        height: 300,
         paddingTop: 20
     },
 });

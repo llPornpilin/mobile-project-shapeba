@@ -9,20 +9,20 @@ const listMeal = (icon, meal, cal) => {
         <View className="flex-row justify-between  ">
             <View className="flex-row gap-6 pl-3 items-center">
                 <Ionicons name={icon} size={24} color="black" />
-                <Text className="font-bold text-lg text-darkgray">{meal}</Text>
+                <Text className="font-medium text-lg text-Darkgray">{meal}</Text>
             </View>
-            <Text className="font-bold text-lg text-darkgray mr-3">{cal} cals</Text>
+            <Text className="font-medium text-lg text-Darkgray mr-3">{cal} cals</Text>
         </View>
 
 
     )
 }
-const btnRecom = (icon, text) => {
+export const btnRecom = (icon, text) => {
     return (
         <TouchableOpacity className="items-center">
             <Image source={icon}
                 style={{ width: 55, height: 55 }} />
-            <Text className="mt-2">{text}</Text>
+            <Text className="mt-2 font-medium text-Darkgray">{text}</Text>
         </TouchableOpacity>
     );
 }
@@ -42,21 +42,21 @@ const DashboardDayScreen = () => {
 
                         <View className="gap-4">
                             {listMeal("time-outline", "BreakFast", "1120")}
-                            <View className="border-b  border-Darkgray opacity-50" />
-                            {listMeal("time-outline", "Brunch", "1120")}
-                            <View className="border-b border-Darkgray opacity-50 " />
-                            {listMeal("time-outline", "Lunch", "1120")}
-                            <View className="border-b border-Darkgray opacity-50 " />
-                            {listMeal("time-outline", "Afternoon Lunch", "1120")}
-                            <View className="border-b border-Darkgray opacity-50 " />
-                            {listMeal("time-outline", "Dinner", "1120")}
+                            <View className="border-b  border-Darkgray opacity-20" />
+                            {listMeal("time-outline", "Brunch", "150")}
+                            <View className="border-b border-Darkgray opacity-20 " />
+                            {listMeal("time-outline", "Lunch", "920")}
+                            <View className="border-b border-Darkgray opacity-20 " />
+                            {listMeal("time-outline", "Afternoon Lunch", "310")}
+                            <View className="border-b border-Darkgray opacity-20 " />
+                            {listMeal("time-outline", "Dinner", "830")}
                         </View>
 
 
                     </View>
                     <View style={[styles.content, styles.c2]}>
                         <Text className="font-bold pt-5 pl-5 text-lg text-Orange " >RECOMMEND</Text>
-                        <View className="flex-row gap-5 p-4 ">
+                        <View className="flex-row gap-4 p-5 ">
                             {btnRecom(require('../../../assets/image/drink.png'), "Drink")}
                             {btnRecom(require('../../../assets/image/dessert.png'), "Dessert")}
                             {btnRecom(require('../../../assets/image/main.png'), "Main Dish")}
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderRadius: 20,
-        elevation: 10,
+        elevation: 5,
 
     },
     c1: {
