@@ -3,15 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 
 // Navigate
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import TestNavigator from './src/navigation/Navigator';
+import StartNavigator from './src/navigation/StartNavigation';
 
 // Page
-import TestNavigator from './src/navigation/Navigator';
 
 
 export default function App() {
   
   return (
     <TestNavigator />
+    // <StartNavigator />
   );
 }
 
