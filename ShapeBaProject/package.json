@@ -19,7 +19,10 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.72.4",
+    "react-native-element-dropdown": "^2.10.0",
     "react-native-elements": "^3.4.3",
+    "react-native-segmented-control-tab": "^4.0.0",
+    "react-native-select-dropdown": "^3.4.0",
     "victory-native": "^36.6.11"
   },
   "devDependencies": {
