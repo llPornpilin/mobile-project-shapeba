@@ -23,8 +23,8 @@ export const DonutChartContainer = () => {
         });
     };
 
-    const font = useFont(require("../../../assets/font/Roboto-Light.ttf"), 60);
-    const smallerFont = useFont(require("../../../assets/font/Roboto-Light.ttf"), 25);
+    const font = useFont(require("../../../src/assets/font/Roboto-Light.ttf"), 60);
+    const smallerFont = useFont(require("../../../src/assets/font/Roboto-Light.ttf"), 25);
 
     if (!font || !smallerFont) {
         return <View />;

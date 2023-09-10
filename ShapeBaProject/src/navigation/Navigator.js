@@ -23,6 +23,7 @@ import AddMyMealsScreen from '../screens/Meal/AddMyMealsScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function TestNavigator() {
@@ -37,15 +38,35 @@ export default function TestNavigator() {
                 <Stack.Screen name="ProcessInfoScreen2" component={ProcessInfoScreen2} />
                 <Stack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
                 <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-                <Stack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
+                <Stack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen}
+                    options={{
+                        headerTintColor: 'white',
+                        headerStyle: {backgroundColor: '#025146', elevation: 0,}
+                    }}
+                />
                 <Stack.Screen name="DashboardDayScreen" component={DashboardDayScreen} />
                 <Stack.Screen name="DashboardWeekScreen" component={DashboardWeekScreen} />
                 <Stack.Screen name="DashboardMonthScreen" component={DashboardMonthScreen} />
-                <Stack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
-                <Stack.Screen name="AddMealsScreen" component={AddMealsScreen} />
+                <Stack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
+                    options={{
+                        headerTintColor: 'white',
+                        headerStyle: {backgroundColor: '#025146', elevation: 0,}
+                    }}
+                />
+                <Stack.Screen name="AddMealsScreen" component={AddMealsScreen}
+                    options={{
+                        headerTintColor: 'white',
+                        headerStyle: {backgroundColor: '#025146', elevation: 0,}
+                    }}
+                />
                 <Stack.Screen name="AddMyMealsScreen" component={AddMyMealsScreen} />
                 <Stack.Screen name="RecommendScreen" component={RecommendScreen} />
-                <Stack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
+                <Stack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen}
+                    options={{
+                        headerTintColor: 'white',
+                        headerStyle: {backgroundColor: '#025146', elevation: 0,}
+                    }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     )
