@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import DonutChartContainer from '../../components/donutChart';
+/*import DonutChartContainer from '../../components/donutChart';*/
 
 
 const DashboardDayScreen = () => {
     return (
         <View style={styles.container}>
             <Text>Dashboard Day</Text>
-            <DonutChartContainer />
+           {/* <DonutChartContainer /> */}
         </View>
     )
 }
