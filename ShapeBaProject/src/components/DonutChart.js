@@ -19,7 +19,7 @@ const DonutChart = ({
 
 }) => {
     const innerRadius = radius - strokeWidth / 2;
-    const targetText = `${targetPercentage * 100}`;
+    const targetText = `${targetPercentage * 100}/2800`;
 
     const path = Skia.Path.Make();
     path.addCircle(radius, radius, innerRadius);
@@ -32,7 +32,7 @@ const DonutChart = ({
             <Canvas style={styles.container}>
                 <Path
                     path={path}
-                    color="orange"
+                    color="#EC744A"
                     style="stroke"
                     strokeJoin="round"
                     strokeWidth={strokeWidth}
@@ -40,21 +40,23 @@ const DonutChart = ({
                     start={0}
                     end={percentageComplete}
                 />
+
+                {/* percent graph */}
                 <Text
                     x={innerRadius - width / 2}
-                    y={radius + strokeWidth}
+                    y={radius + strokeWidth - 10}
                     text={targetText}
                     font={font}
                     opacity={percentageComplete}
-                    color="black"
+                    color="white"
                 />
                 <Text
                     x={innerRadius - titleWidth / 2}
-                    y={radius + 45}
-                    text={"Power"}
+                    y={radius + 20}
+                    text={"Cals"}
                     font={smallerFont}
                     opacity={percentageComplete}
-                    color="black"
+                    color="white"
                 />
             </Canvas>
         </View>
