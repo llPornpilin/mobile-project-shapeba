@@ -11,7 +11,7 @@ const RecmFood = ({ item }) => {
                     <Text className="font-medium text-xs text-Darkgray pt-1">{item.gram} g {item.cal} cals</Text>
                 </View>
                 <TouchableOpacity>
-                    <Image source={require("../../../assets/image/plus.png")}
+                    <Image source={require("../../../assets/img/plus.png")}
                         style={{ width: 30, height: 30 }} />
                 </TouchableOpacity>
 
@@ -39,7 +39,7 @@ const RecommendScreen = () => {
             <ScrollView >
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text>Recommended</Text>
+                        <Text className="flex text-white text-2xl font-medium ">Recommended</Text>
                     </View>
 
                     <View className="flex-row gap-4 p-5 ">
@@ -70,11 +70,14 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#025146',
-        width: 600,
-        height: 100,
+        width: "100%",
+        height: 150,
         paddingBottom: 20,
         marginBottom: 20,
-        borderRadius: 20,
+        borderBottomEndRadius: 30,
+        borderBottomStartRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
         elevation: 5,
     },
 });

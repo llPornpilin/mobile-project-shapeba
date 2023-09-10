@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
+import BarChart from '../../components/BarChart';
 
 
 const ListFood = ({ item }) => {
@@ -23,14 +24,14 @@ const DashboardWeekScreen = () => {
         { name: 'Tuna rice', gram: 150, cal: 780 },
         { name: 'Salad bacon', gram: 150, cal: 780 },
         { name: 'Chocmint', gram: 150, cal: 780 },
-        { name: 'Chocmint', gram: 150, cal: 780 },
+        { name: 'Chocmint55', gram: 150, cal: 780 },
     ];
     return (
         <SafeAreaView >
             <ScrollView >
                 <View style={styles.container}>
                     <View style={[styles.content, styles.c2]}>
-
+                        <BarChart />
                     </View>
                     <View style={[styles.content, styles.c1]}>
                         <Text className="text-white text-base font-bold p-2 pl-4" >Food Highest in calories</Text>
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     c2: {
         backgroundColor: 'white',
         elevation: 10,
-        height: 250
+        // height: 250
     },
     c3: {
         backgroundColor: 'white',

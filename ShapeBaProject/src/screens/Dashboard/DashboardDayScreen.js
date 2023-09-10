@@ -1,20 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import DonutChartContainer from '../../components/donutChart';
-import { Ionicons } from '@expo/vector-icons';
+import {
+    Easing,
+    runTiming,
+    useFont,
+    useValue,
+} from "@shopify/react-native-skia";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
+import DonutChart from "../../components/DonutChart";
+import { useEffect } from 'react';
 
 
 const listMeal = (icon, meal, cal) => {
     return (
         <View className="flex-row justify-between  ">
-            <View className="flex-row gap-6 pl-3 items-center">
-                <Ionicons name={icon} size={24} color="black" />
-                <Text className="font-medium text-lg text-Darkgray">{meal}</Text>
+            <View className="flex-row gap-5 pl-3 items-center">
+                <Image source={icon}
+                    style={{ width: 40, height: 40 }} />
+                <Text className="font-medium text-base text-Darkgray">{meal}</Text>
             </View>
-            <Text className="font-medium text-lg text-Darkgray mr-3">{cal} cals</Text>
+            <Text className="font-medium text-base text-Darkgray mr-4 mt-2">{cal} cals</Text>
         </View>
-
-
     )
 }
 export const btnRecom = (icon, text) => {
@@ -26,30 +31,69 @@ export const btnRecom = (icon, text) => {
         </TouchableOpacity>
     );
 }
-
+//for Donut Chart
+const radius = PixelRatio.roundToNearestPixel(80);
+const STROKE_WIDTH = 7;
 const DashboardDayScreen = () => {
+    const targetPercentage = 85 / 100;
+    const animationState = useValue(0);
+
+    const animateChart = () => {
+        animationState.current = 0;
+        runTiming(animationState, targetPercentage, {
+            duration: 1250,
+            easing: Easing.inOut(Easing.cubic),
+        });
+    };
+
+    const font = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
+    const smallerFont = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
+
+    if (!font || !smallerFont) {
+        return <View />;
+    }
+
+    // useEffect(() => {
+    //     animateChart()
+    // })
+
     return (
         <SafeAreaView>
             <ScrollView>
                 <View style={styles.container}>
-                    <View style={[styles.content, styles.c1]}>
 
+                    <View style={[styles.content, styles.c1]}>
+                        {/* <DonutChartContainer /> */}
+                        <View style={styles.ringChartContainer}>
+                            <DonutChart
+                                backgroundColor="white"
+                                radius={radius}
+                                strokeWidth={STROKE_WIDTH}
+                                percentageComplete={animationState}
+                                targetPercentage={targetPercentage}
+                                font={font}
+                                smallerFont={smallerFont}
+                            />
+                        </View>
                     </View>
+                    <TouchableOpacity onPress={animateChart} style={styles.button}>
+                        <Text style={styles.buttonText}>Animate !</Text>
+                    </TouchableOpacity>
 
                     <View style={[styles.content, styles.c2]}>
                         {/* <View className="bg-white w-80 h-100 rounded-3xl mt-5"> */}
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
-                            {listMeal("time-outline", "BreakFast", "1120")}
+                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", "1120")}
                             <View className="border-b  border-Darkgray opacity-20" />
-                            {listMeal("time-outline", "Brunch", "150")}
+                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", "150")}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal("time-outline", "Lunch", "920")}
+                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", "920")}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal("time-outline", "Afternoon Lunch", "310")}
+                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", "310")}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal("time-outline", "Dinner", "830")}
+                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", "830")}
                         </View>
 
 
@@ -57,15 +101,15 @@ const DashboardDayScreen = () => {
                     <View style={[styles.content, styles.c2]}>
                         <Text className="font-bold pt-5 pl-5 text-lg text-Orange " >RECOMMEND</Text>
                         <View className="flex-row gap-4 p-5 ">
-                            {btnRecom(require('../../../assets/image/drink.png'), "Drink")}
-                            {btnRecom(require('../../../assets/image/dessert.png'), "Dessert")}
-                            {btnRecom(require('../../../assets/image/main.png'), "Main Dish")}
-                            {btnRecom(require('../../../assets/image/fruit.png'), "Fruit")}
+                            {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
+                            {btnRecom(require('../../../assets/img/dessert.png'), "Dessert")}
+                            {btnRecom(require('../../../assets/img/main.png'), "Main Dish")}
+                            {btnRecom(require('../../../assets/img/fruit.png'), "Fruit")}
 
                         </View>
                     </View>
 
-                    {/* <DonutChartContainer /> */}
+
 
                 </View>
             </ScrollView>
@@ -92,11 +136,29 @@ const styles = StyleSheet.create({
     },
     c1: {
         backgroundColor: '#025146',
-        height: 200
+        height: 220,
+        justifyContent: 'center'
     },
     c2: {
         backgroundColor: 'white',
-    }
+    },
+    ringChartContainer: {
+        width: radius * 2,
+        height: radius * 2,
+        marginLeft: 20,
+        marginTop: 20
+    },
+    button: {
+        marginTop: 40,
+        backgroundColor: "orange",
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 10,
+    },
 });
 
 export default DashboardDayScreen;
