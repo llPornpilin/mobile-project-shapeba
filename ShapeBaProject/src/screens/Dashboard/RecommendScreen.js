@@ -43,10 +43,10 @@ const RecommendScreen = () => {
                     </View>
 
                     <View className="flex-row gap-4 p-5 ">
-                        {btnRecom(require('../../../assets/image/drink.png'), "Drink")}
-                        {btnRecom(require('../../../assets/image/dessert.png'), "Dessert")}
-                        {btnRecom(require('../../../assets/image/main.png'), "Main Dish")}
-                        {btnRecom(require('../../../assets/image/fruit.png'), "Fruit")}
+                        {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
+                        {btnRecom(require('../../../assets/img/dessert.png'), "Dessert")}
+                        {btnRecom(require('../../../assets/img/main.png'), "Main Dish")}
+                        {btnRecom(require('../../../assets/img/fruit.png'), "Fruit")}
                     </View>
                     <View className="pt-5">
                         {
