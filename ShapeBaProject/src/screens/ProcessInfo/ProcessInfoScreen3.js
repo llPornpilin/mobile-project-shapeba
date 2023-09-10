@@ -124,8 +124,8 @@ const ProcessInfoScreen1 = () => {
               </View>
             </View>
           </View>
-        </View>
-        <View style={styles.signupContainer}>
+
+          <View style={styles.signupContainer}>
           <TouchableOpacity
             style={styles.btn3}
             onPress={() => props.navigations.navigate("#")}
@@ -137,6 +137,9 @@ const ProcessInfoScreen1 = () => {
             />
           </TouchableOpacity>
         </View>
+
+        </View>
+    
       </ScrollView>
     </KeyboardAvoidingView>
   );

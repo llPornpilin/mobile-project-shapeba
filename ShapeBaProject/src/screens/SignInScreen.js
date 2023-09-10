@@ -48,7 +48,7 @@ const SignUp = () => {
         <Text style={styles.btnText1}>Sign In</Text>
       </TouchableOpacity>
       <View style={styles.orContainer}>
-        <Text style={styles.orText}>Or</Text>
+        <Text style={styles.orText}>or</Text>
       </View>
       <TouchableOpacity style={styles.btn2} onPress={()=> props.navigations.navigate("#")}>
         <Text style={styles.btnText2}>Sign in with google</Text>

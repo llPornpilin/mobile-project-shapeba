@@ -49,48 +49,32 @@ const ProcessInfoScreen1 = () => {
             What do you want to accomplish?
           </Text>
         </View>
+
+        {/* input */}
         <View style={styles.inputContainer}>
           <TouchableOpacity style={styles.inputbetween}>
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontWeight: "semi-bold",
-                fontSize: 15,
-              }}
-            >
-              Maintain
-            </Text>
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontWeight: "semi-bold",
-                fontSize: 15,
-                marginLeft: 9,
-              }}
-            >
-              weight
-            </Text>
+          <Text
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15 }}
+              >
+                Maintain
+              </Text>
+              <Text
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15, marginLeft:9 }}
+              >
+                weight
+              </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.inputRowContainer}>
           <View style={styles.inputContainer}>
             <TouchableOpacity style={styles.inputL}>
               <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontWeight: "semi-bold",
-                  fontSize: 15,
-                  marginLeft: 5,
-                }}
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15,marginLeft:5 }}
               >
                 Lose
               </Text>
               <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontWeight: "semi-bold",
-                  fontSize: 15,
-                }}
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15 }}
               >
                 weight
               </Text>
@@ -98,30 +82,21 @@ const ProcessInfoScreen1 = () => {
           </View>
           <View style={styles.inputContainer}>
             <TouchableOpacity style={styles.inputR}>
-              <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontWeight: "semi-bold",
-                  fontSize: 15,
-                  marginLeft: 6,
-                }}
+            <Text
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15, marginLeft:6 }}
               >
                 Gain
               </Text>
               <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontWeight: "semi-bold",
-                  fontSize: 15,
-                }}
+                style={{ color: "#FFFFFF", fontWeight: "semi-bold", fontSize: 15}}
               >
                 weight
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-      <View style={styles.signupContainer}>
+
+        <View style={styles.signupContainer}>
         <TouchableOpacity
           style={styles.btn3}
           onPress={() => props.navigations.navigate("#")}
@@ -133,6 +108,8 @@ const ProcessInfoScreen1 = () => {
           />
         </TouchableOpacity>
       </View>
+      </View>
+      
     </View>
   );
 };
@@ -278,19 +255,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   signupContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 5,
     marginBottom: 50,
     marginLeft: 260,
-  },
+  },  
   btn3: {
     paddingVertical: -2,
     paddingHorizontal: 15,
     borderRadius: 14,
     backgroundColor: "#FFF",
     borderWidth: 1.5,
-    borderColor: "#025146",
-  },
+    borderColor: "#025146"
+  }
 });
 
 export default ProcessInfoScreen1;
