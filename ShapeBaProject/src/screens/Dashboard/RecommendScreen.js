@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView } from 'react-native';
 import { btnRecom } from './DashboardDayScreen';
 
-const RecmFood = ({ item }) => {
+export const RecmFood = ({ item }) => {
     return (
         <>
             <View className="flex-row justify-between p-4 gap-11">
@@ -50,7 +50,7 @@ const RecommendScreen = () => {
                     </View>
                     <View className="pt-5">
                         {
-                            data.map((item) => <RecmFood item={item} />)
+                            data.map((item, index) => <RecmFood item={item} key={index} />)
                         }
                     </View>
                 </View>

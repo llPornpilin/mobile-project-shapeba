@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const ProcessInfoScreen1 = () => {
+const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
@@ -50,88 +50,88 @@ const ProcessInfoScreen1 = () => {
           </View>
           <View style={styles.Allinput}>
             <View style={styles.inputRowContainer}>
-      
-                <Text
-                  style={{
-                    ...styles.inputLabel,
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                    marginLeft: 13,
-                    fontSize: 16,
-                  }}
-                >
-                  Goal Weight
-                </Text>
-                <TextInput
-                  style={styles.inputGowieght}
-                  value=""
-                  placeholder=""
-                />
-          
+
+              <Text
+                style={{
+                  ...styles.inputLabel,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                  marginLeft: 13,
+                  fontSize: 16,
+                }}
+              >
+                Goal Weight
+              </Text>
+              <TextInput
+                style={styles.inputGowieght}
+                value=""
+                placeholder=""
+              />
+
             </View>
             <View style={styles.inputRowContainer}>
-    
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 10,
-                    fontSize: 16,
-                  }}
-                >
-                  Activity Level
-                </Text>
-                <View
+
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 10,
+                  fontSize: 16,
+                }}
+              >
+                Activity Level
+              </Text>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? styles.pickerContainerIOS
+                    : styles.pickerContainerAndroid
+                }
+              >
+                <Picker
+                  selectedValue={selectedSex}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedSex(itemValue)
+                  }
                   style={
                     Platform.OS === "ios"
-                      ? styles.pickerContainerIOS
-                      : styles.pickerContainerAndroid
+                      ? styles.pickerIOS
+                      : styles.pickerAndroid
                   }
+                  mode="dropdown"
                 >
-                  <Picker
-                    selectedValue={selectedSex}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedSex(itemValue)
-                    }
-                    style={
-                      Platform.OS === "ios"
-                        ? styles.pickerIOS
-                        : styles.pickerAndroid
-                    }
-                    mode="dropdown"
-                  >
-                    <Picker.Item
-                      label="Little or no exercise"
-                      value="Little or no exercise"
-                    />
-                    <Picker.Item
-                      label="1-3 times/week"
-                      value="1-3 times/week"
-                    />
-                    <Picker.Item
-                      label="4-5 times/week"
-                      value="4-5 times/week"
-                    />
-                    <Picker.Item
-                      label="Intense exercise 6-7 times/week"
-                      value="Intense exercise 6-7 times/week"
-                    />
-                    <Picker.Item
-                      label="Very intense exercise daily"
-                      value="Very intense exercise daily"
-                    />
-                  </Picker>
-                </View>
+                  <Picker.Item
+                    label="Little or no exercise"
+                    value="Little or no exercise"
+                  />
+                  <Picker.Item
+                    label="1-3 times/week"
+                    value="1-3 times/week"
+                  />
+                  <Picker.Item
+                    label="4-5 times/week"
+                    value="4-5 times/week"
+                  />
+                  <Picker.Item
+                    label="Intense exercise 6-7 times/week"
+                    value="Intense exercise 6-7 times/week"
+                  />
+                  <Picker.Item
+                    label="Very intense exercise daily"
+                    value="Very intense exercise daily"
+                  />
+                </Picker>
+              </View>
             </View>
           </View>
 
           <View style={styles.signupContainer}>
             <TouchableOpacity
               style={styles.btn3}
-              onPress={() => props.navigations.navigate("#")}
+              onPress={() => navigation.navigate("DashboardDayScreen")}
             >
               <Image
                 source={require("../../../assets/img/Arrow.jpg")}
@@ -140,13 +140,12 @@ const ProcessInfoScreen1 = () => {
               />
             </TouchableOpacity>
           </View>
+
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
-
-export default ProcessInfoScreen1;
 
 const styles = StyleSheet.create({
   container: {
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 55,
     width: 330,
-    },
+  },
   inputRowContainer: {
     marginBottom: 40,
     width: "100%",
@@ -305,3 +304,5 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
+
+export default ProcessInfoScreen3;

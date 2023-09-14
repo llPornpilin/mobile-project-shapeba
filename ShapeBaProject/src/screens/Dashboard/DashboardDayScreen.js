@@ -1,30 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
-import {
-    Easing,
-    runTiming,
-    useFont,
-    useValue,
-} from "@shopify/react-native-skia";
+import {Easing, runTiming, useFont, useValue} from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import DonutChart from "../../components/DonutChart";
 import { useEffect } from 'react';
+import { ProgressBar, MD3Colors  } from 'react-native-paper';
 
 
-const listMeal = (icon, meal, cal) => {
+// Page
+import DetailMealsScreen from '../Meal/DetailMealsScreen';
+import RecommendScreen from './RecommendScreen';
+
+// const myComponent = () => (
+//     <ProgressBar progress={0.5} color={MD3Colors.error50} />
+//   );
+
+const listMeal = (icon, meal, cal, navigation) => {
     return (
-        <View className="flex-row justify-between  ">
+        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen')}>
             <View className="flex-row gap-5 pl-3 items-center">
                 <Image source={icon}
                     style={{ width: 40, height: 40 }} />
                 <Text className="font-medium text-base text-Darkgray">{meal}</Text>
             </View>
             <Text className="font-medium text-base text-Darkgray mr-4 mt-2">{cal} cals</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
-export const btnRecom = (icon, text) => {
+export const btnRecom = (icon, text, navigation) => {
     return (
-        <TouchableOpacity className="items-center">
+        <TouchableOpacity className="items-center" onPress={() => navigation.navigate('RecommendScreen')}>
             <Image source={icon}
                 style={{ width: 55, height: 55 }} />
             <Text className="mt-2 font-medium text-Darkgray">{text}</Text>
@@ -34,7 +38,7 @@ export const btnRecom = (icon, text) => {
 //for Donut Chart
 const radius = PixelRatio.roundToNearestPixel(80);
 const STROKE_WIDTH = 7;
-const DashboardDayScreen = () => {
+const DashboardDayScreen = ({navigation}) => {
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
 
@@ -46,8 +50,8 @@ const DashboardDayScreen = () => {
         });
     };
 
-    const font = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
-    const smallerFont = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
+    const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
+    const smallerFont = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
 
     if (!font || !smallerFont) {
         return <View />;
@@ -64,6 +68,7 @@ const DashboardDayScreen = () => {
 
                     <View style={[styles.content, styles.c1]}>
                         {/* <DonutChartContainer /> */}
+                        <ProgressBar progress={0.5} color={MD3Colors.error50} />
                         <View style={styles.ringChartContainer}>
                             <DonutChart
                                 backgroundColor="white"
@@ -85,15 +90,15 @@ const DashboardDayScreen = () => {
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
-                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", "1120")}
+                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", "1120", navigation)}
                             <View className="border-b  border-Darkgray opacity-20" />
-                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", "150")}
+                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", "150", navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", "920")}
+                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", "920", navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", "310")}
+                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", "310", navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", "830")}
+                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", "830", navigation)}
                         </View>
 
 
@@ -101,10 +106,10 @@ const DashboardDayScreen = () => {
                     <View style={[styles.content, styles.c2]}>
                         <Text className="font-bold pt-5 pl-5 text-lg text-Orange " >RECOMMEND</Text>
                         <View className="flex-row gap-4 p-5 ">
-                            {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
-                            {btnRecom(require('../../../assets/img/dessert.png'), "Dessert")}
-                            {btnRecom(require('../../../assets/img/main.png'), "Main Dish")}
-                            {btnRecom(require('../../../assets/img/fruit.png'), "Fruit")}
+                            {btnRecom(require('../../../assets/img/drink.png'), "Drink", navigation)}
+                            {btnRecom(require('../../../assets/img/dessert.png'), "Dessert", navigation)}
+                            {btnRecom(require('../../../assets/img/main.png'), "Main Dish", navigation)}
+                            {btnRecom(require('../../../assets/img/fruit.png'), "Fruit", navigation)}
 
                         </View>
                     </View>

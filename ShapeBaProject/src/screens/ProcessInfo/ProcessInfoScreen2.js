@@ -1,7 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 
-const ProcessInfoScreen1 = () => {
+// Page
+
+const ProcessInfoScreen2 = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.blueArea}>
@@ -100,7 +102,7 @@ const ProcessInfoScreen1 = () => {
         <View style={styles.signupContainer}>
         <TouchableOpacity
           style={styles.btn3}
-          onPress={() => props.navigations.navigate("#")}
+          onPress={() => navigation.navigate('ProcessInfoScreen3')}
         >
           <Image
             source={require("../../../assets/img/Arrow.jpg")}
@@ -271,4 +273,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProcessInfoScreen1;
+export default ProcessInfoScreen2;

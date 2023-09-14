@@ -1,34 +1,50 @@
+import { translate } from "@shopify/react-native-skia";
 import { StatusBar } from "expo-status-bar";
-// import { StyleSheet, Text, View } from 'react-native';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Text, View, StyleSheet, Image, TouchableOpacity, Animated } from "react-native";
 
-const StartScreen = () => {
+
+const StartScreen = ({ navigation }) => {
+  const [scaleAnimate] = useState(new Animated.Value(0))
+  React.useEffect(() => {
+    Animated.spring(
+      scaleAnimate,
+      {
+        toValue: 1,
+        friction: 2,
+        useNativeDriver: true
+      }
+    ).start();
+  }, [])
+
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor:'#fff', flex:0.8}}>
-      <Image
+      <Animated.Image
         source={require("../../assets/img/Icon.jpg")}
-        style={styles.img}
+        style={[styles.img, { transform: [{ scale: scaleAnimate }] }]}
         resizeMode="contain"
       />
-      </View>
+
       <View>
-      <TouchableOpacity
-        style={styles.btn1}
-        onPress={() => props.navigations.navigate("#")}
-      >
-        <Text style={styles.textbtn1}>
-          Sign In
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.btn2}
-        onPress={() => props.navigations.navigate("#")}
-      >
-        <Text style={styles.textbtn2}>
-          Sign Up
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn1}
+          onPress={() => navigation.navigate('SignInNavigator')}
+        >
+          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20 }}>
+            Sign In
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        <TouchableOpacity
+          style={styles.btn2}
+          onPress={() => navigation.navigate('SignUpNavigator')}
+        >
+          <Text style={{ color: "#025146", fontWeight: "bold", fontSize: 20 }}>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -44,7 +60,7 @@ const styles = StyleSheet.create({
   img: {
     height: 260,
     width: 250,
-    marginTop:100
+    marginTop: 100
   },
   btn1: {
     height: 50,
@@ -76,4 +92,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
 export default StartScreen;
