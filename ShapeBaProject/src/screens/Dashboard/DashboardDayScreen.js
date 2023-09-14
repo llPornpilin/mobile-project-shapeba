@@ -46,8 +46,8 @@ const DashboardDayScreen = () => {
         });
     };
 
-    const font = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
-    const smallerFont = useFont(require("../../../assets/font/Roboto-Light.ttf"), 20);
+    const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
+    const smallerFont = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
 
     if (!font || !smallerFont) {
         return <View />;

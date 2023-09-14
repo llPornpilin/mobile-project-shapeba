@@ -61,49 +61,7 @@ export const BarChart = () => {
         });
     };
 
-    // const creatBar = useComputedValue((item) => {
-    //     console.log("hii", item);
-    //     const newPath = Skia.Path.Make();
-    //     const rect = Skia.XYWHRect(
-    //         x(item.label) - GRAPH_BAR_WIDTH / 2,
-    //         graphHeight,
-    //         GRAPH_BAR_WIDTH,
-    //         y(item.value * animationState.current) * -1
-    //     );
 
-    //     const rrect = Skia.RRectXY(rect, 8, 8);
-    //     newPath.addRRect(rrect);
-    //     return newPath;
-    // }, [animationState]);
-
-    // const Bar = (item) => {
-    //     console.log(item);
-    //     return (
-    //         // <Path path={path} color="#EC744A" />
-    //         <Text>hello</Text>
-    //     )
-    // }
-
-    // const path = useComputedValue(() => {
-    //     const newPath = Skia.Path.Make();
-    //     const paint = new Skia.Paint(); // Create a new paint object
-    //     paint.setColor(Skia.Color(255, 0, 0, 255));
-    //     data.forEach((dataPoint) => {
-    //         const rect = Skia.XYWHRect(
-    //             x(dataPoint.label) - GRAPH_BAR_WIDTH / 2,
-    //             graphHeight,
-    //             GRAPH_BAR_WIDTH,
-    //             y(dataPoint.value * animationState.current) * -1
-    //         );
-
-    //         const rrect = Skia.RRectXY(rect, 8, 8);
-    //         newPath.addRRect(rrect);
-
-
-    //     });
-
-    //     return { newPath, paint };
-    // }, [animationState]);
     const path = useComputedValue(() => {
         const newPath = Skia.Path.Make();
 
@@ -119,10 +77,7 @@ export const BarChart = () => {
             newPath.addRRect(rrect);
         });
 
-        return {
-            path: newPath,
-            color: `#EC744A`, // Include the paint object in the return value
-        };
+        return newPath;
     }, [animationState]);
 
     if (!font) {
@@ -134,7 +89,7 @@ export const BarChart = () => {
     return (
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
-                <Path path={path} color={col} />
+                <Path path={path} color="#EC744A" />
                 {/* {
                     success ? <Path path={path} color="#EC744A" /> : <Path path={path} color="pink" />
                 } */}
