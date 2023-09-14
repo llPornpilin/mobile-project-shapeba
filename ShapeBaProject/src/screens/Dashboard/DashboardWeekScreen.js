@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
-import BarChart from '../../components/BarChart';
+import { BarChart } from '../../components/BarChart';
 
 
 const ListFood = ({ item }) => {
@@ -31,19 +31,45 @@ const DashboardWeekScreen = () => {
             <ScrollView >
                 <View style={styles.container}>
                     <View style={[styles.content, styles.c2]}>
-                        <BarChart />
+                        <View className="flex-row">
+                            <View>
+                                <Text className="text-Darkgray mt-6 ml-6">Average</Text>
+                                <View className="ml-6 flex-row">
+                                    <Text className="text-lg font-bold mr-2">1721 Cals</Text>
+                                    <Image source={require('../../../assets/img/icons8-fire.png')}
+                                        style={{ width: 20, height: 20, marginTop: 2 }} />
+                                </View>
+                            </View>
+                            <View className="ml-5">
+                                <Text className="text-Darkgray mt-6 ml-6">Goal</Text>
+                                <View className="ml-6 flex-row">
+                                    <Text className="text-lg font-bold mr-2">1650 Cals</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View className="">
+                            <Text className="text-Darkgray text-xs text-right mt-8 mr-3">Goal</Text>
+
+                        </View>
+                        <View className="border-b  border-Darkgray opacity-50 " />
+                        <View className="-mt-10 mr-5">
+                            <BarChart />
+                        </View>
+
+
                     </View>
                     <View style={[styles.content, styles.c1]}>
                         <Text className="text-white text-base font-bold p-2 pl-4" >Food Highest in calories</Text>
                         <View style={[styles.content, styles.c3]}>
                             {
-                                data.map((item) => <ListFood item={item} />)
+                                data.map((item, index) => <ListFood item={item} key={index} />)
                             }
                         </View>
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
@@ -70,7 +96,7 @@ const styles = StyleSheet.create({
     c2: {
         backgroundColor: 'white',
         elevation: 10,
-        // height: 250
+        // height: 500
     },
     c3: {
         backgroundColor: 'white',
