@@ -16,11 +16,7 @@ const ProcessInfoScreen1 = () => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor:'#fff', alignItems:'center' }}>
         <View style={styles.blueArea}>
           <View>
             <Text style={styles.Letget}>Let’s Get Start</Text>
@@ -122,21 +118,29 @@ const ProcessInfoScreen1 = () => {
                 >
                   Sex
                 </Text>
-                <Picker
-                  selectedValue={selectedSex}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedSex(itemValue)
+                <View
+                  style={
+                    Platform.OS === "ios"
+                      ? styles.pickerContainerIOS
+                      : styles.pickerContainerAndroid
                   }
-                  style={{
-                    backgroundColor: "#f0f0f0",
-                    marginTop: 20,
-                    borderRadius: 50,
-                  }}
-                  mode="dropdown"
                 >
-                  <Picker.Item label="Male" value="male" />
-                  <Picker.Item label="Female" value="female" />
-                </Picker>
+                  <Picker
+                    selectedValue={selectedSex}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedSex(itemValue)
+                    }
+                    style={
+                      Platform.OS === "ios"
+                        ? styles.pickerIOS
+                        : styles.pickerAndroid
+                    }
+                    mode="dropdown"
+                  >
+                    <Picker.Item label="Male" value="male" />
+                    <Picker.Item label="Female" value="female" />
+                  </Picker>
+                </View>
               </View>
             </View>
           </View>
@@ -154,18 +158,12 @@ const ProcessInfoScreen1 = () => {
           </View>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
   );
 };
 
-export default ProcessInfoScreen1;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   blueArea: {
-    flex: 5,
+    flex: 1,
     width: "100%",
     backgroundColor: "#025146",
     alignItems: "center",
@@ -200,8 +198,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
-    marginTop: 30,
+    marginBottom: 30,
+    marginTop: 10,
   },
   uiItem: {
     alignItems: "center",
@@ -295,13 +293,13 @@ const styles = StyleSheet.create({
   inputRowContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 50,
     width: "80%",
   },
   signupContainer: {
     alignItems: "center",
-    marginTop: 5,
-    marginBottom: 50,
+    marginTop: 40,
+    marginBottom: 10,
     marginLeft: 260,
   },
   btn3: {
@@ -316,5 +314,29 @@ const styles = StyleSheet.create({
   img: {
     width: 35,
     height: 35
-  }
+  },
+  pickerContainerIOS: {
+    marginTop: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 25,
+    width: "100%",
+  },
+  pickerIOS: {
+    height: 50,
+    width: "100%",
+  },
+  pickerContainerAndroid: {
+    marginTop: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 25,
+    overflow: "hidden",
+    width: "100%",
+  },
+  pickerAndroid: {
+    height: 50,
+    width: "100%",
+    color: "#333",
+  },
 });
+
+export default ProcessInfoScreen1;

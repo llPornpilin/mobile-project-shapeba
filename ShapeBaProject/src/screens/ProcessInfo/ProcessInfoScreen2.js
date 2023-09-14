@@ -43,7 +43,8 @@ const ProcessInfoScreen1 = () => {
               fontWeight: "bold",
               marginLeft: 5,
               color: "#575757",
-              marginTop: 15,
+              marginTop: 20,
+              marginBottom:40
             }}
           >
             What do you want to accomplish?
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   whiteArea: {
-    flex: 1.95,
+    flex: 3,
     width: "100%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 40,
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 30,
     marginTop: 15,
   },
   uiItem: {
@@ -256,8 +257,8 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 50,
+    marginTop: 75,
+    marginBottom: 10,
     marginLeft: 260,
   },  
   btn3: {

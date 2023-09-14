@@ -5,30 +5,30 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 const StartScreen = () => {
   return (
     <View style={styles.container}>
+      <View style={{backgroundColor:'#fff', flex:0.8}}>
       <Image
         source={require("../../assets/img/Icon.jpg")}
         style={styles.img}
         resizeMode="contain"
       />
-      <View>
-        <TouchableOpacity
-          style={styles.btn1}
-          onPress={() => props.navigations.navigate("#")}
-        >
-          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20 }}>
-            Sign In
-          </Text>
-        </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity
-          style={styles.btn2}
-          onPress={() => props.navigations.navigate("#")}
-        >
-          <Text style={{ color: "#025146", fontWeight: "bold", fontSize: 20 }}>
-            Sign Up
-          </Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.btn1}
+        onPress={() => props.navigations.navigate("#")}
+      >
+        <Text style={styles.textbtn1}>
+          Sign In
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.btn2}
+        onPress={() => props.navigations.navigate("#")}
+      >
+        <Text style={styles.textbtn2}>
+          Sign Up
+        </Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -42,28 +42,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   img: {
-    height: 200,
-    width: 200,
-    marginTop: 130,
+    height: 260,
+    width: 250,
+    marginTop:100
   },
   btn1: {
-    paddingVertical: 12,
-    paddingHorizontal: 130,
+    height: 50,
+    width: 340,
     borderRadius: 30,
-    marginVertical: 150,
     backgroundColor: "#025146",
-    marginBottom: 20,
-    flexDirection: "column",
   },
   btn2: {
-    paddingVertical: 12,
-    paddingHorizontal: 130,
+    marginTop: 25,
+    height: 50,
+    width: 340,
     borderRadius: 30,
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
-    marginBottom: 1,
-    flexDirection: "column",
     elevation: 5,
+  },
+  textbtn1: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 17,
+    textAlign: "center",
+    marginTop: 10,
+  },
+  textbtn2: {
+    color: "#025146",
+    fontWeight: "bold",
+    fontSize: 17,
+    textAlign: "center",
+    marginTop: 10,
   },
 });
 export default StartScreen;
