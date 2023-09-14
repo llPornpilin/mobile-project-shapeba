@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { Button, Easing, StyleSheet, View } from "react-native";
-import * as d3 from "d3";
 import {
     Canvas,
     Path,
@@ -11,45 +8,52 @@ import {
     useFont,
     useValue,
 } from "@shopify/react-native-skia";
+import React, { useState } from "react";
+import { Button, Easing, StyleSheet, View } from "react-native";
+
+import * as d3 from "d3";
+
 
 const data = [
-    { label: "Jan", value: 50 },
-    { label: "Feb", value: 100 },
-    { label: "Mar", value: 350 },
-    { label: "Apr", value: 200 },
-    { label: "May", value: 550 },
-    { label: "Jun", value: 300 },
-    { label: "Jul", value: 150 },
-    { label: "Aug", value: 400 },
-    { label: "Sep", value: 450 },
-    { label: "Oct", value: 500 },
-    { label: "Nov", value: 250 },
-    { label: "Dec", value: 600 },
+    { label: "Mon", value: 150 },
+    { label: "Tue", value: 100 },
+    { label: "Wed", value: 350 },
+    { label: "Thu", value: 200 },
+    { label: "Fri", value: 250 },
+    { label: "Sat", value: 300 },
+    { label: "Sun", value: 200 },
+
+
 ];
 
 const GRAPH_MARGIN = 20;
-const GRAPH_BAR_WIDTH = 8;
+const GRAPH_BAR_WIDTH = 14;
 
-const CanvasHeight = 350;
-const CanvasWidth = 350;
+const CanvasHeight = 230;
+const CanvasWidth = 300;
 const graphHeight = CanvasHeight - 2 * GRAPH_MARGIN;
 const graphWidth = CanvasWidth - 2;
 
-const BarChart = () => {
-    const [animationState, setAnimationState] = useState(0);
+export const BarChart = () => {
+    const [success, setSuccess] = useState(true);
+
     const font = useFont(require("../../assets/font/Roboto-Bold.ttf"), 10);
+    const animationState = useValue(0);
 
     const xDomain = data.map((dataPoint) => dataPoint.label);
     const xRange = [0, graphWidth];
     const x = d3.scalePoint().domain(xDomain).range(xRange).padding(1);
 
-    const yDomain = [0, d3.max(data, (yDataPoint) => yDataPoint.value)];
+    const yDomain = [
+        0,
+        d3.max(data, (yDataPoint) => yDataPoint.value),
+    ];
+
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
     const animate = () => {
-        console.log("animate");
-        setAnimationState(0);
+        animationState.current = 0;
 
         runTiming(animationState, 1, {
             duration: 1600,
@@ -57,6 +61,49 @@ const BarChart = () => {
         });
     };
 
+    // const creatBar = useComputedValue((item) => {
+    //     console.log("hii", item);
+    //     const newPath = Skia.Path.Make();
+    //     const rect = Skia.XYWHRect(
+    //         x(item.label) - GRAPH_BAR_WIDTH / 2,
+    //         graphHeight,
+    //         GRAPH_BAR_WIDTH,
+    //         y(item.value * animationState.current) * -1
+    //     );
+
+    //     const rrect = Skia.RRectXY(rect, 8, 8);
+    //     newPath.addRRect(rrect);
+    //     return newPath;
+    // }, [animationState]);
+
+    // const Bar = (item) => {
+    //     console.log(item);
+    //     return (
+    //         // <Path path={path} color="#EC744A" />
+    //         <Text>hello</Text>
+    //     )
+    // }
+
+    // const path = useComputedValue(() => {
+    //     const newPath = Skia.Path.Make();
+    //     const paint = new Skia.Paint(); // Create a new paint object
+    //     paint.setColor(Skia.Color(255, 0, 0, 255));
+    //     data.forEach((dataPoint) => {
+    //         const rect = Skia.XYWHRect(
+    //             x(dataPoint.label) - GRAPH_BAR_WIDTH / 2,
+    //             graphHeight,
+    //             GRAPH_BAR_WIDTH,
+    //             y(dataPoint.value * animationState.current) * -1
+    //         );
+
+    //         const rrect = Skia.RRectXY(rect, 8, 8);
+    //         newPath.addRRect(rrect);
+
+
+    //     });
+
+    //     return { newPath, paint };
+    // }, [animationState]);
     const path = useComputedValue(() => {
         const newPath = Skia.Path.Make();
 
@@ -72,17 +119,33 @@ const BarChart = () => {
             newPath.addRRect(rrect);
         });
 
-        return newPath;
+        return {
+            path: newPath,
+            color: `#EC744A`, // Include the paint object in the return value
+        };
     }, [animationState]);
 
     if (!font) {
         return <View />;
     }
+    const col = path.color;
+    console.log(col);
 
     return (
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
-                <Path path={path} color="purple" />
+                <Path path={path} color={col} />
+                {/* {
+                    success ? <Path path={path} color="#EC744A" /> : <Path path={path} color="pink" />
+                } */}
+                {/* {
+                    data.map((item) => {
+                        // { item.value > 250 ? setSuccess(true) : setSuccess(false) }
+                        <Bar item={item} />
+                    }
+
+                    )
+                } */}
                 {data.map((dataPoint) => (
                     <Text
                         key={dataPoint.label}
@@ -103,12 +166,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        backgroundColor: "white",
     },
     canvas: {
         height: CanvasHeight,
         width: CanvasWidth,
     },
 });
-
-export default BarChart;
