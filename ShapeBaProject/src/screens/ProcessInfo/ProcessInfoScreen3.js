@@ -11,18 +11,15 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const ProcessInfoScreen3 = ({navigation}) => {
+const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.GreenArea}>
           <Text style={styles.Letget}>Add Your Goal Weight</Text>
           <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
@@ -53,51 +50,57 @@ const ProcessInfoScreen3 = ({navigation}) => {
           </View>
           <View style={styles.Allinput}>
             <View style={styles.inputRowContainer}>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    ...styles.inputLabel,
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                    marginLeft: 13,
-                    fontSize: 16,
-                  }}
-                >
-                  Goal Weight
-                </Text>
-                <TextInput
-                  style={styles.inputGowieght}
-                  value=""
-                  placeholder=""
-                />
-              </View>
+
+              <Text
+                style={{
+                  ...styles.inputLabel,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                  marginLeft: 13,
+                  fontSize: 16,
+                }}
+              >
+                Goal Weight
+              </Text>
+              <TextInput
+                style={styles.inputGowieght}
+                value=""
+                placeholder=""
+              />
+
             </View>
             <View style={styles.inputRowContainer}>
-              <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 10,
-                    fontSize: 16,
-                  }}
-                >
-                  Activity Level
-                </Text>
+
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 10,
+                  fontSize: 16,
+                }}
+              >
+                Activity Level
+              </Text>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? styles.pickerContainerIOS
+                    : styles.pickerContainerAndroid
+                }
+              >
                 <Picker
                   selectedValue={selectedSex}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedSex(itemValue)
                   }
-                  style={{
-                    backgroundColor: "#f0f0f0",
-                    marginTop: 20,
-                    borderRadius: 50,
-                    width: "98%",
-                  }}
+                  style={
+                    Platform.OS === "ios"
+                      ? styles.pickerIOS
+                      : styles.pickerAndroid
+                  }
                   mode="dropdown"
                 >
                   <Picker.Item
@@ -126,20 +129,19 @@ const ProcessInfoScreen3 = ({navigation}) => {
           </View>
 
           <View style={styles.signupContainer}>
-          <TouchableOpacity
-            style={styles.btn3}
-            onPress={() => navigation.navigate("DashboardDayScreen")}
-          >
-            <Image
-              source={require("../../../assets/img/Arrow.jpg")}
-              style={(styles.img, { width: 35, height: 35 })}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={styles.btn3}
+              onPress={() => navigation.navigate("DashboardDayScreen")}
+            >
+              <Image
+                source={require("../../../assets/img/Arrow.jpg")}
+                style={(styles.img, { width: 35, height: 35 })}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
 
         </View>
-    
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -153,14 +155,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   GreenArea: {
-    flex: 2,
+    flex: 1,
     width: "100%",
     backgroundColor: "#025146",
     alignItems: "center",
     justifyContent: "center",
   },
   whiteArea: {
-    flex: 2,
+    flex: 1.7,
     width: "100%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 40,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 30,
     marginTop: -30,
   },
   uiItem: {
@@ -258,20 +260,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     color: "#333",
     borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    width: "100%",
+    height: 55,
+    width: 330,
   },
   inputRowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-    width: "80%",
+    marginBottom: 40,
+    width: "100%",
   },
   signupContainer: {
     alignItems: "center",
-    marginTop: 5,
-    marginBottom: 50,
+    marginTop: 80,
+    marginBottom: 10,
     marginLeft: 260,
   },
   btn3: {
@@ -281,6 +280,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderWidth: 1.5,
     borderColor: "#025146",
+  },
+  pickerContainerIOS: {
+    marginTop: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 25,
+    width: "330",
+  },
+  pickerIOS: {
+    height: 50,
+    width: "330%",
+  },
+  pickerContainerAndroid: {
+    marginTop: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 30,
+    overflow: "hidden",
+    width: 330,
+  },
+  pickerAndroid: {
+    height: 50,
+    width: "330",
+    color: "#333",
   },
 });
 
