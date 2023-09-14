@@ -14,7 +14,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { Button, Header } from 'react-native-elements';
 
-const ProcessInfoScreen1 = () => {
+const ProfileScreen = () => {
   const [selectedSex, setSelectedSex] = useState("male");
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -192,8 +192,6 @@ const ProcessInfoScreen1 = () => {
   );
 };
 
-export default ProcessInfoScreen1;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -317,3 +315,5 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
   }
 });
+
+export default ProfileScreen;

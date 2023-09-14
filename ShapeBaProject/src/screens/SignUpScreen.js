@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-const SignUp = () => {
+// Page
+// import SignInScreen from './SignInScreen';
+import ProcessInfoScreen1 from './ProcessInfo/ProcessInfoScreen1';
+
+const SignUpScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.img}>
@@ -11,8 +15,16 @@ const SignUp = () => {
         />
       </View>
       <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>FullName</Text>
+        <TextInput 
+          style={styles.input}
+          value="Lingling123"
+          placeholder="Enter Fullname"
+        />
+      </View>
+      <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>User Name</Text>
-        <TextInput
+        <TextInput 
           style={styles.input}
           value="Lingling123"
           placeholder="Enter UserName"
@@ -27,26 +39,33 @@ const SignUp = () => {
           placeholder="Enter Password"
         />
       </View>
-      <TouchableOpacity style={styles.btn1} onPress={()=> props.navigations.navigate("#")}>
-        <Text style={styles.btnText1}>Sign In</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Comfirm Password</Text>
+        <TextInput 
+          style={styles.input}
+          secureTextEntry
+          value="Lingling123"
+          placeholder="Confirm Password"
+        />
+      </View>
+      <TouchableOpacity style={styles.btn1} onPress={() => navigation.navigate('ProcessInfoScreen1')}>
+        <Text style={styles.btnText1}>Sign Up</Text>
       </TouchableOpacity>
       <View style={styles.orContainer}>
-        <Text style={styles.orText}>Or</Text>
+        <Text style={styles.orText}>or</Text>
       </View>
-      <TouchableOpacity style={styles.btn2} onPress={()=> props.navigations.navigate("#")}>
-        <Text style={styles.btnText2}>Sign in with google</Text>
+      <TouchableOpacity style={styles.btn2}>
+        <Text style={styles.btnText2}>Sign up with google</Text>
       </TouchableOpacity>
       <View style={styles.signupContainer}>
         <Text>Don’t have an account?</Text>
-        <TouchableOpacity style={styles.btn3} onPress={()=> props.navigations.navigate("#")}>
-          <Text style={{color: "#EC744A", fontWeight: 'bold'}}>Sign Up</Text>
+        <TouchableOpacity style={styles.btn3} onPress={() => navigation.navigate('SignInScreen')}>
+          <Text style={{color: "#EC744A", fontWeight: 'bold'}}>Sign In</Text>
         </TouchableOpacity>
       </View>
     </View>
   )
 }
-
-export default SignUp
 
 const styles = StyleSheet.create({
     container: {
@@ -56,11 +75,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     img: {
-        width: 180,
-        height: 180,
+        width: 120,
+        height: 120,
         overflow: 'hidden', 
-        marginBottom: 10,
-        marginTop: 15
+        marginBottom: 0.2,
+        marginTop: 10
     },
     inputContainer: {
       marginBottom: 10,
@@ -72,7 +91,7 @@ const styles = StyleSheet.create({
       fontSize: 17,
     },
     input: {
-      marginTop: 10,
+      marginTop: 2,
       backgroundColor: '#f0f0f0', 
       color: '#333', 
       borderRadius: 20,
@@ -118,8 +137,8 @@ const styles = StyleSheet.create({
         fontSize: 15
       },
     orContainer: {
-      marginTop: 10,
-      marginBottom: 10
+      marginTop: 0.2,
+      marginBottom: 0.2
     },
     orText: {
       color: '#575757',
@@ -132,3 +151,5 @@ const styles = StyleSheet.create({
       marginTop: 10,
     }
 });
+
+export default SignUpScreen
