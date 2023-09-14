@@ -50,7 +50,7 @@ const RecommendScreen = () => {
                     </View>
                     <View className="pt-5">
                         {
-                            data.map((item) => <RecmFood item={item} />)
+                            data.map((item, index) => <RecmFood item={item} key={index} />)
                         }
                     </View>
                 </View>

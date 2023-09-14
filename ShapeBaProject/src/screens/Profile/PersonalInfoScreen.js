@@ -9,21 +9,21 @@ const PersonalInfoScreen = () => {
             <Header backgroundColor="#025146" containerStyle={styles.header}></Header>
             <View style={{padding: 20}}>
                 <View style={{padding: 20, backgroundColor: 'white', borderRadius: 20}}>
-                    <View className="flex-row" style={styles.boxStyle}>
+                    <View className="flex-row justify-between" style={styles.boxStyle}>
                        <Text className="mb-5" style={styles.textStyle}>Start Weight</Text>
-                       <Text className="mb-5" style={{width: '20%'}}>58 kg</Text>
+                       <Text className="mb-5">58 kg</Text>
                     </View>
-                    <View className="flex-row" style={styles.boxStyle}>
+                    <View className="flex-row justify-between" style={styles.boxStyle}>
                         <Text className="mb-5 mt-5" style={styles.textStyle}>Goal Weight</Text>
-                        <Text className="mb-5 mt-5" style={{width: '20%'}}>50 kg</Text>
+                        <Text className="mb-5 mt-5">50 kg</Text>
                     </View>
-                    <View className="flex-row" style={styles.boxStyle}>
+                    <View className="flex-row justify-between" style={styles.boxStyle}>
                         <Text className="mb-5 mt-5" style={styles.textStyle}>Height</Text>
-                        <Text className="mb-5 mt-5" style={{width: '20%'}}>170 cm</Text>
+                        <Text className="mb-5 mt-5">170 cm</Text>
                     </View>
-                    <View className="flex-row" style={styles.boxStyle}>
-                        <Text className="mb-5 mt-5" style={[styles.textStyle, {width: '60%'}]}>Activity Level</Text>
-                        <Text className="mb-5 mt-5" style={{width: '40%'}}>Little or no exercise</Text>
+                    <View className="flex-row justify-between" style={styles.boxStyle}>
+                        <Text className="mb-5 mt-5" style={styles.textStyle}>Activity Level</Text>
+                        <Text className="mb-5 mt-5" >Little or no exercise</Text>
                     </View>
                     
                 </View>
@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
         borderBottomColor: '#A4A4A4'
     },
     textStyle: {
-        width: '80%',
         color: '#025146',
         fontWeight: 'bold',
     },

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-const ProcessInfoScreen1 = () => {
+const ProcessInfoScreen3 = ({navigation}) => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
@@ -128,7 +128,7 @@ const ProcessInfoScreen1 = () => {
           <View style={styles.signupContainer}>
           <TouchableOpacity
             style={styles.btn3}
-            onPress={() => props.navigations.navigate("#")}
+            onPress={() => navigation.navigate("DashboardDayScreen")}
           >
             <Image
               source={require("../../../assets/img/Arrow.jpg")}
@@ -144,8 +144,6 @@ const ProcessInfoScreen1 = () => {
     </KeyboardAvoidingView>
   );
 };
-
-export default ProcessInfoScreen1;
 
 const styles = StyleSheet.create({
   container: {
@@ -285,3 +283,5 @@ const styles = StyleSheet.create({
     borderColor: "#025146",
   },
 });
+
+export default ProcessInfoScreen3;

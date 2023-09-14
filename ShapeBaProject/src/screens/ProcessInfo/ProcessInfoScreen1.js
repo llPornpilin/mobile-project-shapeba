@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, 
+  Image, KeyboardAvoidingView, ScrollView, Platform,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 
-const ProcessInfoScreen1 = () => {
+import { Picker } from "@react-native-picker/picker";
+// Page
+
+
+const ProcessInfoScreen1 = ({navigation}) => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
@@ -143,7 +138,7 @@ const ProcessInfoScreen1 = () => {
           <View style={styles.signupContainer}>
             <TouchableOpacity
               style={styles.btn3}
-              onPress={() => props.navigation.navigate("#")}
+              onPress={() => navigation.navigate('ProcessInfoScreen2')}
             >
               <Image
                 source={require("../../../assets/img/Arrow.jpg")}
@@ -157,8 +152,6 @@ const ProcessInfoScreen1 = () => {
     </KeyboardAvoidingView>
   );
 };
-
-export default ProcessInfoScreen1;
 
 const styles = StyleSheet.create({
   container: {
@@ -318,3 +311,5 @@ const styles = StyleSheet.create({
     height: 35
   }
 });
+
+export default ProcessInfoScreen1;

@@ -5,16 +5,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import TestNavigator from './src/navigation/Navigator';
 import StartNavigator from './src/navigation/StartNavigation';
+import AppNavigator from './src/navigation/AppNavigation';
+import { useState } from 'react';
 
 // Page
 
 
 export default function App() {
-  
+  // return (
+  //   <TestNavigator />
+  // )
   return (
-    <TestNavigator />
-    // <StartNavigator />
-  );
+    <AppNavigator />
+  )
 }
 
 const styles = StyleSheet.create({
