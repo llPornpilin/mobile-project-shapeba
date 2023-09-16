@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // Page
 import StartScreen from '../screens/StartScreen';
 import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
+import SignUpScreen from '../screens/SignInScreen';
 import ProcessInfoScreen1 from '../screens/ProcessInfo/ProcessInfoScreen1';
 import ProcessInfoScreen2 from '../screens/ProcessInfo/ProcessInfoScreen2';
 import ProcessInfoScreen3 from '../screens/ProcessInfo/ProcessInfoScreen3';

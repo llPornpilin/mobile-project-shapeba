@@ -59,6 +59,7 @@ const ProfileScreen = () => {
               color: "#025146",
               fontWeight: "bold",
               fontSize: 18,
+              marginTop:10
             }}
           >
             2500 cals
@@ -95,7 +96,7 @@ const ProfileScreen = () => {
         />
       </View>
       <TouchableOpacity
-        style={styles.btn1}
+        style={styles.btnLogout}
         onPress={() => props.navigations.navigate("#")}
       >
         <Text
@@ -104,10 +105,10 @@ const ProfileScreen = () => {
             fontWeight: "bold",
             fontSize: 16,
             textAlign: "center",
-            marginTop: 10,
+            
           }}
         >
-          Sign In
+          Log out 
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -185,13 +186,14 @@ const styles = StyleSheet.create({
     color: "#025146",
     marginLeft:10,
   },
-  btn1: {
+  btnLogout: {
     height: 45,
     width:180,
     backgroundColor: "#FFF",
     borderRadius: 30,
     elevation: 3,
-    marginTop:20
+    marginTop:0,
+    justifyContent:'center'
   },
   header: {
     height: 170,

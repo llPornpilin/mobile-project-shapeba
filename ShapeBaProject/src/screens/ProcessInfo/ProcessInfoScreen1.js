@@ -1,158 +1,143 @@
 import React, { useState } from "react";
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, 
-  Image, KeyboardAvoidingView, ScrollView, Platform,
+import {
+  View,Text,StyleSheet,TextInput,TouchableOpacity,Image,ScrollView,Platform,
 } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
 // Page
-
-
-const ProcessInfoScreen1 = ({navigation}) => {
+export const progressCircle = (number, color, textcolor) => {
+  return (
+    <View style={styles.uiItem}>
+      <View style={[styles.circle, { backgroundColor: color, elevation: 3 }]}>
+        <Text style={[styles.uiText, { color: textcolor }]}>{number}</Text>
+      </View>
+    </View>
+  );
+};
+const ProcessInfoScreen1 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor:'#fff', alignItems:'center' }}>
-        <View style={styles.blueArea}>
-          <View>
-            <Text style={styles.Letget}>Let’s Get Start</Text>
-          </View>
-          <View>
-            <Text style={styles.Trackyour}>Track Your Daily Intake</Text>
-          </View>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+      }}
+    >
+      <View style={styles.blueArea}>
+        <View>
+          <Text style={styles.Texttop}>Let’s Get Start</Text>
         </View>
-        <View style={styles.whiteArea}>
-          <View style={styles.uiContainer}>
-            <View style={styles.uiItem}>
-              <View style={styles.circle}>
-                <Text style={styles.uiText}>1</Text>
-              </View>
+        <View>
+          <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
+        </View>
+      </View>
+      <View style={styles.whiteArea}>
+        <View style={styles.uiContainer}>
+          {progressCircle(1, "#EC744A", "white")}
+          <View style={styles.line}></View>
+          {progressCircle(2, "white", "#EC744A")}
+          <View style={styles.line}></View>
+          {progressCircle(3, "white", "#EC744A")}
+        </View>
+        <View style={styles.Allinput}>
+          <View style={styles.inputRowContainer}>
+            <View style={{ flex: 1, marginRight: 10 }}>
+              <Text
+                style={{
+                  ...styles.inputLabel,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                }}
+              >
+                Weight
+              </Text>
+              <TextInput style={styles.input} value="" placeholder="" />
             </View>
-            <View style={styles.uiItem}>
-              <View style={styles.line}></View>
-            </View>
-            <View style={styles.uiItem2}>
-              <View style={styles.circle2}>
-                <Text style={styles.uiText2}>2</Text>
-              </View>
-            </View>
-            <View style={styles.uiItem}>
-              <View style={styles.line}></View>
-            </View>
-            <View style={styles.uiItem3}>
-              <View style={styles.circle3}>
-                <Text style={styles.uiText3}>3</Text>
-              </View>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.inputLabel,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                }}
+              >
+                Height
+              </Text>
+              <TextInput style={styles.input} value="" placeholder="" />
             </View>
           </View>
-          <View style={styles.Allinput}>
-            <View style={styles.inputRowContainer}>
-              <View style={{ flex: 1, marginRight: 10 }}>
-                <Text
-                  style={{
-                    ...styles.inputLabel,
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                  }}
-                >
-                  Weight
-                </Text>
-                <TextInput
-                  style={styles.inputWeight}
-                  value=""
-                  placeholder=""
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    ...styles.inputLabel,
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                  }}
-                >
-                  Height
-                </Text>
-                <TextInput
-                  style={styles.inputHeight}
-                  value=""
-                  placeholder=""
-                />
-              </View>
+          <View style={styles.inputRowContainer}>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  ...styles.inputLabel,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                }}
+              >
+                Birth Date
+              </Text>
+              <TextInput style={styles.input} value="" placeholder="" />
             </View>
-            <View style={styles.inputRowContainer}>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    ...styles.inputLabel,
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                  }}
-                >
-                  Birth Date
-                </Text>
-                <TextInput
-                  style={styles.inputBirthDate}
-                  value=""
-                  placeholder=""
-                />
-              </View>
-              <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    marginLeft: 5,
-                    color: "#575757",
-                    marginTop: 30,
-                  }}
-                >
-                  Sex
-                </Text>
-                <View
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  color: "#575757",
+                  marginTop: 30,
+                }}
+              >
+                Sex
+              </Text>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? styles.pickerContainerIOS
+                    : styles.pickerContainerAndroid
+                }
+              >
+                <Picker
+                  selectedValue={selectedSex}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedSex(itemValue)
+                  }
                   style={
                     Platform.OS === "ios"
-                      ? styles.pickerContainerIOS
-                      : styles.pickerContainerAndroid
+                      ? styles.pickerIOS
+                      : styles.pickerAndroid
                   }
+                  mode="dropdown"
                 >
-                  <Picker
-                    selectedValue={selectedSex}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedSex(itemValue)
-                    }
-                    style={
-                      Platform.OS === "ios"
-                        ? styles.pickerIOS
-                        : styles.pickerAndroid
-                    }
-                    mode="dropdown"
-                  >
-                    <Picker.Item label="Male" value="male" />
-                    <Picker.Item label="Female" value="female" />
-                  </Picker>
-                </View>
+                  <Picker.Item label="Male" value="male" />
+                  <Picker.Item label="Female" value="female" />
+                </Picker>
               </View>
             </View>
           </View>
-          <View style={styles.signupContainer}>
-            <TouchableOpacity
-              style={styles.btn3}
-              onPress={() => navigation.navigate('ProcessInfoScreen2')}
-            >
-              <Image
-                source={require("../../../assets/img/Arrow.jpg")}
-                style={(styles.img, { width: 35, height: 35 })}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
         </View>
-      </ScrollView>
+        <View style={styles.signupContainer}>
+          <TouchableOpacity
+            style={styles.btn3}
+            onPress={() => navigation.navigate("ProcessInfoScreen2")}
+          >
+            <Image
+              source={require("../../../assets/img/Arrow.jpg")}
+              style={(styles.img, { width: 35, height: 35 })}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -174,14 +159,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  Letget: {
+  Texttop: {
     color: "#FFFFFF",
     fontSize: 35,
     fontWeight: "bold",
     marginTop: 5,
     paddingRight: 115,
   },
-  Trackyour: {
+  Textbottom: {
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
@@ -201,16 +186,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginHorizontal: 0,
   },
-  uiItem2: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 0,
-  },
-  uiItem3: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 0,
-  },
   circle: {
     width: 40,
     height: 40,
@@ -218,24 +193,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#EC744A",
     alignItems: "center",
     justifyContent: "center",
-  },
-  circle2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-  },
-  circle3: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
   },
   line: {
     height: 2,
@@ -247,35 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  uiText2: {
-    color: "#EC744A",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  uiText3: {
-    color: "#EC744A",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  inputWeight: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    color: "#333",
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    width: "100%",
-  },
-  inputHeight: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    color: "#333",
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    width: "100%",
-  },
-  inputBirthDate: {
+  input: {
     marginTop: 20,
     backgroundColor: "#f0f0f0",
     color: "#333",
@@ -304,11 +233,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderWidth: 1.5,
     borderColor: "#025146",
-    marginTop: 20
+    marginTop: 20,
   },
   img: {
     width: 35,
-    height: 35
+    height: 35,
   },
   pickerContainerIOS: {
     marginTop: 20,

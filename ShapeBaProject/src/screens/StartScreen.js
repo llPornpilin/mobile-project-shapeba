@@ -24,24 +24,20 @@ const StartScreen = ({ navigation }) => {
         style={[styles.img, { transform: [{ scale: scaleAnimate }] }]}
         resizeMode="contain"
       />
-
-      <View>
+      <View style={{justifyContent:'flex-end'}}>
         <TouchableOpacity
           style={styles.btn1}
           onPress={() => navigation.navigate('SignInNavigator')}
         >
-          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20 }}>
+          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20, textAlign:'center' }}>
             Sign In
           </Text>
         </TouchableOpacity>
-      </View>
-
-      <View>
         <TouchableOpacity
           style={styles.btn2}
           onPress={() => navigation.navigate('SignUpNavigator')}
         >
-          <Text style={{ color: "#025146", fontWeight: "bold", fontSize: 20 }}>
+          <Text style={{ color: "#025146", fontWeight: "bold", fontSize: 20, textAlign:'center' }}>
             Sign Up
           </Text>
         </TouchableOpacity>
@@ -49,24 +45,25 @@ const StartScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems:'center',
   },
   img: {
-    height: 260,
-    width: 250,
-    marginTop: 100
+    height: 220,
+    width: 200,
+    marginTop: 200
   },
   btn1: {
     height: 50,
     width: 340,
     borderRadius: 30,
     backgroundColor: "#025146",
+    justifyContent:'center',
+    elevation:5,
+    marginTop: 160
   },
   btn2: {
     marginTop: 25,
@@ -76,6 +73,7 @@ const styles = StyleSheet.create({
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
     elevation: 5,
+    justifyContent:'center'
   },
   textbtn1: {
     color: "#FFFFFF",

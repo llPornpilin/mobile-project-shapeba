@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import {progressCircle} from './ProcessInfoScreen1';
 
 const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
@@ -25,29 +26,13 @@ const ProcessInfoScreen3 = ({ navigation }) => {
           <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
         </View>
         <View style={styles.whiteArea}>
-          <View style={styles.uiContainer}>
-            <View style={styles.uiItem}>
-              <View style={styles.circle}>
-                <Text style={styles.uiText}>1</Text>
-              </View>
-            </View>
-            <View style={styles.uiItem}>
-              <View style={styles.line}></View>
-            </View>
-            <View style={styles.uiItem2}>
-              <View style={styles.circle2}>
-                <Text style={styles.uiText2}>2</Text>
-              </View>
-            </View>
-            <View style={styles.uiItem}>
-              <View style={styles.line}></View>
-            </View>
-            <View style={styles.uiItem3}>
-              <View style={styles.circle3}>
-                <Text style={styles.uiText3}>3</Text>
-              </View>
-            </View>
-          </View>
+        <View style={styles.uiContainer}>
+          {progressCircle(1, "white", "#EC744A")}
+          <View style={styles.line}></View>
+          {progressCircle(2, "white", "#EC744A")}
+          <View style={styles.line}></View>
+          {progressCircle(3, "#EC744A", "white")}
+        </View>
           <View style={styles.Allinput}>
             <View style={styles.inputRowContainer}>
 
@@ -192,19 +177,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 30,
-    marginTop: -30,
+    marginTop: -20,
   },
   uiItem: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 0,
-  },
-  uiItem2: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 0,
-  },
-  uiItem3: {
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 0,
@@ -218,23 +193,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     elevation: 2,
   },
-  circle2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-  },
-  circle3: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#EC744A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   line: {
     height: 2,
     width: 65,
@@ -242,16 +200,6 @@ const styles = StyleSheet.create({
   },
   uiText: {
     color: "#EC744A",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  uiText2: {
-    color: "#EC744A",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  uiText3: {
-    color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
   },
