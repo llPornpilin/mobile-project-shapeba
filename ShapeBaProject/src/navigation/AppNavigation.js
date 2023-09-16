@@ -19,6 +19,7 @@ import PersonalInfoScreen from '../screens/Profile/PersonalInfoScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import { Button } from '@rneui/themed';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 const MainStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -42,7 +43,7 @@ function MainNavigator() {
             screenOptions={{
                 headerShown: false,
             }}
-            >
+        >
             <MainStack.Screen name="DashboardDayScreen" component={DashboardDayScreen} />
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
@@ -68,48 +69,70 @@ function ProfileNavigate() {
 //topTab DashboardDay
 function MyTopTabs() {
     return (
-      <TopTab.Navigator>
-        <TopTab.Screen name="MainNavigator" component={MainNavigator}  
-        options={({route}) => ({
-            tabBarStyle: ((route) => {
-                const routeName = getFocusedRouteNameFromRoute(route)
-                console.log(routeName)
-                if (routeName === 'DetailMealsScreen') {
-                    
-                    return { display: "none" }
-                  }
-                return
-            })(route),
-            title: "Day"
-        })}
-        />
-        <TopTab.Screen name="DashboardWeekScreen" component={DashboardWeekScreen} options={{ title: "Week" }}/>
-        <TopTab.Screen name="DashboardMonthScreen" component={DashboardMonthScreen} options={{ title: "Month" }}/>
-      </TopTab.Navigator>
+        <TopTab.Navigator
+        >
+            <TopTab.Screen name="MainNavigator" component={MainNavigator}
+                options={({ route }) => ({
+                    tabBarStyle: ((route) => {
+                        const routeName = getFocusedRouteNameFromRoute(route)
+                        // console.log(routeName)
+                        if (routeName === 'DetailMealsScreen' || routeName === 'RecommendScreen') {
+
+                            return { display: "none" }
+                        }
+                        return
+                    })(route),
+                    title: "Day"
+                })}
+            />
+            <TopTab.Screen name="DashboardWeekScreen" component={DashboardWeekScreen} options={{ title: "Week" }} />
+            <TopTab.Screen name="DashboardMonthScreen" component={DashboardMonthScreen} options={{ title: "Month" }} />
+        </TopTab.Navigator>
     );
-  }
+}
+const headerLeft = () => {
+    return (
+        <View className="h-10 bg-pink">
+            <Text className="text-xl font-bold ml-3">Chiffon!</Text>
+            <Text className="text-sm font-bold ml-3 text-Darkgray">Friday, March 24</Text>
+        </View>
+    );
+}
 
 export default function AppNavigator() {
     return (
         <NavigationContainer>
-            <BottomTab.Navigator  
+            <BottomTab.Navigator
                 screenOptions={{
-                // headerShown: false,
-            }}>
-            <BottomTab.Screen name="Home" component={MyTopTabs} 
-                options={{
-                    tabBarIcon: ({color, size}) => {
-                        return <Ionicons name="ios-home" size={size} color={color} />
+                    headerTitle: () => headerLeft(),
+                    headerRight: () => (
+                        <TouchableOpacity className="mr-3">
+                            <Ionicons name="ios-notifications" size={24} color="black" />
+                        </TouchableOpacity>
+                    ),
+                    headerStyle: {
+                        height: 100,
+                    },
+                    headerTintColor: 'black',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
                     },
                 }}
-            />
-            <BottomTab.Screen name="Profile" component={ProfileNavigate}
-                options={{
-                    tabBarIcon: ({color, size}) => {
-                        return <Ionicons name="ios-star" size={size} color={color} />
-                    },
-                }}
-            />
+            >
+                <BottomTab.Screen name="Home" component={MyTopTabs}
+                    options={{
+                        tabBarIcon: ({ color, size }) => {
+                            return <Ionicons name="ios-home" size={size} color={color} />
+                        },
+                    }}
+                />
+                <BottomTab.Screen name="Profile" component={ProfileNavigate}
+                    options={{
+                        tabBarIcon: ({ color, size }) => {
+                            return <Ionicons name="ios-star" size={size} color={color} />
+                        },
+                    }}
+                />
             </BottomTab.Navigator>
         </NavigationContainer>
     )

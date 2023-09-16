@@ -51,7 +51,7 @@ const DonutChart = ({
                     color="white"
                 />
                 <Text
-                    x={innerRadius - titleWidth / 2}
+                    x={(innerRadius - titleWidth / 2 + 8)}
                     y={radius + 20}
                     text={"Cals"}
                     font={smallerFont}

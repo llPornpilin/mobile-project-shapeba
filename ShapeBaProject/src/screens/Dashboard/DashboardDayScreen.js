@@ -1,9 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import {Easing, runTiming, useFont, useValue} from "@shopify/react-native-skia";
+import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import DonutChart from "../../components/DonutChart";
 import { useEffect } from 'react';
-import { ProgressBar, MD3Colors  } from 'react-native-paper';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+
 
 
 // Page
@@ -26,7 +29,7 @@ const listMeal = (icon, meal, cal, navigation) => {
         </TouchableOpacity>
     )
 }
-export const btnRecom = (icon, text, navigation) => {
+const btnRecom = (icon, text, navigation) => {
     return (
         <TouchableOpacity className="items-center" onPress={() => navigation.navigate('RecommendScreen')}>
             <Image source={icon}
@@ -37,8 +40,8 @@ export const btnRecom = (icon, text, navigation) => {
 }
 //for Donut Chart
 const radius = PixelRatio.roundToNearestPixel(80);
-const STROKE_WIDTH = 7;
-const DashboardDayScreen = ({navigation}) => {
+const STROKE_WIDTH = 6;
+const DashboardDayScreen = ({ navigation }) => {
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
 
@@ -67,8 +70,6 @@ const DashboardDayScreen = ({navigation}) => {
                 <View style={styles.container}>
 
                     <View style={[styles.content, styles.c1]}>
-                        {/* <DonutChartContainer /> */}
-                        <ProgressBar progress={0.5} color={MD3Colors.error50} />
                         <View style={styles.ringChartContainer}>
                             <DonutChart
                                 backgroundColor="white"
@@ -79,6 +80,26 @@ const DashboardDayScreen = ({navigation}) => {
                                 font={font}
                                 smallerFont={smallerFont}
                             />
+                        </View>
+
+                        <View style={styles.progress}>
+                            <View>
+                                <Text className="text-white text-[10px] pb-1" >168 g</Text>
+                                <ProgressBar progress={0.6} color={"#EC744A"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pt-1" >Carb</Text>
+                            </View>
+                            <View>
+                                <Text className="text-white text-[10px] pb-1" >84 g</Text>
+                                <ProgressBar progress={0.5} color={"#FBBB57"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pt-1" >Fat</Text>
+                            </View>
+                            <View>
+                                <Text className="text-white text-[10px] pb-1" >152 g</Text>
+                                <ProgressBar progress={0.7} color={"#57DB54"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pt-1" >Protien</Text>
+                            </View>
+
+
                         </View>
                     </View>
                     <TouchableOpacity onPress={animateChart} style={styles.button}>
@@ -142,7 +163,9 @@ const styles = StyleSheet.create({
     c1: {
         backgroundColor: '#025146',
         height: 220,
-        justifyContent: 'center'
+        flexDirection: 'row',
+        padding: 20,
+        justifyContent: 'space-between',
     },
     c2: {
         backgroundColor: 'white',
@@ -150,11 +173,10 @@ const styles = StyleSheet.create({
     ringChartContainer: {
         width: radius * 2,
         height: radius * 2,
-        marginLeft: 20,
-        marginTop: 20
+        marginTop: 10,
     },
     button: {
-        marginTop: 40,
+        marginTop: 5,
         backgroundColor: "orange",
         paddingHorizontal: 10,
         paddingVertical: 10,
@@ -164,6 +186,11 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 10,
     },
+    progress: {
+        gap: 20,
+        width: 100,
+        justifyContent: 'center',
+    }
 });
 
 export default DashboardDayScreen;

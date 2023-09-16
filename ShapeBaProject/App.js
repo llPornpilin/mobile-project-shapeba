@@ -12,12 +12,12 @@ import { useState } from 'react';
 
 
 export default function App() {
-  return (
-    <TestNavigator />
-  )
   // return (
-  //   <AppNavigator />
+  //   <TestNavigator />
   // )
+  return (
+    <AppNavigator />
+  )
 }
 
 const styles = StyleSheet.create({

@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView } from 'react-native';
-import { btnRecom } from './DashboardDayScreen';
+// import { btnRecom } from './DashboardDayScreen';
 
-export const RecmFood = ({ item }) => {
+const RecmFood = ({ item }) => {
     return (
         <>
             <View className="flex-row justify-between p-4 gap-11">
@@ -20,6 +20,16 @@ export const RecmFood = ({ item }) => {
         </>
 
     )
+}
+
+const btnRecom = (icon, text, navigation) => {
+    return (
+        <TouchableOpacity className="items-center" onPress={() => navigation.navigate('RecommendScreen')}>
+            <Image source={icon}
+                style={{ width: 55, height: 55 }} />
+            <Text className="mt-2 font-medium text-Darkgray">{text}</Text>
+        </TouchableOpacity>
+    );
 }
 
 
