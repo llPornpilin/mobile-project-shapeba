@@ -35,7 +35,7 @@ function MainNavigator() {
             }}
         >
             <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
-            <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} options={{ presentation: "modal" }} />
+            <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
         </MainStack.Navigator>
