@@ -19,7 +19,7 @@ export const DetailMealsPattern = ({ item }) => {
     )
 }
 
-export const greenHeader = () => {
+export const greenHeader = (navigation) => {
     return (
         <Header backgroundColor= "#025146" containerStyle={styles.header}
                 leftComponent={
@@ -44,7 +44,7 @@ export const greenHeader = () => {
     )
 }
 
-const DetailMealsScreen = ({navigation}) => {
+const DetailMealsScreen = ({navigation, props}) => {
     
     const allMeals = [
         {id: 1, name: 'meals1'},
@@ -64,7 +64,7 @@ const DetailMealsScreen = ({navigation}) => {
     ];
     return (
         <View style={styles.container}>
-            {greenHeader()}
+            {greenHeader(navigation)}
             <ScrollView style={{paddingLeft: 40, paddingRight: 40, paddingTop: 20}}>
                 <View>
                     {
