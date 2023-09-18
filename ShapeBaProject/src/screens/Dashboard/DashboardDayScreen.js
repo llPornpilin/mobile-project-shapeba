@@ -45,13 +45,18 @@ const DashboardDayScreen = ({ navigation }) => {
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
 
-    const animateChart = () => {
-        animationState.current = 0;
-        runTiming(animationState, targetPercentage, {
-            duration: 1250,
-            easing: Easing.inOut(Easing.cubic),
-        });
-    };
+    // const animateChart = () => {
+    //     animationState.current = 0;
+    //     runTiming(animationState, targetPercentage, {
+    //         duration: 1250,
+    //         easing: Easing.inOut(Easing.cubic),
+    //     });
+    // };
+    animationState.current = 0;
+    runTiming(animationState, targetPercentage, {
+        duration: 1250,
+        easing: Easing.inOut(Easing.cubic),
+    });
 
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
     const smallerFont = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
@@ -102,9 +107,9 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-                    <TouchableOpacity onPress={animateChart} style={styles.button}>
+                    {/* <TouchableOpacity onPress={animateChart} style={styles.button}>
                         <Text style={styles.buttonText}>Animate !</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <View style={[styles.content, styles.c2]}>
                         {/* <View className="bg-white w-80 h-100 rounded-3xl mt-5"> */}

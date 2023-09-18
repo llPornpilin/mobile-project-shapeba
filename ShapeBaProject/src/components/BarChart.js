@@ -8,8 +8,8 @@ import {
     useFont,
     useValue,
 } from "@shopify/react-native-skia";
-import React, { useState } from "react";
-import { Button, Easing, StyleSheet, View } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { Button, Easing, StyleSheet, View, Animated } from "react-native";
 
 import * as d3 from "d3";
 
@@ -39,6 +39,7 @@ export const BarChart = () => {
 
     const font = useFont(require("../../assets/font/Roboto-Bold.ttf"), 10);
     const animationState = useValue(0);
+    // const animationState = useRef(new Animated.Value(0)).current;
 
     const xDomain = data.map((dataPoint) => dataPoint.label);
     const xRange = [0, graphWidth];
@@ -52,14 +53,34 @@ export const BarChart = () => {
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
-    const animate = () => {
-        animationState.current = 0;
+    animationState.current = 0;
 
+    useEffect(() => {
         runTiming(animationState, 1, {
             duration: 1600,
             easing: Easing.inOut(Easing.exp),
         });
-    };
+    });
+
+
+
+    // Animated.timing(animationState, {
+    //     toValue: 1,
+    //     duration: 1600,
+    //     easing: Easing.inOut(Easing.exp),
+    //     useNativeDriver: true,
+    // }).start(() => {
+    //     animationState.setValue(1);
+    // });
+
+    // const animate = () => {
+    //     animationState.current = 0;
+
+    //     runTiming(animationState, 1, {
+    //         duration: 1600,
+    //         easing: Easing.inOut(Easing.exp),
+    //     });
+    // };
 
 
     const path = useComputedValue(() => {
@@ -111,7 +132,7 @@ export const BarChart = () => {
                     />
                 ))}
             </Canvas>
-            <Button title="Animate!" onPress={animate} />
+            {/* <Button title="Animate!" onPress={animate} /> */}
         </View>
     );
 };

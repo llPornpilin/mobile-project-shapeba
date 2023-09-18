@@ -7,7 +7,7 @@ import { getFocusedRouteNameFromRoute, NavigationContainer } from '@react-naviga
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // Icon
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 // Page
 import DashboardDayScreen from '../screens/Dashboard/DashboardDayScreen';
 import DashboardWeekScreen from '../screens/Dashboard/DashboardWeekScreen';
@@ -93,6 +93,14 @@ const headerLeft = () => {
     );
 }
 
+const btnPlus = () => {
+    return (
+        <View className="-mt-3" >
+            <AntDesign name="pluscircle" size={45} color="#025146" />
+        </View>
+    );
+}
+
 function BottomNavigate() {
     return (
         <BottomTab.Navigator
@@ -104,7 +112,7 @@ function BottomNavigate() {
                     </TouchableOpacity>
                 ),
                 headerStyle: {
-                    height: 100,
+                    height: 80,
                 },
                 headerTintColor: 'black',
                 headerTitleStyle: {
@@ -130,10 +138,18 @@ function BottomNavigate() {
                     },
                 })}
             />
+            <BottomTab.Screen name="AddMealsScreen" component={AddMealsScreen}
+                options={{
+
+                    tabBarButton: () => btnPlus(),
+                    headerShown: false,
+                    title: ""
+                }}
+            />
             <BottomTab.Screen name="Profile" component={ProfileNavigate}
                 options={{
                     tabBarIcon: ({ color, size }) => {
-                        return <Ionicons name="ios-star" size={size} color={color} />
+                        return <Ionicons name="person-outline" size={size} color={color} />
                     },
                     headerShown: false,
                 }}

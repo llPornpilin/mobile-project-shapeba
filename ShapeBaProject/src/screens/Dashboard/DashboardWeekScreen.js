@@ -60,7 +60,7 @@ const DashboardWeekScreen = () => {
 
                     </View>
                     <View style={[styles.content, styles.c1]}>
-                        <Text className="text-white text-base font-bold p-2 pl-4" >Food Highest in calories</Text>
+                        <Text className="text-white text-base font-bold p-2 pl-4" >Highest Food calories</Text>
                         <View style={[styles.content, styles.c3]}>
                             {
                                 data.map((item, index) => <ListFood item={item} key={index} />)
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     c2: {
         backgroundColor: 'white',
         elevation: 10,
-        // height: 500
+        // height: 350
     },
     c3: {
         backgroundColor: 'white',
