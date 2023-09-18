@@ -1,42 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Pressable, useState, SafeAreaView } from 'react-native';
 import { Header } from 'react-native-elements';
 import { AntDesign, Entypo } from '@expo/vector-icons';
+import SwipeableFlatList from 'react-native-swipeable-list';
+import { FontAwesome, Feather } from '@expo/vector-icons';
 
 // Page
 import AddMealsScreen from './AddMealsScreen';
 import { color } from 'd3';
 
 
-export const DetailMealsPattern = ({ item }) => {
-    return (
-        <>
-            <View style={{borderBottomWidth: 0.5, borderColor: '#A4A4A4', paddingLeft: 10}}>
-                <Text className="font-semibold mt-3 text-lg">{item.name}</Text>
-                <Text className="mb-3">100 g , 30 cals</Text>
-            </View>
-        </>
-    )
-}
-
 export const greenHeader = (navigation) => {
     return (
         <Header backgroundColor= "#025146" containerStyle={styles.header}
                 leftComponent={
                     <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity style={{marginRight: 15, marginTop: 5}} onPress={() => navigation.goBack()}>
+                        <TouchableOpacity style={{marginRight: 15, marginTop: 3}} onPress={() => navigation.goBack()}>
                             <AntDesign name="leftcircleo" size={24} color="white" />
                         </TouchableOpacity>
-                        <Text style={{color: 'white', fontSize: 25, width: '200%', fontWeight: 'bold'}}>BreakFast</Text>
+                        <Text style={{color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold'}}>BreakFast</Text>
                     </View>
                 }
                 // centerComponent={{icon: 'menu', color: '#fff', iconStyle: {color: 'white', paddingLeft: 90, marginTop: 5}}}
                 rightComponent={
                     <View style={{flexDirection: 'row'}}>
-                        <View style={{marginRight: 5, marginTop: 5}}>
-                            <Entypo name="flash" size={24} color="white" />
+                        <View style={{marginRight: 3, marginTop: 3}}>
+                            <Entypo name="flash" size={22} color="white" />
                         </View>
-                        <Text style={{color: 'white', fontSize: 25, width: '150%', fontWeight: 'bold'}}>720 cals</Text>
+                        <Text style={{color: 'white', fontSize: 20, width: '150%', fontWeight: 'bold'}}>720 cals</Text>
                     </View>
                 }
             >
@@ -44,7 +35,50 @@ export const greenHeader = (navigation) => {
     )
 }
 
+export const DetailMealsPattern = ({ item }) => {
+    return (
+        <>
+            <View style={{paddingLeft: 10, backgroundColor: 'white'}}>
+                <Text className="font-semibold mt-3 text-lg">{item.name}</Text>
+                <Text className="mb-3">100 g , 30 cals</Text>
+            </View>
+        </>
+    )
+}
+
+const extractItemKey = item => {
+    return item.id.toString();
+};
+
+function renderItemSeparator() {
+    return <View style={{backgroundColor: '#A4A4A4', height: 1}} />;
+}
+
 const DetailMealsScreen = ({navigation, props}) => {
+    // function delete meals
+    const deleteItem = itemId => {
+        // const newState = [...data];
+        // const filteredState = newState.filter(item => item.id !== itemId);
+        // return setData(filteredState);
+    };
+
+// item in swipe
+const QuickActions = (index, qaItem) => {
+    return (
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end',}}>
+            <View style={[styles.button, {backgroundColor: '#EF5353'}]}>
+                <Pressable>
+                    <FontAwesome name="trash-o" size={28} color="white" />
+                </Pressable>
+            </View>
+            <View style={[styles.button, {backgroundColor: '#FBBB57'}]}>
+                <Pressable>
+                    <Feather name="edit" size={24} color="white" />
+                </Pressable>
+            </View>
+        </View>
+    );
+};
     
     const allMeals = [
         {id: 1, name: 'meals1'},
@@ -62,21 +96,28 @@ const DetailMealsScreen = ({navigation, props}) => {
         {id: 13, name: 'meals13'},
         {id: 14, name: 'meals14'},
     ];
+
     return (
         <View style={styles.container}>
             {greenHeader(navigation)}
-            <ScrollView style={{paddingLeft: 40, paddingRight: 40, paddingTop: 20}}>
-                <View>
-                    {
-                        allMeals.map((item, index) => <DetailMealsPattern item={item} key={index} />)
-                    }
-                </View>
-                <View style={{width: '100%', alignItems: 'center', marginBottom: 20}}>
-                    <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen')}>
-                        <Text className="font-bold text-white">Add More Meal</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+            <SwipeableFlatList
+                keyExtractor={extractItemKey}
+                data={allMeals}
+                renderItem={({item}) => (
+                    <DetailMealsPattern item={item} />
+                )}
+                maxSwipeDistance={240}
+                renderQuickActions={({index, item}) => QuickActions(index, item)}
+                contentContainerStyle={{paddingLeft: 30, paddingRight: 30, paddingTop: 15}}
+                shouldBounceOnMount={false}
+                ItemSeparatorComponent={renderItemSeparator}
+                onSwipeableOpen={false}
+            />
+            <View style={{width: '100%', alignItems: 'center', marginBottom: 0,}}>
+                <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen')}>
+                    <Text className="font-bold text-white">Add More Meal</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -105,8 +146,13 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         width: '50%',
         alignItems: 'center',
-        marginBottom: 30
+        marginBottom: 30,
+    },
+    button: {
+        width: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
-  });
+});
 
-  export default DetailMealsScreen;
+export default DetailMealsScreen;
