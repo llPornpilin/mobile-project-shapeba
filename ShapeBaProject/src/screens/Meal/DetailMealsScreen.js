@@ -39,7 +39,7 @@ export const DetailMealsPattern = ({ item }) => {
     return (
         <>
             <View style={{paddingLeft: 10, backgroundColor: 'white'}}>
-                <Text className="font-semibold mt-3 text-lg">{item.name}</Text>
+                <Text className="font-semibold mt-3 text-base">{item.name}</Text>
                 <Text className="mb-3">100 g , 30 cals</Text>
             </View>
         </>
@@ -50,7 +50,7 @@ const extractItemKey = item => {
     return item.id.toString();
 };
 
-function renderItemSeparator() {
+export function renderItemSeparator() {
     return <View style={{backgroundColor: '#A4A4A4', height: 1}} />;
 }
 
