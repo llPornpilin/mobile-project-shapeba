@@ -23,14 +23,14 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#F7F7FB", alignItems: "center", flex:1 }}>
+    <SafeAreaView style={{ backgroundColor: "#F7F7FB", alignItems: "center", flex: 1 }}>
       <View style={styles.header}>
         <Image
           source={require("../../../assets/img/Icon.jpg")}
           style={styles.img}
           resizeMode="contain"
         />
-        <Text style={styles.name,{fontWeight:'bold', fontSize:23, color:'#025146'}}>chiffon m</Text>
+        <Text style={[styles.name, { fontWeight: 'bold', fontSize: 23, color: '#025146' }]}>chiffon m</Text>
       </View>
       <View style={styles.progress}></View>
       <View style={styles.inputContainer}>
@@ -47,7 +47,7 @@ const ProfileScreen = () => {
           <Text
             style={{
               color: "#979797",
-              fontWeight: "semi-bold",
+              // fontWeight: "semi-bold",
               fontSize: 13,
               marginTop: 6,
             }}
@@ -59,7 +59,7 @@ const ProfileScreen = () => {
               color: "#025146",
               fontWeight: "bold",
               fontSize: 18,
-              marginTop:10
+              marginTop: 10
             }}
           >
             2500 cals
@@ -86,7 +86,7 @@ const ProfileScreen = () => {
         <Switch
           style={{
             transform: [{ scaleX: 1.4 }, { scaleY: 1.4 }],
-            marginLeft:140,
+            marginLeft: 140,
           }}
           trackColor={{ false: "#D9D9D9", true: "#31A82E" }}
           thumbColor={isEnabled ? "#FFFFFF" : "#FFFFFF"}
@@ -105,10 +105,10 @@ const ProfileScreen = () => {
             fontWeight: "bold",
             fontSize: 16,
             textAlign: "center",
-            
+
           }}
         >
-          Log out 
+          Log out
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -171,9 +171,9 @@ const styles = StyleSheet.create({
   },
 
   switchFrame: {
-    height:50,
-    width:350,
-    margin:30,
+    height: 50,
+    width: 350,
+    margin: 30,
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
     borderRadius: 30,
@@ -184,16 +184,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#025146",
-    marginLeft:10,
+    marginLeft: 10,
   },
   btnLogout: {
     height: 45,
-    width:180,
+    width: 180,
     backgroundColor: "#FFF",
     borderRadius: 30,
     elevation: 3,
-    marginTop:0,
-    justifyContent:'center'
+    marginTop: 0,
+    justifyContent: 'center'
   },
   header: {
     height: 170,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
-    elevation:5
+    elevation: 5
   },
 });
 
