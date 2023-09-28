@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import { Button, Header } from 'react-native-elements';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import DetailMealsScreen from './DetailMealsScreen'
+import React from "react";
 
+import DetailMealsScreen from './DetailMealsScreen'
+// Segment
 import AddMealsSegment from '../../components/AddMealsSegment';
 
 const AddMealsScreen = ({ navigation }) => {
@@ -26,7 +28,6 @@ const AddMealsScreen = ({ navigation }) => {
             </Header>
             < AddMealsSegment />
         </View>
-
     )
 }
 

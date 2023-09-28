@@ -1,6 +1,5 @@
-import { StyleSheet, View, Text, FlatList, Modal, Pressable, 
-    TouchableHighlight, Animated, useWindowDimensions, TouchableOpacity} from 'react-native';
-import { Component, useState, useRef } from "react";
+import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight} from 'react-native';
+import React, { Component, useState, useRef } from "react";
 
 // segmant tab
 import SegmentedControlTab from "react-native-segmented-control-tab";
@@ -10,51 +9,22 @@ import { renderItemSeparator } from '../screens/Meal/DetailMealsScreen'
 import SwipeableFlatList from 'react-native-swipeable-list';
 // Icon
 import { FontAwesome, Feather, AntDesign } from '@expo/vector-icons';
-
 // Bottom Modal
-const BottomModal = ({ visible, onClose }) => {
-    const [modalVisible, setModalVisible] = useState(visible);
-    const { height } = useWindowDimensions();
-    const translateY = useRef(new Animated.Value(height)).current;
-  
-    const openModal = () => {
-      setModalVisible(true);
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: false,
-      }).start();
-    };
-  
-    const closeModal = () => {
-      Animated.timing(translateY, {
-        toValue: Dimensions.get('window').height,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => {
-        setModalVisible(false);
-        onClose();
-      });
-    };
-  
-    return (
-      <Modal transparent animationType="none" visible={modalVisible} onRequestClose={closeModal}>
-        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={closeModal}>
-          <Animated.View style={[styles.modalContainer, { transform: [{ translateY }] }]}>
-            <View style={styles.modalContent}>
-              <Text>This is the bottom modal content.</Text>
-              <TouchableOpacity onPress={closeModal}>
-                <Text>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
-    );
-};
+import { BottomModal } from './BottomModal';
+
+//---- for Bottom Modal Popup----
+let popupRef = React.createRef()
+const onShowPopup = () => {
+    popupRef.show()
+}
+const onClosePopup = () => {
+    popupRef.close()
+}
+// --------------------------------
 
 const renderData = ({ item }) => {
     return (
-        <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={() => alert('Press !')}>
+        <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={onShowPopup}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
                 <AntDesign name="plus" size={15} color="black" style={{paddingRight: 10}} />
@@ -129,7 +99,7 @@ class AddMealsSegment extends Component {
           selectedIndex: index
         });
     }
-   render () {
+    render () {
         return (
             <View style={{flex: 1, alignItems: 'center', width: '100%', marginBottom: 20, paddingTop: 30}}>
                 <SegmentedControlTab
@@ -168,6 +138,7 @@ class AddMealsSegment extends Component {
                             />
                         </View>
                 }
+                <BottomModal ref={(target) => popupRef = target} onTouchOutside={onClosePopup} title="Menu Name"/>
             </View>
         )
     }
