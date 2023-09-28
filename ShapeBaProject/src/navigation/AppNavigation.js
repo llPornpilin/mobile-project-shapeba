@@ -18,6 +18,7 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 import PersonalInfoScreen from '../screens/Profile/PersonalInfoScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
+import TapToStart from '../screens/ProcessInfo/TapToStart';
 import { Button } from '@rneui/themed';
 import { View, Text, TouchableOpacity } from 'react-native';
 
@@ -38,6 +39,7 @@ function MainNavigator() {
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
+            <MainStack.Screen name="TapToStart" component={TapToStart} />
         </MainStack.Navigator>
     )
 }

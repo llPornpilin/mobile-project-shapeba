@@ -4,6 +4,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Ima
 import DonutChart from "../../components/DonutChart";
 import { useEffect } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
+import TapToStart from '../ProcessInfo/TapToStart';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 // import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
@@ -12,6 +13,7 @@ import { ProgressBar, MD3Colors } from 'react-native-paper';
 // Page
 import DetailMealsScreen from '../Meal/DetailMealsScreen';
 import RecommendScreen from './RecommendScreen';
+import { Button } from 'react-native-elements';
 
 // const myComponent = () => (
 //     <ProgressBar progress={0.5} color={MD3Colors.error50} />
@@ -107,9 +109,7 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-                    {/* <TouchableOpacity onPress={animateChart} style={styles.button}>
-                        <Text style={styles.buttonText}>Animate !</Text>
-                    </TouchableOpacity> */}
+                    <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button>
 
                     <View style={[styles.content, styles.c2]}>
                         {/* <View className="bg-white w-80 h-100 rounded-3xl mt-5"> */}

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Header } from 'react-native-elements';
 
@@ -7,17 +7,18 @@ const RecmFood = ({ item }) => {
     return (
         <>
             <View className="flex-row justify-between p-4 gap-11">
-                <View className="flex-row  items-center justify-center">
-                    <Text className="font-medium text-base text-Darkgray">{item.name} </Text>
-                    <Text className="font-medium text-xs text-Darkgray pt-1">{item.gram} g {item.cal} cals</Text>
+                <View className="pl-5">
+                    <Text className="font-semibold text-base ">{item.name} </Text>
+                    <Text className="font-semibold text-xs  pt-1">{item.gram} g {item.cal} cals</Text>
+
                 </View>
                 <TouchableOpacity>
-                    <Image source={require("../../../assets/img/plus.png")}
-                        style={{ width: 30, height: 30 }} />
+                    <Image source={require("../../../assets/img/add-plus.png")}
+                        style={{ width: 25, height: 25 }} className="mt-3 mr-4" />
                 </TouchableOpacity>
 
             </View>
-            <View className="border-b  border-Darkgray opacity-20" />
+            <View className="border-b  border-Darkgray opacity-20 ml-6 mr-6" />
         </>
 
     )
@@ -49,35 +50,43 @@ const RecommendScreen = ({ navigation }) => {
 
     ];
     return (
-        <SafeAreaView>
-            <ScrollView >
-                <View style={styles.container}>
-                    <Header backgroundColor="#025146" containerStyle={styles.header}
-                        leftComponent={
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
-                                    <AntDesign name="leftcircleo" size={25} color="white" />
-                                </TouchableOpacity>
-                                <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>Recommend</Text>
-                            </View>
-                        }
+        <SafeAreaView style={styles.container}>
+            <View className="justify-center">
+                <Header backgroundColor="#025146" containerStyle={styles.header}
+                    leftComponent={
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
+                                <AntDesign name="leftcircleo" size={25} color="white" />
+                            </TouchableOpacity>
+                            <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>Recommend</Text>
+                        </View>
+                    }
 
-                    >
-                    </Header>
+                >
+                </Header>
 
-                    <View className="flex-row gap-4 p-5 ">
-                        {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
-                        {btnRecom(require('../../../assets/img/dessert.png'), "Dessert")}
-                        {btnRecom(require('../../../assets/img/main.png'), "Main Dish")}
-                        {btnRecom(require('../../../assets/img/fruit.png'), "Fruit")}
-                    </View>
-                    <View className="pt-5">
+                <View className="flex-row gap-4 p-5 justify-center">
+                    {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
+                    {btnRecom(require('../../../assets/img/dessert.png'), "Dessert")}
+                    {btnRecom(require('../../../assets/img/main.png'), "Main Dish")}
+                    {btnRecom(require('../../../assets/img/fruit.png'), "Fruit")}
+                </View>
+
+                <FlatList
+                    data={data}
+                    renderItem={({ item, index }) => (
+                        <RecmFood item={item} key={index} />
+                    )}
+                />
+
+
+                {/* <View className="pt-5">
                         {
                             data.map((item, index) => <RecmFood item={item} key={index} />)
                         }
-                    </View>
-                </View>
-            </ScrollView>
+                    </View> */}
+            </View>
+            {/* </ScrollView> */}
         </SafeAreaView>
 
 
