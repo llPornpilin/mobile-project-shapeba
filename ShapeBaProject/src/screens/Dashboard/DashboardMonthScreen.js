@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
+import { LineChart } from '../../components/LineChart';
 
 
 const DashboardMonthScreen = () => {
@@ -30,8 +31,9 @@ const DashboardMonthScreen = () => {
 
                         </View>
                         <View className="border-b  border-Darkgray opacity-50 " />
-                        <View className="-mt-10 mr-5">
 
+                        <View className="mr-5" style={styles.chart}>
+                            <LineChart />
                         </View>
 
 
@@ -95,6 +97,9 @@ const styles = StyleSheet.create({
         padding: 15,
         justifyContent: 'center',
     },
+    chart: {
+        marginTop: -130,
+    }
 
 });
 

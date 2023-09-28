@@ -16,7 +16,7 @@ const greenHeader = (navigation) => {
             leftComponent={
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
-                        <AntDesign name="leftcircleo" size={24} color="white" />
+                        <AntDesign name="leftcircleo" size={25} color="white" />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>BreakFast</Text>
                 </View>
@@ -130,14 +130,13 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#025146',
-        height: '15%',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        height: '18%',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
         padding: 100,
         width: '100%',
         paddingLeft: 20,
         flexDirection: 'row'
-
     },
     btnAddMeal: {
         backgroundColor: '#EC744A',

@@ -38,8 +38,7 @@ export const BarChart = () => {
     const [success, setSuccess] = useState(true);
 
     const font = useFont(require("../../assets/font/Roboto-Bold.ttf"), 10);
-    const animationState = useValue(0);
-    // const animationState = useRef(new Animated.Value(0)).current;
+    const [animationState, setAnimationState] = useState(new Animated.Value(0));
 
     const xDomain = data.map((dataPoint) => dataPoint.label);
     const xRange = [0, graphWidth];
@@ -53,8 +52,6 @@ export const BarChart = () => {
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
-    animationState.current = 0;
-
     useEffect(() => {
         runTiming(animationState, 1, {
             duration: 1600,
@@ -64,64 +61,37 @@ export const BarChart = () => {
 
 
 
-    // Animated.timing(animationState, {
-    //     toValue: 1,
-    //     duration: 1600,
-    //     easing: Easing.inOut(Easing.exp),
-    //     useNativeDriver: true,
-    // }).start(() => {
-    //     animationState.setValue(1);
-    // });
-
-    // const animate = () => {
-    //     animationState.current = 0;
-
-    //     runTiming(animationState, 1, {
-    //         duration: 1600,
-    //         easing: Easing.inOut(Easing.exp),
-    //     });
-    // };
-
-
-    const path = useComputedValue(() => {
+    const Bar = (label, value) => {
+        // console.log(label, value);
         const newPath = Skia.Path.Make();
+        const rect = Skia.XYWHRect(
+            x(label) - GRAPH_BAR_WIDTH / 2,
+            graphHeight,
+            GRAPH_BAR_WIDTH,
+            y(value) * -1
+        );
 
-        data.forEach((dataPoint) => {
-            const rect = Skia.XYWHRect(
-                x(dataPoint.label) - GRAPH_BAR_WIDTH / 2,
-                graphHeight,
-                GRAPH_BAR_WIDTH,
-                y(dataPoint.value * animationState.current) * -1
-            );
-
-            const rrect = Skia.RRectXY(rect, 8, 8);
-            newPath.addRRect(rrect);
-        });
+        const rrect = Skia.RRectXY(rect, 8, 8);
+        newPath.addRRect(rrect);
 
         return newPath;
-    }, [animationState]);
+    }
 
     if (!font) {
         return <View />;
     }
-    const col = path.color;
-    console.log(col);
 
+    // const path = Bar();
     return (
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
-                <Path path={path} color="#EC744A" />
-                {/* {
-                    success ? <Path path={path} color="#EC744A" /> : <Path path={path} color="pink" />
-                } */}
-                {/* {
-                    data.map((item) => {
-                        // { item.value > 250 ? setSuccess(true) : setSuccess(false) }
-                        <Bar item={item} />
-                    }
+                {data.map((dataPoint) => (
+                    dataPoint.value > 250 ?
+                        <Path key={dataPoint.label} path={Bar(dataPoint.label, dataPoint.value)} color="#FBBB57" />
+                        : <Path key={dataPoint.label} path={Bar(dataPoint.label, dataPoint.value)} color="#EC744A" />
+                ))}
 
-                    )
-                } */}
+
                 {data.map((dataPoint) => (
                     <Text
                         key={dataPoint.label}
@@ -132,7 +102,6 @@ export const BarChart = () => {
                     />
                 ))}
             </Canvas>
-            {/* <Button title="Animate!" onPress={animate} /> */}
         </View>
     );
 };

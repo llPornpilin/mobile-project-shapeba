@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView } from 'react-native';
-// import { btnRecom } from './DashboardDayScreen';
+import { AntDesign } from '@expo/vector-icons';
+import { Header } from 'react-native-elements';
 
 const RecmFood = ({ item }) => {
     return (
@@ -33,7 +34,7 @@ const btnRecom = (icon, text, navigation) => {
 }
 
 
-const RecommendScreen = () => {
+const RecommendScreen = ({ navigation }) => {
     const data = [
         { name: 'Oatmeal', gram: 150, cal: 780 },
         { name: 'Tuna rice', gram: 150, cal: 780 },
@@ -42,15 +43,27 @@ const RecommendScreen = () => {
         { name: 'Bingsu', gram: 150, cal: 780 },
         { name: 'Bingsu', gram: 150, cal: 780 },
         { name: 'Bingsu', gram: 150, cal: 780 },
+        { name: 'Bingsu', gram: 150, cal: 780 },
+        { name: 'Bingsu', gram: 150, cal: 780 },
+        { name: 'Bingsu55', gram: 150, cal: 780 },
 
     ];
     return (
         <SafeAreaView>
             <ScrollView >
                 <View style={styles.container}>
-                    <View style={styles.header}>
-                        <Text className="flex text-white text-2xl font-medium ">Recommended</Text>
-                    </View>
+                    <Header backgroundColor="#025146" containerStyle={styles.header}
+                        leftComponent={
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
+                                    <AntDesign name="leftcircleo" size={25} color="white" />
+                                </TouchableOpacity>
+                                <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>Recommend</Text>
+                            </View>
+                        }
+
+                    >
+                    </Header>
 
                     <View className="flex-row gap-4 p-5 ">
                         {btnRecom(require('../../../assets/img/drink.png'), "Drink")}
@@ -80,15 +93,14 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#025146',
-        width: "100%",
-        height: 150,
-        paddingBottom: 20,
-        marginBottom: 20,
-        borderBottomEndRadius: 30,
-        borderBottomStartRadius: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 5,
+        height: '18%',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        padding: 100,
+        width: '100%',
+        paddingLeft: 20,
+        flexDirection: 'row',
+
     },
 });
 
