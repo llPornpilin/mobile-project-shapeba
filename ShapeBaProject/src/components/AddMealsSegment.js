@@ -8,23 +8,31 @@ import { renderItemSeparator } from '../screens/Meal/DetailMealsScreen'
 // Swipeable
 import SwipeableFlatList from 'react-native-swipeable-list';
 // Icon
-import { FontAwesome, Feather, AntDesign } from '@expo/vector-icons';
+import { FontAwesome, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 // Bottom Modal
-import { BottomModal } from './BottomModal';
+import { AddMealBottomModal, CreateMenuBottomModal } from './BottomModal';
 
 //---- for Bottom Modal Popup----
-let popupRef = React.createRef()
-const onShowPopup = () => {
-    popupRef.show()
+let popupAddMeal = React.createRef()
+const onShowPopupAdd = () => {
+    popupAddMeal.show()
 }
-const onClosePopup = () => {
-    popupRef.close()
+const onClosePopupAdd = () => {
+    popupAddMeal.close()
+}
+
+let popupCreateMenu = React.createRef()
+const onShowPopupCreate = () => {
+    popupCreateMenu.show()
+}
+const onClosePopupCreate = () => {
+    popupCreateMenu.close()
 }
 // --------------------------------
 
 const renderData = ({ item }) => {
     return (
-        <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={onShowPopup}>
+        <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={onShowPopupAdd}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
                 <AntDesign name="plus" size={15} color="black" style={{paddingRight: 10}} />
@@ -106,7 +114,7 @@ class AddMealsSegment extends Component {
                     tabsContainerStyle={{ width: '80%', borderRadius: 30, overflow: 'hidden', marginBottom: 30}}
                     tabStyle={{ borderWidth: 0, backgroundColor: '#F7F7FB'}}
                     firstTabStyle={{ marginRight: 5, borderRadius: 30, borderColor: 'white'}}
-                    lastTabStyle={{ marginLeft: 5, borderRadius: 30, borderColor: 'white',}}
+                    lastTabStyle={{ marginLeft: 5, borderRadius: 30, borderColor: 'white'}}
                     tabTextStyle={{ color: '#EC744A', fontWeight: 'bold' }}
                     activeTabStyle={{ backgroundColor: '#EC744A' }}
                     selectedIndex={ this.state.selectedIndex }
@@ -117,6 +125,7 @@ class AddMealsSegment extends Component {
                 {/* เงื่อนไขแสดงหน้า All menu หรือ My menu */}
                 {
                     this.state.selectedIndex === 0 ? 
+                        // All
                         <FlatList 
                             style={{ padding: 40, paddingTop: 5, width: '100%' }}
                             data={allMeals}
@@ -124,6 +133,7 @@ class AddMealsSegment extends Component {
                             keyExtractor={item => item.id}
                             ItemSeparatorComponent={renderItemSeparator}
                         /> : 
+                        // My Menu
                         <View style={{width: '100%'}}>
                             <SwipeableFlatList
                                 keyExtractor={(item) => item.id.toString()}
@@ -136,9 +146,19 @@ class AddMealsSegment extends Component {
                                 ItemSeparatorComponent={renderItemSeparator}
                                 onSwipeableOpen={false}
                             />
+                            {/* Add My Menu Button */}
+                            <TouchableHighlight 
+                                className="bg-Orange w-14 h-14 rounded-full justify-center items-center"
+                                style={{position: 'absolute', right: 30, bottom: 80, elevation: 3}}
+                                underlayColor="#EF8E6D"
+                                onPress={onShowPopupCreate}
+                            >
+                                <FontAwesome5 name="plus" size={20} color="white" />
+                            </TouchableHighlight>
                         </View>
                 }
-                <BottomModal ref={(target) => popupRef = target} onTouchOutside={onClosePopup} title="Menu Name"/>
+                <AddMealBottomModal ref={(target) => popupAddMeal = target} onTouchOutside={onClosePopupAdd} title="Menu Name"/>
+                <CreateMenuBottomModal ref={(target) => popupCreateMenu = target} onTouchOutside={onClosePopupCreate} title="Create Your Menu"/>
             </View>
         )
     }

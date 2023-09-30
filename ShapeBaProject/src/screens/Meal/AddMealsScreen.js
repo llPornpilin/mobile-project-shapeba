@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         height: 210,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
+        elevation: 4
     },
     body: {
         padding: 20,
