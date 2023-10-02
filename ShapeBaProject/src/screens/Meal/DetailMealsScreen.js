@@ -6,7 +6,6 @@ import SwipeableFlatList from 'react-native-swipeable-list';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 
 // Page
-import AddMealsScreen from './AddMealsScreen';
 import { color } from 'd3';
 
 

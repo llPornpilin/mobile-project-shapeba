@@ -19,6 +19,8 @@ import PersonalInfoScreen from '../screens/Profile/PersonalInfoScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import TapToStart from '../screens/ProcessInfo/TapToStart';
+//component
+import BottomSheet from "../components/BottomSheet";
 import { Button } from '@rneui/themed';
 import { View, Text, TouchableOpacity } from 'react-native';
 
@@ -140,10 +142,10 @@ function BottomNavigate() {
                     },
                 })}
             />
-            <BottomTab.Screen name="AddMealsScreen" component={AddMealsScreen}
+            <BottomTab.Screen name="DetailMealsScreen" component={DetailMealsScreen}
                 options={{
-
-                    tabBarButton: () => btnPlus(),
+                    tabBarIcon: () => btnPlus(),
+                    presentation: "Modal",
                     headerShown: false,
                     title: ""
                 }}

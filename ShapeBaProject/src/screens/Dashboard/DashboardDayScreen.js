@@ -5,6 +5,13 @@ import DonutChart from "../../components/DonutChart";
 import { useEffect } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
+import BottomSheet from '../../components/BottomSheet';
+import {
+    BottomSheetModal,
+    BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 // import DateTimePicker from '@react-native-community/datetimepicker';
 // import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
@@ -72,9 +79,13 @@ const DashboardDayScreen = ({ navigation }) => {
     // })
 
     return (
-        <SafeAreaView>
-            <ScrollView>
+        <SafeAreaView style={{ flex: 1 }}>
+            {/* <GestureHandlerRootView >
+                <BottomSheetModalProvider> */}
+
+            <ScrollView >
                 <View style={styles.container}>
+                    <BottomSheet></BottomSheet>
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
@@ -112,7 +123,6 @@ const DashboardDayScreen = ({ navigation }) => {
                     <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button>
 
                     <View style={[styles.content, styles.c2]}>
-                        {/* <View className="bg-white w-80 h-100 rounded-3xl mt-5"> */}
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
@@ -142,8 +152,15 @@ const DashboardDayScreen = ({ navigation }) => {
 
 
 
+
                 </View>
+
+
             </ScrollView>
+            {/* 
+                </BottomSheetModalProvider>
+            </GestureHandlerRootView> */}
+
         </SafeAreaView>
 
     )

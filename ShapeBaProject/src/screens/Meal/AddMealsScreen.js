@@ -4,7 +4,6 @@ import { Button, Header } from 'react-native-elements';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import React from "react";
 
-import DetailMealsScreen from './DetailMealsScreen'
 // Segment
 import AddMealsSegment from '../../components/AddMealsSegment';
 
@@ -20,8 +19,8 @@ const AddMealsScreen = ({ navigation }) => {
                         <Text className="text-white mb-2 text-xl font-bold">What do you eat ?</Text>
                     </View>
                     <Text className="text-white mb-6 ml-10 text-base">Let see the calories !</Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        <TextInput className="bg-white rounded-3xl pl-4 h-10 mb-5" style={{flex: 1,}} placeholder='Search ...' />
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <TextInput className="bg-white rounded-3xl pl-4 h-10 mb-5" style={{ flex: 1, }} placeholder='Search ...' />
                         {/* <Feather style={{marginLeft: -10}} name="search" size={24} color="red" /> */}
                     </View>
                 </View>
