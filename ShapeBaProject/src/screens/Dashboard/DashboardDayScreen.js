@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import DonutChart from "../../components/DonutChart";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
 import BottomSheet from '../../components/BottomSheet';
@@ -22,9 +22,6 @@ import DetailMealsScreen from '../Meal/DetailMealsScreen';
 import RecommendScreen from './RecommendScreen';
 import { Button } from 'react-native-elements';
 
-// const myComponent = () => (
-//     <ProgressBar progress={0.5} color={MD3Colors.error50} />
-//   );
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
@@ -51,16 +48,15 @@ const btnRecom = (icon, text, navigation) => {
 const radius = PixelRatio.roundToNearestPixel(80);
 const STROKE_WIDTH = 6;
 const DashboardDayScreen = ({ navigation }) => {
+    const [isOpen, setIsOpen] = useState(null);
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
 
-    // const animateChart = () => {
-    //     animationState.current = 0;
-    //     runTiming(animationState, targetPercentage, {
-    //         duration: 1250,
-    //         easing: Easing.inOut(Easing.cubic),
-    //     });
-    // };
+    const handleChildData = (data) => {
+        setIsOpen(data);
+        console.log(data)
+    };
+
     animationState.current = 0;
     runTiming(animationState, targetPercentage, {
         duration: 1250,
@@ -74,9 +70,7 @@ const DashboardDayScreen = ({ navigation }) => {
         return <View />;
     }
 
-    // useEffect(() => {
-    //     animateChart()
-    // })
+
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -84,8 +78,10 @@ const DashboardDayScreen = ({ navigation }) => {
                 <BottomSheetModalProvider> */}
 
             <ScrollView >
-                <View style={styles.container}>
-                    <BottomSheet></BottomSheet>
+                <View style={styles.c1}></View>
+                <View style={
+                    styles.container}>
+                    <BottomSheet onData={handleChildData} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>

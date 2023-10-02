@@ -20,7 +20,7 @@ import { Entypo } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
-const BottomSheet = () => {
+const BottomSheet = (props) => {
     const [darkmode, setDarkmode] = useState(false);
     const [device, setDevice] = useState(false);
     const { width } = useWindowDimensions();
@@ -31,18 +31,23 @@ const BottomSheet = () => {
 
     const snapPoints = ["25%", "48%", "75%"];
 
+    const sendDataToParent = () => {
+        // console.log(isOpen)
+        props.onData(isOpen);
+    };
+
     function handlePresentModal() {
         bottomSheetModalRef.current?.present();
         setTimeout(() => {
             setIsOpen(true);
         }, 100);
+        sendDataToParent()
     }
     return (
         // <View style={styles.container}>
         //     <Text>BottomSheet</Text>
         // </View>
         <SafeAreaView style={styles.container}>
-            {/* <DashboardDayScreen /> */}
             <Button title="Present Modal" onPress={handlePresentModal} />
             <BottomSheetModal
                 ref={bottomSheetModalRef}
