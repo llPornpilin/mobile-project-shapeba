@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import DonutChart from "../../components/DonutChart";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
-import BottomSheet from '../../components/BottomSheet';
+import BottomSheet from '../../components/MealBottomSheet';
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
@@ -48,14 +48,18 @@ const btnRecom = (icon, text, navigation) => {
 const radius = PixelRatio.roundToNearestPixel(80);
 const STROKE_WIDTH = 6;
 const DashboardDayScreen = ({ navigation }) => {
-    const [isOpen, setIsOpen] = useState(null);
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
+    //for BottomSheet
+    const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetModalRef = useRef(null);
 
-    const handleChildData = (data) => {
-        setIsOpen(data);
-        console.log(data)
-    };
+    const handlePresentModal = () => {
+        bottomSheetModalRef.current?.present();
+        setTimeout(() => {
+            setIsOpen(true);
+        }, 100);
+    }
 
     animationState.current = 0;
     runTiming(animationState, targetPercentage, {
@@ -78,10 +82,11 @@ const DashboardDayScreen = ({ navigation }) => {
                 <BottomSheetModalProvider> */}
 
             <ScrollView >
-                <View style={styles.c1}></View>
                 <View style={
                     styles.container}>
-                    <BottomSheet onData={handleChildData} />
+                    {/* Modal jaa */}
+                    <Button title="Present Modal" onPress={handlePresentModal} />
+                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>

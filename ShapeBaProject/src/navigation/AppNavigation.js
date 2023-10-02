@@ -20,7 +20,7 @@ import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import TapToStart from '../screens/ProcessInfo/TapToStart';
 //component
-import BottomSheet from "../components/BottomSheet";
+import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
 import { View, Text, TouchableOpacity } from 'react-native';
 
