@@ -86,7 +86,7 @@ const DashboardDayScreen = ({ navigation }) => {
                     styles.container}>
                     {/* Modal jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
-                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} />
+                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>

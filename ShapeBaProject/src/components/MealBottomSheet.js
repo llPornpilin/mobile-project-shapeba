@@ -8,21 +8,24 @@ import {
     Text,
     useWindowDimensions,
     View,
-    SafeAreaView
+    SafeAreaView,
+    TouchableOpacity,
+    TouchableHighlight
 } from "react-native";
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 
 
-const MealBottomSheet = (props) => {
+
+const MealBottomSheet = ({ props, navigation }) => {
     const [darkmode, setDarkmode] = useState(false);
     const [device, setDevice] = useState(false);
     const { width } = useWindowDimensions();
@@ -33,14 +36,18 @@ const MealBottomSheet = (props) => {
 
     const snapPoints = ["25%", "60%",];
 
+    const closeModal = () => {
+        props.setIsOpen((prev) => !prev);
+    }
+
     const mealMenu = (title) => {
         return (
             <>
-                <View className="flex-row p-4">
+                <TouchableOpacity className="flex-row p-4" onPress={() => navigation.navigate("DetailMealsScreen", { meal: title })}>
                     <View className="flex-row gap-6 pl-3">
                         <Text className="font-medium text-base text-Darkgray">{title} </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
                 <View className="border-b  border-Darkgray opacity-20" />
 
             </>
@@ -59,16 +66,22 @@ const MealBottomSheet = (props) => {
             // onDismiss={() => setIsOpen(true)}
             >
                 <View style={styles.contentContainer}>
-                    <Text style={[styles.title, { marginBottom: 20, marginLeft: 20 }]}>
+                    <Text style={[styles.title, { marginBottom: 10, marginLeft: 20 }]}>
                         Select Meal
                     </Text>
-                    <View className="bg-white rounded-lg">
+                    <View className="bg-white rounded-3xl h-full">
                         {mealMenu("Breakfast")}
                         {mealMenu("Bunch")}
                         {mealMenu("Lunch")}
                         {mealMenu("Afternoon Lunch")}
                         {mealMenu("Dinner")}
                         {mealMenu("Afternoon Dinner")}
+                        <View className="bg-white w-full -mt-3">
+                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={() => closeModal}>
+                                <Text className="font-bold text-white text-lg">Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
                     </View>
                 </View>
             </BottomSheetModal>
@@ -86,7 +99,6 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        // paddingHorizontal: 15,
         width: "100 %",
 
     },
@@ -113,6 +125,16 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "normal",
         width: "100%",
+    },
+    button: {
+        padding: 5,
+        marginTop: 10,
+        borderRadius: 30,
+        width: '30%',
+        alignItems: 'center',
+        elevation: 3,
+        underlineColorAndroid: "transparent",
+        alignSelf: "flex-end"
     },
 });
 
