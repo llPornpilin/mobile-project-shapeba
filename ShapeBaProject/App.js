@@ -16,7 +16,7 @@ export default function App() {
   //   <TestNavigator />
   // )
   return (
-    <AppNavigator />
+    <AppNavigator/>
   )
 }
 
