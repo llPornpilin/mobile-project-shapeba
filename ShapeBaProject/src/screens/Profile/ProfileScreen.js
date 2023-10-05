@@ -13,6 +13,7 @@ import {
   ScrollView,
   Switch,
   SafeAreaView,
+  StatusBar
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
@@ -29,6 +30,7 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView>
+      <StatusBar barStyle="dark-content" animated={true} backgroundColor="#fff"/>
       <PaperProvider>
         <SafeAreaView
           style={{
@@ -38,8 +40,8 @@ const ProfileScreen = () => {
             paddingBottom: 20,
           }}
         >
-          <CurrentWeightPopup isVisible={visible} setVisible={setVisible}/>
           <View style={styles.header}>
+          <CurrentWeightPopup isVisible={visible} setVisible={setVisible}/>
             <Image
               source={require("../../../assets/img/Icon.jpg")}
               style={styles.img}
@@ -54,7 +56,7 @@ const ProfileScreen = () => {
               chiffon m
             </Text>
           </View>
-          <View style={styles.progress}>
+          <TouchableOpacity style={styles.progress}>
             <View
               style={
                 (styles.progressbar,
@@ -82,7 +84,7 @@ const ProfileScreen = () => {
                 <Text style={{ color: "#fff" }}>50 Kg</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.Details}>
             <View className="flex-row justify-between" style={styles.boxStyle}>
               <Image
@@ -169,7 +171,7 @@ const ProfileScreen = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={showDialog}
             style={{
               width: 350,
@@ -217,7 +219,38 @@ const ProfileScreen = () => {
               Start New Goal
             </Text>
           </TouchableOpacity>
-          <History />
+          <TouchableOpacity
+        style={{
+          width: 350,
+          height: 50,
+          backgroundColor: "white",
+          flexDirection: "row",
+          borderRadius: 30,
+          alignItems: "center",
+          elevation: 3,
+          paddingLeft:20,
+          marginBottom:10,
+          marginTop:15
+        }}
+      >
+      <Image
+              source={require("../../../assets/img/icons8-shutdownpng.png")}
+              style={{ width: 25, height: 35 }}
+              resizeMode="contain"
+            />
+      <Text
+          style={{
+            color: "#025146",
+            fontWeight: "bold",
+            fontSize: 16,
+            textAlign: "center",
+            justifyContent:'flex-start',
+            marginLeft:5
+          }}
+        >
+          History
+        </Text>
+      </TouchableOpacity>
           <View style={styles.switchFrame}>
             <Image
               source={require("../../../assets/img/notification.jpg")}
@@ -277,7 +310,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   header: {
-    height: 170,
+    height: 190,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     width: "100%",
@@ -292,7 +325,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 350,
     height: 150,
-    marginTop: 10,
+    marginTop: 20,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",

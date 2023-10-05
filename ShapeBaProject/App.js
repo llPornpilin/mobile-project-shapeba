@@ -13,6 +13,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import InformationScreen from "./src/screens/Profile/InformationScreen";
 
 // Page
 
@@ -30,11 +31,11 @@ export default function App() {
 
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
-
-
-
-
   )
+  // return (
+  //   <InformationScreen/>
+  // )
+
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }, 
 });
 
 

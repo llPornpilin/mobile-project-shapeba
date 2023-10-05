@@ -1,13 +1,14 @@
 import * as React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Button, Dialog, Portal } from "react-native-paper";
 
 const History = () => {
-  const [visible, setVisible] = React.useState(false);
-
-  const showDialog = () => setVisible(true);
-
-  const hideDialog = () => setVisible(false);
+  const visible  = props.isVisible
+   console.log(props.isVisible);
+  //  const [visible, setVisible] = React.useState(false);
+  //  setVisible(isVisible)
+   console.log("isVisible: " + visible)
+   const hideDialog = () => {props.setVisible((prev)=>!prev)}
 
   return (
     <View
@@ -15,53 +16,63 @@ const History = () => {
         marginTop: 20,
       }}
     >
-      <TouchableOpacity
-        onPress={showDialog}
-        style={{
-          width: 350,
-          height: 50,
-          backgroundColor: "white",
-          flexDirection: "row",
-          borderRadius: 30,
-          alignItems: "center",
-          elevation: 3,
-          paddingLeft:20,
-          marginBottom:10
-        }}
-      >
-      <Image
-        source={require("../../assets/img/icons8-history-100.png")}
-        style={{ width: 25, height: 35 }}
-        resizeMode="contain"
-      />
-      <Text
-          style={{
-            color: "#025146",
-            fontWeight: "bold",
-            fontSize: 16,
-            textAlign: "center",
-            justifyContent:'flex-start',
-            marginLeft:5
-          }}
-        >
-          History
-        </Text>
-      </TouchableOpacity>
       <Portal>
-        <Dialog
-          style={{ backgroundColor: "#fff" }}
-          visible={visible}
-          onDismiss={hideDialog}
-        >
-          <Dialog.Title>Alert</Dialog.Title>
-          <Dialog.Content>
-            <Text>This is simple dialog</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog.ScrollArea>
+          <ScrollView>
+            <Text>This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            </Text>
+            <Text>This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            </Text>
+            <Text>This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            </Text>
+            <Text>This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            This is a scrollable area
+            </Text>
+
+          </ScrollView>
+        </Dialog.ScrollArea>
+      </Dialog>
+    </Portal>
     </View>
   );
 };
