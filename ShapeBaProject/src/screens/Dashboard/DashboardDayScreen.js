@@ -21,6 +21,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import DetailMealsScreen from '../Meal/DetailMealsScreen';
 import RecommendScreen from './RecommendScreen';
 import { Button } from 'react-native-elements';
+import Animated from 'react-native-reanimated';
 
 
 const listMeal = (icon, meal, cal, navigation) => {
@@ -74,7 +75,7 @@ const DashboardDayScreen = ({ navigation }) => {
         return <View />;
     }
 
-
+    // const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -82,6 +83,7 @@ const DashboardDayScreen = ({ navigation }) => {
                 <BottomSheetModalProvider> */}
 
             <ScrollView >
+                {/* <Animated.View style={{ opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)) }}> */}
                 <View style={
                     styles.container}>
                     {/* Modal jaa */}
@@ -155,6 +157,7 @@ const DashboardDayScreen = ({ navigation }) => {
 
 
                 </View>
+                {/* </Animated.View> */}
 
 
             </ScrollView>

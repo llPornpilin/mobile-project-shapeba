@@ -25,7 +25,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 
-const MealBottomSheet = ({ props, navigation }) => {
+const MealBottomSheet = (props) => {
     const [darkmode, setDarkmode] = useState(false);
     const [device, setDevice] = useState(false);
     const { width } = useWindowDimensions();
@@ -35,15 +35,19 @@ const MealBottomSheet = ({ props, navigation }) => {
     const isOpen = props.isOpen;
 
     const snapPoints = ["25%", "60%",];
+    console.log("isOpen", isOpen)
 
     const closeModal = () => {
-        props.setIsOpen((prev) => !prev);
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            props.setIsOpen(false);
+        }, 200);
     }
-
+    // onPress = {() => navigation.navigate("DetailMealsScreen", { meal: title })}
     const mealMenu = (title) => {
         return (
             <>
-                <TouchableOpacity className="flex-row p-4" onPress={() => navigation.navigate("DetailMealsScreen", { meal: title })}>
+                <TouchableOpacity className="flex-row p-4" onPress={() => navigator.navigate("DetailMealsScreen")} >
                     <View className="flex-row gap-6 pl-3">
                         <Text className="font-medium text-base text-Darkgray">{title} </Text>
                     </View>
@@ -61,9 +65,9 @@ const MealBottomSheet = ({ props, navigation }) => {
             <BottomSheetModal
                 ref={bottomSheetModalRef}
                 index={1}
-                snapPoints={snapPoints} s
+                snapPoints={snapPoints}
                 backgroundStyle={{ borderRadius: 30, backgroundColor: "#025146" }}
-            // onDismiss={() => setIsOpen(true)}
+                onDismiss={() => props.setIsOpen(false)}
             >
                 <View style={styles.contentContainer}>
                     <Text style={[styles.title, { marginBottom: 10, marginLeft: 20 }]}>
@@ -77,7 +81,7 @@ const MealBottomSheet = ({ props, navigation }) => {
                         {mealMenu("Dinner")}
                         {mealMenu("Afternoon Dinner")}
                         <View className="bg-white w-full -mt-3">
-                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={() => closeModal}>
+                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                                 <Text className="font-bold text-white text-lg">Cancel</Text>
                             </TouchableOpacity>
                         </View>

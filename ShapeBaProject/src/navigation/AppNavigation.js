@@ -39,9 +39,6 @@ function MainNavigator() {
         >
             <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
-                options={({ route }) => ({
-                    title: route.params.meal
-                })}
             />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />

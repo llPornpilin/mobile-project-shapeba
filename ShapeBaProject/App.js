@@ -13,7 +13,6 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet from "./src/components/MealBottomSheet";
 
 // Page
 
