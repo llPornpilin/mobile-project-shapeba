@@ -43,11 +43,15 @@ const MealBottomSheet = (props) => {
             props.setIsOpen(false);
         }, 200);
     }
-    // onPress = {() => navigation.navigate("DetailMealsScreen", { meal: title })}
+
+    const chooseMeal = (title) => {
+        // console.log(title)
+        props.setTitleMeal(title)
+    }
     const mealMenu = (title) => {
         return (
             <>
-                <TouchableOpacity className="flex-row p-4" onPress={() => navigator.navigate("DetailMealsScreen")} >
+                <TouchableOpacity className="flex-row p-4" onPress={() => chooseMeal(title)}>
                     <View className="flex-row gap-6 pl-3">
                         <Text className="font-medium text-base text-Darkgray">{title} </Text>
                     </View>

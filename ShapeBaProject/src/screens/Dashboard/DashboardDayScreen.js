@@ -54,6 +54,20 @@ const DashboardDayScreen = ({ navigation }) => {
     //for BottomSheet
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef(null);
+    const [titleMeal, setTitleMeal] = useState("");
+    const [isClick, setIsClick] = useState(false)
+
+    if (titleMeal != "") {
+        console.log(titleMeal)
+        navigation.navigate('DetailMealsScreen')
+        setTitleMeal("")
+        //close modal
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            setIsOpen(false);
+        }, 200);
+    }
+
 
     const handlePresentModal = () => {
         bottomSheetModalRef.current?.present();
@@ -61,6 +75,7 @@ const DashboardDayScreen = ({ navigation }) => {
             setIsOpen(true);
         }, 100);
     }
+
 
     animationState.current = 0;
     runTiming(animationState, targetPercentage, {
@@ -88,7 +103,7 @@ const DashboardDayScreen = ({ navigation }) => {
                     styles.container}>
                     {/* Modal jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
-                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
