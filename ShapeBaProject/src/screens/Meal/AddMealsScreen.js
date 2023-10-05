@@ -13,7 +13,7 @@ const AddMealsScreen = ({ navigation }) => {
             <Header backgroundColor="#025146" containerStyle={styles.header}>
                 <View style={{ width: 370, paddingLeft: 20, paddingRight: 20 }}>
                     <View className="mt-6" style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }}>
+                        <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
                             <AntDesign name="leftcircleo" size={24} color="white" />
                         </TouchableOpacity>
                         <Text className="text-white mb-2 text-xl font-bold">What do you eat ?</Text>
