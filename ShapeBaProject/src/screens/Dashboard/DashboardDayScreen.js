@@ -21,6 +21,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import DetailMealsScreen from '../Meal/DetailMealsScreen';
 import RecommendScreen from './RecommendScreen';
 import { Button } from 'react-native-elements';
+import Animated from 'react-native-reanimated';
 
 
 const listMeal = (icon, meal, cal, navigation) => {
@@ -53,6 +54,20 @@ const DashboardDayScreen = ({ navigation }) => {
     //for BottomSheet
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef(null);
+    const [titleMeal, setTitleMeal] = useState("");
+    const [isClick, setIsClick] = useState(false)
+
+    if (titleMeal != "") {
+        console.log(titleMeal)
+        navigation.navigate('DetailMealsScreen')
+        setTitleMeal("")
+        //close modal
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            setIsOpen(false);
+        }, 200);
+    }
+
 
     const handlePresentModal = () => {
         bottomSheetModalRef.current?.present();
@@ -60,6 +75,7 @@ const DashboardDayScreen = ({ navigation }) => {
             setIsOpen(true);
         }, 100);
     }
+
 
     animationState.current = 0;
     runTiming(animationState, targetPercentage, {
@@ -74,7 +90,7 @@ const DashboardDayScreen = ({ navigation }) => {
         return <View />;
     }
 
-
+    // const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -82,11 +98,12 @@ const DashboardDayScreen = ({ navigation }) => {
                 <BottomSheetModalProvider> */}
 
             <ScrollView >
+                {/* <Animated.View style={{ opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)) }}> */}
                 <View style={
                     styles.container}>
                     {/* Modal jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
-                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
@@ -104,7 +121,7 @@ const DashboardDayScreen = ({ navigation }) => {
                         <View style={styles.progress}>
                             <View>
                                 <Text className="text-white text-[10px] pb-1" >168 g</Text>
-                                <ProgressBar progress={0.6} color={"#EC744A"} className="h-1 rounded" />
+                                <ProgressBar progress={0.9} color={"#EC744A"} className="h-1 rounded" />
                                 <Text className="text-white text-[10px] pt-1" >Carb</Text>
                             </View>
                             <View>
@@ -155,6 +172,7 @@ const DashboardDayScreen = ({ navigation }) => {
 
 
                 </View>
+                {/* </Animated.View> */}
 
 
             </ScrollView>
