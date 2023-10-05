@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable, Modal } from 'react-native';
 import DonutChart from "../../components/DonutChart";
 import { useEffect, useState, useRef } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
@@ -13,7 +13,8 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // import DateTimePicker from '@react-native-community/datetimepicker';
-// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-modern-datepicker';
+import { getFormatedDate } from "react-native-modern-datepicker";
 
 
 
@@ -55,7 +56,25 @@ const DashboardDayScreen = ({ navigation }) => {
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef(null);
     const [titleMeal, setTitleMeal] = useState("");
-    const [isClick, setIsClick] = useState(false)
+    //for DatePicker
+    const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+    const today = new Date();
+    const startDate = getFormatedDate(
+        today.setDate(today.getDate() + 1),
+        "YYYY/MM/DD"
+    );
+    const [selectedStartDate, setSelectedStartDate] = useState("");
+    const [startedDate, setStartedDate] = useState("12/12/2023");
+
+    function handleChangeStartDate(propDate) {
+        setStartedDate(propDate);
+    }
+
+    const handleOnPressStartDate = () => {
+        // console.log("openStartDatePicker", openStartDatePicker)
+        setOpenStartDatePicker(!openStartDatePicker);
+    };
+
 
     if (titleMeal != "") {
         console.log(titleMeal)
@@ -98,9 +117,44 @@ const DashboardDayScreen = ({ navigation }) => {
                 <BottomSheetModalProvider> */}
 
             <ScrollView >
-                {/* <Animated.View style={{ opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)) }}> */}
                 <View style={
                     styles.container}>
+                    <View>
+                        <Button onPress={handleOnPressStartDate} title="Show date picker!" />
+                    </View>
+                    {/* input date */}
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={openStartDatePicker}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <DatePicker
+                                    mode="calendar"
+                                    minimumDate={startDate}
+                                    selected={startedDate}
+                                    onDateChanged={handleChangeStartDate}
+                                    onSelectedChange={(date) => setSelectedStartDate(date)}
+                                    options={{
+                                        backgroundColor: "#fff",
+                                        textHeaderColor: "#EC744A",
+                                        textDefaultColor: "#000",
+                                        selectedTextColor: "#FFF",
+                                        mainColor: "#EC744A",
+                                        textSecondaryColor: "#000",
+                                        borderColor: "#fff",
+                                    }}
+                                />
+
+                                <TouchableOpacity onPress={handleOnPressStartDate}>
+                                    <Text style={{ color: "#EC744A" }}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
+
                     {/* Modal jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
                     <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
@@ -231,7 +285,29 @@ const styles = StyleSheet.create({
         gap: 20,
         width: 100,
         justifyContent: 'center',
-    }
+    },
+    centeredView: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 20,
+        padding: 35,
+        width: "90%",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
 });
 
 export default DashboardDayScreen;

@@ -6,8 +6,10 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import DatePicker from 'react-native-modern-datepicker';
+import { getFormatedDate } from "react-native-modern-datepicker";
 // Icon
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 // Page
 import DashboardDayScreen from '../screens/Dashboard/DashboardDayScreen';
 import DashboardWeekScreen from '../screens/Dashboard/DashboardWeekScreen';
@@ -106,14 +108,16 @@ const btnPlus = () => {
     );
 }
 
+
 function BottomNavigate() {
+
     return (
         <BottomTab.Navigator
             screenOptions={{
                 headerTitle: () => headerLeft(),
                 headerRight: () => (
-                    <TouchableOpacity className="mr-3">
-                        <Ionicons name="ios-notifications" size={24} color="black" />
+                    <TouchableOpacity className="mr-3" >
+                        <AntDesign name="calendar" size={24} color="black" />
                     </TouchableOpacity>
                 ),
                 headerStyle: {
