@@ -33,12 +33,13 @@ const TestPage = ({navigation}) => {
                 
                 {/* Ling Ling */}
                 <View>
-                <Text>Ling Ling</Text>
-                <View style={{margin: 5}}><Button title='Detail Meals' onPress={() => navigation.navigate('DetailMealsScreen')}></Button></View>
-                <View style={{margin: 5}}><Button title='Add Meal' onPress={() => navigation.navigate('AddMealsScreen')}></Button></View>
-                <View style={{margin: 5}}><Button title='Add My Meal' onPress={() => navigation.navigate('AddMyMealsScreen')}></Button></View>
-                <View style={{margin: 5}}><Button title='Personal Info' onPress={() => navigation.navigate('PersonalInfoScreen')}></Button></View>
-                <View style={{margin: 5}}><Button title='Start New Goal' onPress={() => navigation.navigate('StartNewGoalScreen')}></Button></View>
+                    <Text>Ling Ling</Text>
+                    <View style={{margin: 5}}><Button title='Detail Meals' onPress={() => navigation.navigate('DetailMealsScreen')}></Button></View>
+                    <View style={{margin: 5}}><Button title='Add Meal' onPress={() => navigation.navigate('AddMealsScreen')}></Button></View>
+                    <View style={{margin: 5}}><Button title='Add My Meal' onPress={() => navigation.navigate('AddMyMealsScreen')}></Button></View>
+                    <View style={{margin: 5}}><Button title='Personal Info' onPress={() => navigation.navigate('PersonalInfoScreen')}></Button></View>
+                    <View style={{margin: 5}}><Button title='Start New Goal' onPress={() => navigation.navigate('StartNewGoalScreen')}></Button></View>
+                    <View style={{margin: 5}}><Button title='History' onPress={() => navigation.navigate('HistoryScreen')}></Button></View>
                 </View>
             </View>
             <StatusBar style="auto" />
