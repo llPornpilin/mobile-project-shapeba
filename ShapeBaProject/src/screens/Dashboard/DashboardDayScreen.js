@@ -26,7 +26,7 @@ import Animated from 'react-native-reanimated';
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
-        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen')}>
+        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', { header: meal })}>
             <View className="flex-row gap-5 pl-3 items-center">
                 <Image source={icon}
                     style={{ width: 40, height: 40 }} />
@@ -55,11 +55,10 @@ const DashboardDayScreen = ({ navigation }) => {
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef(null);
     const [titleMeal, setTitleMeal] = useState("");
-    const [isClick, setIsClick] = useState(false)
 
     if (titleMeal != "") {
-        console.log(titleMeal)
-        navigation.navigate('DetailMealsScreen')
+        // console.log(titleMeal)
+        navigation.navigate('DetailMealsScreen', { header: titleMeal })
         setTitleMeal("")
         //close modal
         bottomSheetModalRef.current?.close();

@@ -34,7 +34,7 @@ const MealBottomSheet = ( props ) => {
     const isOpen = props.isOpen;
 
     const snapPoints = ["25%", "60%",];
-    console.log("isOpen", isOpen)
+    // console.log("isOpen", isOpen)
 
     const closeModal = () => {
         bottomSheetModalRef.current?.close();
