@@ -24,8 +24,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 
-
-const MealBottomSheet = (props) => {
 const MealBottomSheet = ( props ) => {
     const [darkmode, setDarkmode] = useState(false);
     const [device, setDevice] = useState(false);
