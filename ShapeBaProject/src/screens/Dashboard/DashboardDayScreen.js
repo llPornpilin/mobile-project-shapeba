@@ -2,9 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import DonutChart from "../../components/DonutChart";
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
+import BottomSheet from '../../components/MealBottomSheet';
+import {
+    BottomSheetModal,
+    BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 // import DateTimePicker from '@react-native-community/datetimepicker';
 // import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
@@ -14,10 +21,8 @@ import TapToStart from '../ProcessInfo/TapToStart';
 import DetailMealsScreen from '../Meal/DetailMealsScreen';
 import RecommendScreen from './RecommendScreen';
 import { Button } from 'react-native-elements';
+import Animated from 'react-native-reanimated';
 
-// const myComponent = () => (
-//     <ProgressBar progress={0.5} color={MD3Colors.error50} />
-//   );
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
@@ -46,14 +51,32 @@ const STROKE_WIDTH = 6;
 const DashboardDayScreen = ({ navigation }) => {
     const targetPercentage = 85 / 100;
     const animationState = useValue(0);
+    //for BottomSheet
+    const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetModalRef = useRef(null);
+    const [titleMeal, setTitleMeal] = useState("");
+    const [isClick, setIsClick] = useState(false)
 
-    // const animateChart = () => {
-    //     animationState.current = 0;
-    //     runTiming(animationState, targetPercentage, {
-    //         duration: 1250,
-    //         easing: Easing.inOut(Easing.cubic),
-    //     });
-    // };
+    if (titleMeal != "") {
+        console.log(titleMeal)
+        navigation.navigate('DetailMealsScreen')
+        setTitleMeal("")
+        //close modal
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            setIsOpen(false);
+        }, 200);
+    }
+
+
+    const handlePresentModal = () => {
+        bottomSheetModalRef.current?.present();
+        setTimeout(() => {
+            setIsOpen(true);
+        }, 100);
+    }
+
+
     animationState.current = 0;
     runTiming(animationState, targetPercentage, {
         duration: 1250,
@@ -67,14 +90,20 @@ const DashboardDayScreen = ({ navigation }) => {
         return <View />;
     }
 
-    // useEffect(() => {
-    //     animateChart()
-    // })
+    // const fall = new Animated.Value(1);
 
     return (
-        <SafeAreaView>
-            <ScrollView>
-                <View style={styles.container}>
+        <SafeAreaView style={{ flex: 1 }}>
+            {/* <GestureHandlerRootView >
+                <BottomSheetModalProvider> */}
+
+            <ScrollView >
+                {/* <Animated.View style={{ opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)) }}> */}
+                <View style={
+                    styles.container}>
+                    {/* Modal jaa */}
+                    <Button title="Present Modal" onPress={handlePresentModal} />
+                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
@@ -112,7 +141,6 @@ const DashboardDayScreen = ({ navigation }) => {
                     <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button>
 
                     <View style={[styles.content, styles.c2]}>
-                        {/* <View className="bg-white w-80 h-100 rounded-3xl mt-5"> */}
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
@@ -142,8 +170,16 @@ const DashboardDayScreen = ({ navigation }) => {
 
 
 
+
                 </View>
+                {/* </Animated.View> */}
+
+
             </ScrollView>
+            {/* 
+                </BottomSheetModalProvider>
+            </GestureHandlerRootView> */}
+
         </SafeAreaView>
 
     )

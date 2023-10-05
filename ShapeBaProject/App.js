@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -7,6 +8,11 @@ import TestNavigator from './src/navigation/Navigator';
 import StartNavigator from './src/navigation/StartNavigation';
 import AppNavigator from './src/navigation/AppNavigation';
 import { useState } from 'react';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Page
 
@@ -16,7 +22,18 @@ export default function App() {
   //   <TestNavigator />
   // )
   return (
-    <AppNavigator/>
+    <GestureHandlerRootView style={{ flex: 1 }} >
+      <BottomSheetModalProvider>
+        {/* <BottomSheet /> */}
+
+        <AppNavigator />
+
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
+
+
+
+
   )
 }
 

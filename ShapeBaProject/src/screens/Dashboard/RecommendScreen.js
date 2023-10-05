@@ -2,27 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ScrollView, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Header } from 'react-native-elements';
-
-const RecmFood = ({ item }) => {
-    return (
-        <>
-            <View className="flex-row justify-between p-4 gap-11">
-                <View className="pl-5">
-                    <Text className="font-semibold text-base ">{item.name} </Text>
-                    <Text className="font-semibold text-xs  pt-1">{item.gram} g {item.cal} cals</Text>
-
-                </View>
-                <TouchableOpacity>
-                    <Image source={require("../../../assets/img/add-plus.png")}
-                        style={{ width: 25, height: 25 }} className="mt-3 mr-4" />
-                </TouchableOpacity>
-
-            </View>
-            <View className="border-b  border-Darkgray opacity-20 ml-6 mr-6" />
-        </>
-
-    )
-}
+import { useState, useRef } from 'react';
+import BottomSheet from '../../components/MealBottomSheet';
 
 const btnRecom = (icon, text, navigation) => {
     return (
@@ -36,6 +17,16 @@ const btnRecom = (icon, text, navigation) => {
 
 
 const RecommendScreen = ({ navigation }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetModalRef = useRef(null);
+
+    const handlePresentModal = () => {
+        bottomSheetModalRef.current?.present();
+        setTimeout(() => {
+            setIsOpen(true);
+        }, 100);
+    }
+
     const data = [
         { name: 'Oatmeal', gram: 150, cal: 780 },
         { name: 'Tuna rice', gram: 150, cal: 780 },
@@ -49,8 +40,31 @@ const RecommendScreen = ({ navigation }) => {
         { name: 'Bingsu55', gram: 150, cal: 780 },
 
     ];
+
+    const RecmFood = ({ item }) => {
+        return (
+            <>
+                <TouchableOpacity className="flex-row justify-between p-4" onPress={handlePresentModal}>
+                    <View className="pl-5">
+                        <Text className="font-semibold text-base ">{item.name} </Text>
+                        <Text className="font-semibold text-xs  pt-1">{item.gram} g {item.cal} cals</Text>
+
+                    </View>
+                    <View>
+                        <Image source={require("../../../assets/img/add-plus.png")}
+                            style={{ width: 25, height: 25 }} className="mt-3 mr-4" />
+                    </View>
+
+                </TouchableOpacity>
+                <View className="border-b  border-Darkgray opacity-20 ml-6 mr-6" />
+            </>
+
+        )
+    }
+
     return (
         <SafeAreaView style={styles.container}>
+            <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} />
             <View className="justify-center">
                 <Header backgroundColor="#025146" containerStyle={styles.header}
                     leftComponent={
@@ -79,12 +93,6 @@ const RecommendScreen = ({ navigation }) => {
                     )}
                 />
 
-
-                {/* <View className="pt-5">
-                        {
-                            data.map((item, index) => <RecmFood item={item} key={index} />)
-                        }
-                    </View> */}
             </View>
             {/* </ScrollView> */}
         </SafeAreaView>
