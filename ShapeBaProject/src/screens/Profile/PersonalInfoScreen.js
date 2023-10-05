@@ -25,6 +25,10 @@ const PersonalInfoScreen = () => {
                         <Text className="mb-5 mt-5" style={styles.textStyle}>Activity Level</Text>
                         <Text className="mb-5 mt-5" >Little or no exercise</Text>
                     </View>
+                    <View className="flex-row justify-between" style={styles.boxStyle}>
+                        <Text className="mb-5 mt-5" style={styles.textStyle}>Activity Level</Text>
+                        <Text className="mb-5 mt-5" >Little or no exercise</Text>
+                    </View>
                     
                 </View>
                 <View className="mt-5 bg-white" style={{padding: 20, borderRadius: 20}}>

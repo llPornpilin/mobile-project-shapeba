@@ -121,7 +121,7 @@ const DashboardDayScreen = ({ navigation }) => {
                         <View style={styles.progress}>
                             <View>
                                 <Text className="text-white text-[10px] pb-1" >168 g</Text>
-                                <ProgressBar progress={0.6} color={"#EC744A"} className="h-1 rounded" />
+                                <ProgressBar progress={0.9} color={"#EC744A"} className="h-1 rounded" />
                                 <Text className="text-white text-[10px] pt-1" >Carb</Text>
                             </View>
                             <View>
