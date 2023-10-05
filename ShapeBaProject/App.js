@@ -1,6 +1,8 @@
 import "react-native-gesture-handler";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './src/store/store';
 
 // Navigate
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -23,14 +25,15 @@ export default function App() {
   //   <TestNavigator />
   // )
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} >
-      <BottomSheetModalProvider>
-        {/* <BottomSheet /> */}
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }} >
+        <BottomSheetModalProvider>
 
-        <AppNavigator />
+          <AppNavigator />
 
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </Provider>
   )
   // return (
   //   <InformationScreen/>
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  }, 
+  },
 });
 
 

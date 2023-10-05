@@ -137,7 +137,7 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-                    <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button>
+                    {/* <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button> */}
 
                     <View style={[styles.content, styles.c2]}>
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
