@@ -22,6 +22,7 @@ import AddMealsScreen from '../screens/Meal/AddMealsScreen';
 import AddMyMealsScreen from '../screens/Meal/AddMyMealsScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
+import HistoryScreen from '../screens/Profile/HistoryScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -65,6 +66,13 @@ export default function TestNavigator() {
                     options={{
                         headerTintColor: 'white',
                         headerStyle: {backgroundColor: '#025146', elevation: 0,}
+                    }}
+                />
+                <Stack.Screen name="HistoryScreen" component={HistoryScreen}
+                    options={{
+                        headerTintColor: 'white',
+                        headerStyle: {backgroundColor: '#025146', elevation: 0,},
+                        headerShown: false
                     }}
                 />
             </Stack.Navigator>

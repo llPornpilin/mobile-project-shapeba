@@ -19,6 +19,7 @@ import PersonalInfoScreen from '../screens/Profile/PersonalInfoScreen';
 import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import TapToStart from '../screens/ProcessInfo/TapToStart';
+import HistoryScreen from '../screens/Profile/HistoryScreen';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -61,11 +62,12 @@ function ProfileNavigate() {
             <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
             <ProfileStack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
+            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
         </ProfileStack.Navigator>
     )
 }
 
-//topTab DashboardDay
+// topTab DashboardDay
 function MyTopTabs() {
     return (
         <TopTab.Navigator
