@@ -4,7 +4,7 @@ const frontEndSlice = createSlice({
     name: "frontend",
     //ตัวแปร
     initialState: {
-        favorite: "",
+        favorite: "Chocolate Bar",
         btnCheck: false
     },
     //function
@@ -27,6 +27,6 @@ const frontEndSlice = createSlice({
         }
     }
 })
-// export const { setFavorite, setBtnCheck } = FavSlice.actions
-// export const FavSelector = (store) => store.favorite;
+export const { setFavorite, setBtnCheck } = frontEndSlice.actions
+export const frontEndSelector = (store) => store.frontEnd;
 export default frontEndSlice.reducer
