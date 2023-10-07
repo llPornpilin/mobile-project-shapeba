@@ -59,10 +59,10 @@ function ProfileNavigate() {
                 headerShown: false,
             }}
         >
-            <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen}/>
             <ProfileStack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
-            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
+            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen}/>
         </ProfileStack.Navigator>
     )
 }
@@ -70,9 +70,7 @@ function ProfileNavigate() {
 // topTab DashboardDay
 function MyTopTabs() {
     return (
-        <TopTab.Navigator
-
-        >
+        <TopTab.Navigator>
             <TopTab.Screen name="DashboardDayScreen" component={DashboardDayScreen}
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
@@ -154,12 +152,19 @@ function BottomNavigate() {
                 }}
             />
             <BottomTab.Screen name="Profile" component={ProfileNavigate}
-                options={{
+                options={({route}) => ({
+                    tabBarStyle: ((route) => {
+                        const routeName = getFocusedRouteNameFromRoute(route)
+                        if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen') {
+                            return {display: "none"}
+                        }
+                        return
+                    })(route),
                     tabBarIcon: ({ color, size }) => {
                         return <Ionicons name="person-outline" size={size} color={color} />
                     },
                     headerShown: false,
-                }}
+                })}
             />
         </BottomTab.Navigator>
     );
