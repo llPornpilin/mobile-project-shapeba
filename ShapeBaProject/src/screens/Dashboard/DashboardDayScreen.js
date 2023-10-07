@@ -26,7 +26,7 @@ import Animated from 'react-native-reanimated';
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
-        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen')}>
+        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', {mealName: meal})}>
             <View className="flex-row gap-5 pl-3 items-center">
                 <Image source={icon}
                     style={{ width: 40, height: 40 }} />
