@@ -12,14 +12,14 @@ import {
   ScrollView,
   Switch,
   SafeAreaView,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
 const ProfileScreen = ({navigation}) => {
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
-  
+
   const [selectedSex, setSelectedSex] = useState("male");
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -29,7 +29,11 @@ const ProfileScreen = ({navigation}) => {
 
   return (
     <ScrollView>
-      <StatusBar barStyle="dark-content" animated={true} backgroundColor="#fff"/>
+      <StatusBar
+        barStyle="dark-content"
+        animated={true}
+        backgroundColor="#fff"
+      />
       <PaperProvider>
         <SafeAreaView
           style={{
@@ -40,7 +44,7 @@ const ProfileScreen = ({navigation}) => {
           }}
         >
           <View style={styles.header}>
-          <CurrentWeightPopup isVisible={visible} setVisible={setVisible}/>
+            <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
             <Image
               source={require("../../../assets/img/Icon.jpg")}
               style={styles.img}
@@ -83,6 +87,9 @@ const ProfileScreen = ({navigation}) => {
                 <Text style={{ color: "#fff" }}>50 Kg</Text>
               </View>
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.information}>
+
           </TouchableOpacity>
           <View style={styles.Details}>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -202,7 +209,7 @@ const ProfileScreen = ({navigation}) => {
               Current Weight
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.StartNewGoal}
             onPress={() => navigation.navigate('StartNewGoalScreen')}
@@ -394,6 +401,9 @@ const styles = StyleSheet.create({
     width: 25,
     height: 35,
   },
+  information:{
+    
+  }
 });
 
 export default ProfileScreen;
