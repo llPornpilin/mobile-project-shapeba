@@ -13,12 +13,12 @@ const StartNewGoalScreen = ({navigation}) => {
     const [accomplish, setAccomplish] = useState(null);
     const [activity, setActivity] = useState(null);
     const accomplishData = [
-        { label: 'Lose Weight', value: '1' },
-        { label: 'Maintain Weight', value: '2' },
-        { label: 'Gain Weight', value: '3' },
+        { label: 'lose weight', value: '1' },
+        { label: 'maintain weight', value: '2' },
+        { label: 'gain weight', value: '3' },
     ];
     const activityLevel = [
-        { label: 'Little or no exercise', value: '1' },
+        { label: 'little or no exercise', value: '1' },
         { label: '1-3 times/week', value: '2' },
         { label: '4-5 times/week', value: '3' },
         { label: 'Intense exercise 6-7 times/week', value: '4' },
@@ -43,16 +43,26 @@ const StartNewGoalScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             {greenHeader(navigation)}
-            <View className="mt-10" style={{ padding: 40, alignItems: 'center', justifyContent: 'center'}}>
+            <View className="mt-4" style={{ padding: 40, alignItems: 'center', justifyContent: 'center'}}>
                 {/* weight and height */}
                 <View className="flex-row">
                     <View style={{width: '50%'}}>
                         <Text style={{marginLeft: 10}} className="text-Green font-semibold text-base">Weight</Text>
-                        <TextInput style={[styles.textbox, {marginRight: 5}]} value={weight} onChangeText={weight => setWeight(weight)}/>
+                        <TextInput 
+                            style={[styles.textbox, {marginRight: 5}]}
+                            value={weight}
+                            onChangeText={weight => setWeight(weight)}
+                            keyboardType='decimal-pad'
+                        />
                     </View>
                     <View style={{width: '50%'}}>
                         <Text style={{marginLeft: 10}} className="text-Green font-semibold text-base">Height</Text>
-                        <TextInput style={[styles.textbox, {marginRight: 5}]} value={height} onChangeText={height => setHeight(height)}/>
+                        <TextInput 
+                            style={[styles.textbox, {marginRight: 5}]}
+                            value={height}
+                            onChangeText={height => setHeight(height)}
+                            keyboardType='decimal-pad'
+                        />
                     </View>
                 </View>
                 <View className="mt-10" style={{width: '100%'}}>
@@ -65,7 +75,7 @@ const StartNewGoalScreen = ({navigation}) => {
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder="Accomplish"
+                        placeholder="Lose Weight"
                         value={accomplish}
                         onChange={item => {
                             setAccomplish(item.value);
@@ -74,7 +84,12 @@ const StartNewGoalScreen = ({navigation}) => {
                     {/* goal weight */}
                     <View className="mt-10" style={{width: '100%'}}>
                         <Text style={{marginLeft: 10}} className="text-Green font-semibold text-base">Goal Weight</Text>
-                        <TextInput style={styles.textbox} vlaue={goal} onChangeText={({goal}) => setGoal(goal)} />
+                        <TextInput
+                            style={styles.textbox}
+                            vlaue={goal}
+                            onChangeText={({goal}) => setGoal(goal)}
+                            keyboardType='decimal-pad'
+                        />
                     </View>
                     {/* activity level */}
                     <Text className="text-Green font-semibold text-base pl-3 mt-10">Activity Level</Text>
@@ -85,7 +100,7 @@ const StartNewGoalScreen = ({navigation}) => {
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder="Accomplish"
+                        placeholder="Little or no exercise"
                         value={activity}
                         onChange={item => {
                             setActivity(item.value);
@@ -138,7 +153,7 @@ const styles = StyleSheet.create({
     btnFinish: {
         backgroundColor: '#EC744A',
         padding: 10,
-        marginTop: 50,
+        marginTop: 40,
         borderRadius: 20,
         width: '50%',
         alignItems: 'center',
