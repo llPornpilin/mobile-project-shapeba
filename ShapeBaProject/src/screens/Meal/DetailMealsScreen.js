@@ -9,7 +9,7 @@ import { FontAwesome, Feather } from '@expo/vector-icons';
 import { color } from 'd3';
 
 
-const greenHeader = (navigation, header) => {
+const greenHeader = (navigation, mealName) => {
     return (
         <Header backgroundColor="#025146" containerStyle={styles.header}
             leftComponent={
@@ -17,7 +17,7 @@ const greenHeader = (navigation, header) => {
                     <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }} onPress={() => navigation.goBack()}>
                         <AntDesign name="leftcircleo" size={25} color="white" />
                     </TouchableOpacity>
-                    <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>{header} </Text>
+                    <Text style={{ color: 'white', fontSize: 20, width: '200%', fontWeight: 'bold' }}>{mealName}</Text>
                 </View>
             }
             // centerComponent={{icon: 'menu', color: '#fff', iconStyle: {color: 'white', paddingLeft: 90, marginTop: 5}}}
@@ -53,10 +53,7 @@ export function renderItemSeparator() {
     return <View style={{ backgroundColor: '#A4A4A4', height: 1 }} />;
 }
 
-//main
-const DetailMealsScreen = ({ route, navigation, props }) => {
-    console.log("detail", route.params.header)
-    const header = route.params.header;
+const DetailMealsScreen = ({ navigation, route }) => {
     // function delete meals
     const deleteItem = itemId => {
         // const newState = [...data];
@@ -101,7 +98,7 @@ const DetailMealsScreen = ({ route, navigation, props }) => {
 
     return (
         <View style={styles.container}>
-            {greenHeader(navigation, header)}
+            {greenHeader(navigation, route.params.mealName)}
             <SwipeableFlatList
                 keyExtractor={extractItemKey}
                 data={allMeals}

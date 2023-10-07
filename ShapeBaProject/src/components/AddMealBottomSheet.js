@@ -1,23 +1,25 @@
 import React, {useState} from 'react';
 import {Modal, TouchableWithoutFeedback, 
-StyleSheet, View, Text, TouchableOpacity, TextInput, Animated, useWindowDimensions, SafeAreaView} from 'react-native';
-import { BottomSheetModal, BottomSheetModalProvider} from "@gorhom/bottom-sheet";
+StyleSheet, View, Text, TouchableOpacity, TextInput, Animated, useWindowDimensions, SafeAreaView, Pressable} from 'react-native';
+import { BottomSheetModal, BottomSheetModalProvider, Background } from "@gorhom/bottom-sheet";
 
 // ---------------------- Create Own Menu ---------------------------------
 export const CreateMealBottomModal = ( props ) => {
-    const [darkmode, setDarkmode] = useState(false);
-    const [device, setDevice] = useState(false);
-    const { width } = useWindowDimensions();
-    const [theme, setTheme] = useState("dim");
     //props
-    const bottomSheetModalRef = props.bottomSheetModalRef;
-    const isOpen = props.isOpen;
-
+    const bottomSheetModalRef = props.bottomSheetModalRef; 
     const snapPoints = ["60%",];
-
+    
+    const isOpen = props.isOpen;
     const closeModal = () => {
-        props.setIsOpen((prev) => !prev);
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            props.setIsOpen(false);
+        }, 200);
     }
+
+    const handleModalDismiss = () => {
+        bottomSheetModalRef.current?.dismiss();
+    };
 
     return (
         <SafeAreaView>
@@ -26,7 +28,7 @@ export const CreateMealBottomModal = ( props ) => {
                 index={0}
                 snapPoints={snapPoints} s
                 backgroundStyle={{ borderRadius: 30,}}
-            // onDismiss={() => se tIsOpen(true)}
+                onDismiss={() => props.setIsOpen(false)}
             >
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
@@ -76,8 +78,8 @@ export const CreateMealBottomModal = ( props ) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+                {/* </Background> */}
             </BottomSheetModal>
-
         </SafeAreaView>
     )
 }
@@ -90,7 +92,10 @@ export const AddMealBottomModal = ( props ) => {
 
     const isOpen = props.isOpen;
     const closeModal = () => {
-        props.setIsOpen((prev) => !prev);
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            props.setIsOpen(false);
+        }, 200);
     }
     
 
@@ -114,7 +119,7 @@ export const AddMealBottomModal = ( props ) => {
                 snapPoints={snapPoints} s
                 backgroundStyle={{ borderRadius: 30, marginBottom: 0}}
                 animationType={'fade'}
-            // onDismiss={() => setIsOpen(true)}
+                // onDismiss={() => props.setIsOpen(false)}
             >
                 
                 <View className="p-8">

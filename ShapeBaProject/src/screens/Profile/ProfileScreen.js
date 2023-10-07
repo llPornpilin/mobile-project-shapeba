@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import CurrentWeightPopup from "../../components/CurrentWeight";
-import History from "../../components/History";
 import { ProgressBar, MD3Colors } from "react-native-paper";
 import {
   View,
@@ -17,7 +16,7 @@ import {
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
   
@@ -206,7 +205,7 @@ const ProfileScreen = () => {
           
           <TouchableOpacity
             style={styles.StartNewGoal}
-            onPress={() => props.navigations.navigate("#")}
+            onPress={() => navigation.navigate('StartNewGoalScreen')}
           >
             <Text
               style={{
@@ -219,38 +218,39 @@ const ProfileScreen = () => {
               Start New Goal
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-        style={{
-          width: 350,
-          height: 50,
-          backgroundColor: "white",
-          flexDirection: "row",
-          borderRadius: 30,
-          alignItems: "center",
-          elevation: 3,
-          paddingLeft:20,
-          marginBottom:10,
-          marginTop:15
-        }}
-      >
-      <Image
-              source={require("../../../assets/img/icons8-shutdownpng.png")}
-              style={{ width: 25, height: 35 }}
-              resizeMode="contain"
-            />
-      <Text
-          style={{
-            color: "#025146",
-            fontWeight: "bold",
-            fontSize: 16,
-            textAlign: "center",
-            justifyContent:'flex-start',
-            marginLeft:5
-          }}
-        >
-          History
-        </Text>
-      </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 350,
+                  height: 50,
+                  backgroundColor: "white",
+                  flexDirection: "row",
+                  borderRadius: 30,
+                  alignItems: "center",
+                  elevation: 3,
+                  paddingLeft:20,
+                  marginBottom:10,
+                  marginTop: 20
+                }}
+                onPress={() => navigation.navigate('HistoryScreen')}
+          >
+          <Image
+            source={require("../../../assets/img/icons8-history-100.png")}
+            style={{ width: 25, height: 35 }}
+            resizeMode="contain"
+          />
+          <Text
+              style={{
+                color: "#025146",
+                fontWeight: "bold",
+                fontSize: 16,
+                textAlign: "center",
+                justifyContent:'flex-start',
+                marginLeft:5
+              }}
+            >
+              History
+            </Text>
+          </TouchableOpacity>
           <View style={styles.switchFrame}>
             <Image
               source={require("../../../assets/img/notification.jpg")}
