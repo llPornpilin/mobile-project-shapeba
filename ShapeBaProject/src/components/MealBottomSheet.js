@@ -24,7 +24,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 
-const MealBottomSheet = ( props ) => {
+const MealBottomSheet = (props) => {
     const [darkmode, setDarkmode] = useState(false);
     const [device, setDevice] = useState(false);
     const { width } = useWindowDimensions();
@@ -34,7 +34,7 @@ const MealBottomSheet = ( props ) => {
     const isOpen = props.isOpen;
 
     const snapPoints = ["25%", "60%",];
-    console.log("isOpen", isOpen)
+    // console.log("isOpen", isOpen)
 
     const closeModal = () => {
         bottomSheetModalRef.current?.close();
@@ -82,7 +82,7 @@ const MealBottomSheet = ( props ) => {
                         {mealMenu("Lunch")}
                         {mealMenu("Afternoon Lunch")}
                         {mealMenu("Dinner")}
-                        {mealMenu("Afternoon Dinner")}
+                        {mealMenu("After Dinner")}
                         <View className="bg-white w-full -mt-3">
                             <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                                 <Text className="font-bold text-white text-lg">Cancel</Text>
