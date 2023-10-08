@@ -20,6 +20,7 @@ import StartNewGoalScreen from '../screens/Profile/StartNewGoalScreen';
 import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import TapToStart from '../screens/ProcessInfo/TapToStart';
 import HistoryScreen from '../screens/Profile/HistoryScreen';
+import InformationScreen from '../screens/Profile/InformationScreen';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -66,7 +67,8 @@ function ProfileNavigate() {
             <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
             <ProfileStack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
-            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
+            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen}/>
+            <ProfileStack.Screen name="InformationScreen" component={InformationScreen}/>
         </ProfileStack.Navigator>
     )
 }
@@ -163,8 +165,8 @@ function BottomNavigate() {
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
                         const routeName = getFocusedRouteNameFromRoute(route)
-                        if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen') {
-                            return { display: "none" }
+                        if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen' || routeName == 'InformationScreen')  {
+                            return {display: "none"}
                         }
                         return
                     })(route),
