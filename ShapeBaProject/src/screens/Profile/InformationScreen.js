@@ -11,9 +11,9 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Header } from "react-native-elements";
 import { rotate } from "@shopify/react-native-skia";
 
-const InformationScreen = () => {
+const InformationScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={styles.contrainer}>
+    <View style={styles.contrainer}>
       <View style={styles.header}>
         <View
           style={{
@@ -24,7 +24,10 @@ const InformationScreen = () => {
           }}
         >
           <View className="mt-6" style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={{ marginRight: 15, marginTop: 3 }}>
+            <TouchableOpacity 
+            style={{ marginRight: 15, marginTop: 3 }}
+            onPress={() => navigation.goBack()}
+            >
               <AntDesign name="leftcircleo" size={24} color="white" />
             </TouchableOpacity>
             <Text className="text-white mb-2 text-xl font-bold">
@@ -60,7 +63,7 @@ const InformationScreen = () => {
             <Text
               style={{ color: "#025146", fontWeight: "bold", fontSize: 20 }}
             >
-              TDEE 
+              TDEE
             </Text>
             <Text
               className="mt-1"
@@ -70,11 +73,14 @@ const InformationScreen = () => {
             </Text>
           </View>
           <Text style={{ fontSize: 16, marginTop: 5 }}>
-          Stands for Total Daily Energy Expenditure. It represents the total number of calories your body needs in a day, taking into account all activities and functions, including your Basal Metabolic Rate (BMR) and physical activity level.
+            Stands for Total Daily Energy Expenditure. It represents the total
+            number of calories your body needs in a day, taking into account all
+            activities and functions, including your Basal Metabolic Rate (BMR)
+            and physical activity level.
           </Text>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

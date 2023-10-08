@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CurrentWeightPopup from "../../components/CurrentWeight";
+import History from "../../components/History";
 import { ProgressBar, MD3Colors } from "react-native-paper";
 import {
   View,
@@ -16,9 +17,14 @@ import {
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({ navigation }) => {
+  // CurrentweightPopup
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
+
+  // progressPopup
+  const [progressWeight, setProgressWeight] = React.useState(false);
+  const showProgressWeight = () => setProgressWeight(true);
 
   const [selectedSex, setSelectedSex] = useState("male");
   const [isEnabled, setIsEnabled] = useState(false);
@@ -45,6 +51,10 @@ const ProfileScreen = ({navigation}) => {
         >
           <View style={styles.header}>
             <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
+            <History
+              isVisible={progressWeight}
+              setVisible={setProgressWeight}
+            />
             <Image
               source={require("../../../assets/img/Icon.jpg")}
               style={styles.img}
@@ -59,7 +69,11 @@ const ProfileScreen = ({navigation}) => {
               chiffon m
             </Text>
           </View>
-          <TouchableOpacity style={styles.progress}>
+          {/* ปุ่มแสดงprogress */}
+          <TouchableOpacity
+            style={styles.progress}
+            onPress={showProgressWeight}
+          >
             <View
               style={
                 (styles.progressbar,
@@ -88,9 +102,26 @@ const ProfileScreen = ({navigation}) => {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.information}>
-
+          {/* Information */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#D9D9D9",
+              height: 30,
+              width: 30,
+              borderRadius: 20,
+              marginTop: 15,
+              marginLeft: 300,
+              alignItems:'center'
+            }}
+            onPress={() => navigation.navigate("InformationScreen")}
+          >
+            <Image
+                source={require("../../../assets/img/icons8-i.png")}
+                style={{ width: 20, height: 35, marginTop: -4}}
+                resizeMode="contain"
+              />
           </TouchableOpacity>
+          <TouchableOpacity style={styles.information}></TouchableOpacity>
           <View style={styles.Details}>
             <View className="flex-row justify-between" style={styles.boxStyle}>
               <Image
@@ -212,7 +243,7 @@ const ProfileScreen = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.StartNewGoal}
-            onPress={() => navigation.navigate('StartNewGoalScreen')}
+            onPress={() => navigation.navigate("StartNewGoalScreen")}
           >
             <Text
               style={{
@@ -225,34 +256,34 @@ const ProfileScreen = ({navigation}) => {
               Start New Goal
             </Text>
           </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  width: 350,
-                  height: 50,
-                  backgroundColor: "white",
-                  flexDirection: "row",
-                  borderRadius: 30,
-                  alignItems: "center",
-                  elevation: 3,
-                  paddingLeft:20,
-                  marginBottom:10,
-                  marginTop: 20
-                }}
-                onPress={() => navigation.navigate('HistoryScreen')}
+          <TouchableOpacity
+            style={{
+              width: 350,
+              height: 50,
+              backgroundColor: "white",
+              flexDirection: "row",
+              borderRadius: 30,
+              alignItems: "center",
+              elevation: 3,
+              paddingLeft: 20,
+              marginBottom: 10,
+              marginTop: 20,
+            }}
+            onPress={() => navigation.navigate("HistoryScreen")}
           >
-          <Image
-            source={require("../../../assets/img/icons8-history-100.png")}
-            style={{ width: 25, height: 35 }}
-            resizeMode="contain"
-          />
-          <Text
+            <Image
+              source={require("../../../assets/img/icons8-history-100.png")}
+              style={{ width: 25, height: 35 }}
+              resizeMode="contain"
+            />
+            <Text
               style={{
                 color: "#025146",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center",
-                justifyContent:'flex-start',
-                marginLeft:5
+                justifyContent: "flex-start",
+                marginLeft: 5,
               }}
             >
               History
@@ -343,7 +374,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 350,
     height: 380,
-    marginTop: 20,
+    marginTop: 15,
     padding: 20,
     elevation: 5,
   },
@@ -401,9 +432,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 35,
   },
-  information:{
-    
-  }
+  information: {},
 });
 
 export default ProfileScreen;

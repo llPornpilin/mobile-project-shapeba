@@ -17,38 +17,6 @@ import { Button, Dialog, Portal } from "react-native-paper";
         justifyContent:'center'
       }}
     >
-     {/* <TouchableOpacity
-            onPress={showDialog}
-            style={{
-              width: 180,
-              height: 50,
-              backgroundColor: "white",
-              flexDirection: "row",
-              borderRadius: 30,
-              alignItems: "center",
-              elevation: 3,
-              paddingLeft: 20,
-              marginTop: 3,
-            }}
-          >
-            <Image
-              source={require("../../assets/img/icons8-weight-100.png")}
-              style={{ width: 25, height: 35 }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                color: "#025146",
-                fontWeight: "bold",
-                fontSize: 16,
-                textAlign: "center",
-                justifyContent: "flex-start",
-                marginLeft: 5,
-              }}
-            >
-              Current Weight
-            </Text>
-          </TouchableOpacity> */}
       <Portal>
         <Dialog
           style={{ backgroundColor: "#fff",justifyContent:'center', alignItems:'center' }}
