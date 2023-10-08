@@ -25,6 +25,10 @@ import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
 import { View, Text, TouchableOpacity } from 'react-native';
 
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { frontEndSelector, setOpenStartDatePicker } from '../store/slice/frontEndSlice';
+
 const MainStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -59,10 +63,10 @@ function ProfileNavigate() {
                 headerShown: false,
             }}
         >
-            <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen}/>
+            <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
             <ProfileStack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
-            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen}/>
+            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
         </ProfileStack.Navigator>
     )
 }
@@ -107,13 +111,17 @@ const btnPlus = () => {
 }
 
 function BottomNavigate() {
+    //for DatePicker
+    const dispatch = useDispatch();
+    const frontEndStore = useSelector(frontEndSelector);
+    const openStartDatePicker = frontEndStore.openStartDatePicker;
     return (
         <BottomTab.Navigator
             screenOptions={{
                 headerTitle: () => headerLeft(),
                 headerRight: () => (
-                    <TouchableOpacity className="mr-3">
-                        <Ionicons name="ios-notifications" size={24} color="black" />
+                    <TouchableOpacity className="mr-3" onPress={() => dispatch(setOpenStartDatePicker(!openStartDatePicker))}>
+                        <AntDesign name="calendar" size={24} color="black" />
                     </TouchableOpacity>
                 ),
                 headerStyle: {
@@ -152,11 +160,11 @@ function BottomNavigate() {
                 }}
             />
             <BottomTab.Screen name="Profile" component={ProfileNavigate}
-                options={({route}) => ({
+                options={({ route }) => ({
                     tabBarStyle: ((route) => {
                         const routeName = getFocusedRouteNameFromRoute(route)
                         if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen') {
-                            return {display: "none"}
+                            return { display: "none" }
                         }
                         return
                     })(route),

@@ -9,15 +9,18 @@ import { useEffect, useState, useRef } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
 import BottomSheet from '../../components/MealBottomSheet';
+import Calendar from '../../components/Calendar';
+import DatePicker from 'react-native-modern-datepicker';
+import { getFormatedDate } from "react-native-modern-datepicker";
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
-import { frontEndSelector } from '../../store/slice/frontEndSlice';
+import { frontEndSelector, setOpenStartDatePicker } from '../../store/slice/frontEndSlice';
 
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
-        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', {mealName: meal})}>
+        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', { mealName: meal })}>
             <View className="flex-row gap-5 pl-3 items-center">
                 <Image source={icon}
                     style={{ width: 40, height: 40 }} />
@@ -51,7 +54,12 @@ const DashboardDayScreen = ({ navigation }) => {
     //get data from redux
     const dispatch = useDispatch();
     const frontEndStore = useSelector(frontEndSelector);
-    console.log("fav", frontEndStore.favorite)
+
+    //for DatePicker
+    const openStartDatePicker = frontEndStore.openStartDatePicker;
+    const handleOnPressStartDate = () => {
+        dispatch(setOpenStartDatePicker(!openStartDatePicker));
+    };
 
 
     if (titleMeal != "") {
@@ -95,6 +103,9 @@ const DashboardDayScreen = ({ navigation }) => {
             <ScrollView >
                 <View style={
                     styles.container}>
+                    <View style={openStartDatePicker ? styles.blur : null}></View>
+                    <Calendar openStartDatePicker={openStartDatePicker} handleOnPressStartDate={handleOnPressStartDate} />
+
                     {/* Modal jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
                     <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
@@ -225,6 +236,14 @@ const styles = StyleSheet.create({
         gap: 20,
         width: 100,
         justifyContent: 'center',
+    },
+    blur: {
+        backgroundColor: 'black',
+        opacity: 0.5,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        zIndex: 1,
     }
 });
 
