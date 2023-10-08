@@ -5,7 +5,7 @@ const frontEndSlice = createSlice({
     //ตัวแปร
     initialState: {
         favorite: "Chocolate Bar",
-        btnCheck: false
+        openStartDatePicker: false,
     },
     //function
     reducers: {
@@ -22,11 +22,11 @@ const frontEndSlice = createSlice({
                 );
             }
         },
-        setBtnCheck(state, action) {
-            state.btnCheck = action.payload
+        setOpenStartDatePicker(state, action) {
+            state.openStartDatePicker = action.payload
         }
     }
 })
-export const { setFavorite, setBtnCheck } = frontEndSlice.actions
+export const { setFavorite, setOpenStartDatePicker } = frontEndSlice.actions
 export const frontEndSelector = (store) => store.frontEnd;
 export default frontEndSlice.reducer

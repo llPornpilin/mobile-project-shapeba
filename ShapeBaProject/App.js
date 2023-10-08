@@ -17,7 +17,6 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import InformationScreen from "./src/screens/Profile/InformationScreen";
 
-// Page
 
 
 export default function App() {
@@ -28,7 +27,7 @@ export default function App() {
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }} >
         <BottomSheetModalProvider>
-
+          {/* <Calendar /> */}
           <AppNavigator />
 
         </BottomSheetModalProvider>
