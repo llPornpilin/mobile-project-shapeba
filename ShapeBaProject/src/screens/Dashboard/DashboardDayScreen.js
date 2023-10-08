@@ -20,7 +20,7 @@ import { frontEndSelector, setOpenStartDatePicker } from '../../store/slice/fron
 
 const listMeal = (icon, meal, cal, navigation) => {
     return (
-        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', { mealName: meal })}>
+        <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', { header: meal })}>
             <View className="flex-row gap-5 pl-3 items-center">
                 <Image source={icon}
                     style={{ width: 40, height: 40 }} />
@@ -73,7 +73,7 @@ const DashboardDayScreen = ({ navigation }) => {
         }, 200);
     }
 
-
+    //open modal
     const handlePresentModal = () => {
         bottomSheetModalRef.current?.present();
         setTimeout(() => {
@@ -106,7 +106,7 @@ const DashboardDayScreen = ({ navigation }) => {
                     <View style={openStartDatePicker ? styles.blur : null}></View>
                     <Calendar openStartDatePicker={openStartDatePicker} handleOnPressStartDate={handleOnPressStartDate} />
 
-                    {/* Modal jaa */}
+                    {/* Bottom sheet jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
                     <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
                     <Text>{frontEndStore.favorite} </Text>

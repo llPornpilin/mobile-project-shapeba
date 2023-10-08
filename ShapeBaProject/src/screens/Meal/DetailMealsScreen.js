@@ -98,7 +98,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            {greenHeader(navigation, route.params.mealName)}
+            {greenHeader(navigation, route.params.header)}
             <SwipeableFlatList
                 keyExtractor={extractItemKey}
                 data={allMeals}
