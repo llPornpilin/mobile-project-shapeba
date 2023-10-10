@@ -1,9 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { LineChart } from '../../components/LineChart';
+import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from "@react-navigation/native";
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from '../../../firebase-cofig';
 
 
 const DashboardMonthScreen = () => {
+    const [allStudent, setAllStudent] = useState([])
+    // console.log("Student List: ", allStudent);
+
+    //get all students from firebase
+    const getStudents = async () => {
+        const querySnapshot = await getDocs(collection(db, "user"));
+        console.log("Total user: ", querySnapshot.size);
+        const tempDoc = [];
+        querySnapshot.forEach((doc) => {
+            tempDoc.push({ ...doc.data(), key: doc.id });
+        });
+        setAllStudent(tempDoc);
+    }
+    console.log(allStudent)
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getStudents();
+            return () => {
+                // Clear the students state when the component is unfocused
+                setAllStudent([]);
+            };
+        }, [])
+    );
+
     return (
         <SafeAreaView >
             <ScrollView >
