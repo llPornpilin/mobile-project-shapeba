@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight} from 'react-native';
-import React, { Component, useState, useRef } from "react";
+import React, { Component, useState, useRef, useEffect } from "react";
 
 // segmant tab
 import SegmentedControlTab from "react-native-segmented-control-tab";
@@ -11,6 +11,12 @@ import SwipeableFlatList from 'react-native-swipeable-list';
 import { FontAwesome, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 // Bottom Modal
 import { AddMealBottomModal, CreateMealBottomModal } from './AddMealBottomSheet';
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { addMealSelector } from '../store/slice/mealsSlice';
+import { setMenus, delMenu } from '../store/slice/mealsSlice';
+// Database
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from '../../firebase-cofig'
 
 
 const allMeals = [
@@ -62,12 +68,84 @@ const QuickActions = (index, qaItem) => {
             </View>
         </View>
     );
-};
+}; 
 
 // Segment เปลี่ยนหน้า
-const AddMealsSegment = () => {
+const AddMealsSegment = (props) => {
 
+    // for Redux
+    const dispatch = useDispatch()
+    const allMenusStore = useSelector(addMealSelector)
+    const allMenus = allMenusStore.allMenus
+
+    // search props from header
+    const search = props.search
+    console.log("search menu: ", search)
+
+    // test API
+    // useEffect(() => {
+    //     fetch('https://jsonplaceholder.typicode.com/users')
+    //         .then(response => response.json())
+    //         .then(data => dispatch(setMenus(data)))
+        
+    //     console.log("all Menu " + JSON.stringify(allMenus, null, 2))
+    // }, [])
+
+    // MyMenu from Database
+    const searchMenu = async (searchMenuName) => {
+        try {
+            const myMenusDatabase = await getDocs(collection(db, "user"))
+            const tempDoc = []
+            myMenusDatabase.forEach(menu => {
+                for (const menuItem of menu.data().myMenu) {
+                    if (menuItem.name === searchMenuName) {
+                        tempDoc.push({ ...menuItem, key: menu.id });
+                        dispatch(setMenus(tempDoc))
+                        break;
+                    }
+                }
+            });
+            console.log("searched menu from database => ", tempDoc)
+
+            if (tempDoc.length == 0) {
+                console.log("\nnot found menu !")
+            }
+        }
+        catch (error) {
+            console.error("Error occurred while searching the database:", error);
+        }
+        
+    }
+
+    // ----------------------- Nutrition API ------------------------
+    useEffect(() => {
+        var query = '1lb brisket and fries';
+        if (search != "") {
+            fetch('https://api.api-ninjas.com/v1/nutrition?query=' + search, {
+            method: 'GET',
+            headers: {
+                'X-Api-Key': 'wIvbYEMaum9wtqjsPbj5ZA==ABsp5fb3TdHYbd0m',
+                'Content-Type': 'application/json',
+            },
+            })
+                .then(response => response.json())
+                .then(result => dispatch(setMenus(result)))
+                .catch((error) => {
+                    console.log("not found menu in API")
+                    searchMenu(search);
+            });
+        }
+        else {
+            dispatch(delMenu())
+        }
+    }, [search])
+    console.log("allMenu from nutrial API : ", allMenus)
+    // -----------------------------------------------------------------
+
+
+    // select segment
     const [selectedIndex, setSelectIndex] = useState(0)
+
     // add meal bottom sheet
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const bottomSheetModalRefAdd = useRef(null);
@@ -116,7 +194,7 @@ const AddMealsSegment = () => {
                 activeTabStyle={{ backgroundColor: '#EC744A' }}
                 selectedIndex={ selectedIndex }
                 allowFontScaling={false}
-                values={["All", "My Menu"]}
+                values={["All", "My Menu"]} 
                 onTabPress = { handleIndexChange }
             />
             {/* เงื่อนไขแสดงหน้า All menu หรือ My menu */}
@@ -125,9 +203,10 @@ const AddMealsSegment = () => {
                     // All
                     <FlatList 
                         style={{ padding: 40, paddingTop: 5, width: '100%' }}
-                        data={allMeals}
+                        // data={allMeals}
+                        data={allMenus}
                         renderItem={renderData}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.name}
                         ItemSeparatorComponent={renderItemSeparator}
                     /> : 
                     // My Menu

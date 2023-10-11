@@ -1,13 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable } from 'react-native';
 import { Button, Header } from 'react-native-elements';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 // Segment
 import AddMealsSegment from '../../components/AddMealsSegment';
 
+// Redux
+import { useDispatch } from 'react-redux';
+import { setMenus } from '../../store/slice/mealsSlice';
+
 const AddMealsScreen = ({ navigation }) => {
+    const [searchInput, setSearchInput] = useState("")
+    const [btnSearch, setBtnSearch] = useState(false)
+    
+    const toggleBtnSearch = () => {
+        setBtnSearch(true)
+        console.log("handle button search")
+    }
+
+    useEffect(() => {
+        if (btnSearch) {
+            // const dispatch = useDispatch()
+            // dispatch(setMenus([]))
+            setBtnSearch(false);
+        }
+    }, [btnSearch]);
+
     return (
         <View style={styles.container}>
             <Header backgroundColor="#025146" containerStyle={styles.header}>
@@ -20,12 +40,20 @@ const AddMealsScreen = ({ navigation }) => {
                     </View>
                     <Text className="text-white mb-6 ml-10 text-base">Let see the calories !</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <TextInput className="bg-white rounded-3xl pl-4 h-10 mb-5" style={{ flex: 1, }} placeholder='Search ...' />
-                        {/* <Feather style={{marginLeft: -10}} name="search" size={24} color="red" /> */}
+                        <TextInput
+                            className="bg-white rounded-3xl pl-4 h-10 mb-5"
+                            style={{ flex: 1, }}
+                            placeholder='Search ...'
+                            value={searchInput}
+                            onChangeText={(text) => setSearchInput(text)}
+                        />
+                        <TouchableOpacity onPress={toggleBtnSearch}>
+                            <Feather style={{marginLeft: -35, marginBottom: 20}} name="search" size={24} color="#025146" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Header>
-            < AddMealsSegment />
+            <AddMealsSegment search={btnSearch ? searchInput : ""} />
         </View>
     )
 }
