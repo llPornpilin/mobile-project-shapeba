@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight} from 'react-native';
+import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight } from 'react-native';
 import React, { Component, useState, useRef, useEffect } from "react";
 
 // segmant tab
@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addMealSelector } from '../store/slice/mealsSlice';
 import { setMenus, delMenu } from '../store/slice/mealsSlice';
 // Database
-import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from '../../firebase-cofig'
-
+import { db, collection, getDocs, query, where } from '../../firebase-cofig'
+import { useFocusEffect } from "@react-navigation/native";
 
 const allMeals = [
     { id: 1, name: 'meals1' },
@@ -68,7 +68,7 @@ const QuickActions = (index, qaItem) => {
             </View>
         </View>
     );
-}; 
+};
 
 // Segment เปลี่ยนหน้า
 const AddMealsSegment = (props) => {
@@ -82,14 +82,6 @@ const AddMealsSegment = (props) => {
     const search = props.search
     console.log("search menu: ", search)
 
-    // test API
-    // useEffect(() => {
-    //     fetch('https://jsonplaceholder.typicode.com/users')
-    //         .then(response => response.json())
-    //         .then(data => dispatch(setMenus(data)))
-        
-    //     console.log("all Menu " + JSON.stringify(allMenus, null, 2))
-    // }, [])
 
     // MyMenu from Database
     const searchMenu = async (searchMenuName) => {
@@ -114,7 +106,7 @@ const AddMealsSegment = (props) => {
         catch (error) {
             console.error("Error occurred while searching the database:", error);
         }
-        
+
     }
 
     // ----------------------- Nutrition API ------------------------
@@ -122,18 +114,19 @@ const AddMealsSegment = (props) => {
         var query = '1lb brisket and fries';
         if (search != "") {
             fetch('https://api.api-ninjas.com/v1/nutrition?query=' + search, {
-            method: 'GET',
-            headers: {
-                'X-Api-Key': 'wIvbYEMaum9wtqjsPbj5ZA==ABsp5fb3TdHYbd0m',
-                'Content-Type': 'application/json',
-            },
+                method: 'GET',
+                headers: {
+                    'X-Api-Key': 'wIvbYEMaum9wtqjsPbj5ZA==ABsp5fb3TdHYbd0m',
+                    'Content-Type': 'application/json',
+                },
             })
                 .then(response => response.json())
                 .then(result => dispatch(setMenus(result)))
                 .catch((error) => {
                     console.log("not found menu in API")
                     searchMenu(search);
-            });
+                });
+            console.log("all Menu " + JSON.stringify(allMenus, null, 2))
         }
         else {
             dispatch(delMenu())
@@ -149,7 +142,7 @@ const AddMealsSegment = (props) => {
     // add meal bottom sheet
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const bottomSheetModalRefAdd = useRef(null);
-    
+
     // create own menu bottom sheet
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const bottomSheetModalRefCreate = useRef(null);
@@ -177,43 +170,72 @@ const AddMealsSegment = (props) => {
             <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={handlePresentModalAdd}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
-                    <AntDesign name="plus" size={15} color="black" style={{paddingRight: 10}} />
+                    <AntDesign name="plus" size={15} color="black" style={{ paddingRight: 10 }} />
                 </View>
             </TouchableHighlight>
         )
     }
 
+    const [u_id, setU_id] = useState("01");
+    const [myMenu, setMyMenu] = useState([]);
+
+    // Get My Menu from Database
+    const getMyMenuById = async () => { // Pass the user ID as an argument
+        try {
+            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("u_id", "==", u_id))); // Use the user's ID passed as an argument
+            console.log("Total menu: ", querySnapshot.size);
+            const tempDoc = [];
+            querySnapshot.forEach((doc) => {
+                tempDoc.push({ ...doc.data(), key: doc.id });
+            });
+            setMyMenu(tempDoc);
+            console.log(myMenu)
+        } catch (error) {
+            console.error("Error fetching user menu: ", error);
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getMyMenuById();
+            return () => {
+                // Clear the menu state when the component is unfocused
+                setMyMenu([]);
+            };
+        }, [])
+    );
+
     return (
-        <View style={{flex: 1, alignItems: 'center', width: '100%', marginBottom: 20, paddingTop: 30}}>
+        <View style={{ flex: 1, alignItems: 'center', width: '100%', marginBottom: 20, paddingTop: 30 }}>
             <SegmentedControlTab
-                tabsContainerStyle={{ width: '80%', borderRadius: 30, overflow: 'hidden', marginBottom: 30}}
-                tabStyle={{ borderWidth: 0, backgroundColor: '#F7F7FB'}}
-                firstTabStyle={{ marginRight: 5, borderRadius: 30, borderColor: 'white'}}
-                lastTabStyle={{ marginLeft: 5, borderRadius: 30, borderColor: 'white'}}
+                tabsContainerStyle={{ width: '80%', borderRadius: 30, overflow: 'hidden', marginBottom: 30 }}
+                tabStyle={{ borderWidth: 0, backgroundColor: '#F7F7FB' }}
+                firstTabStyle={{ marginRight: 5, borderRadius: 30, borderColor: 'white' }}
+                lastTabStyle={{ marginLeft: 5, borderRadius: 30, borderColor: 'white' }}
                 tabTextStyle={{ color: '#EC744A', fontWeight: 'bold' }}
                 activeTabStyle={{ backgroundColor: '#EC744A' }}
-                selectedIndex={ selectedIndex }
+                selectedIndex={selectedIndex}
                 allowFontScaling={false}
-                values={["All", "My Menu"]} 
-                onTabPress = { handleIndexChange }
+                values={["All", "My Menu"]}
+                onTabPress={handleIndexChange}
             />
             {/* เงื่อนไขแสดงหน้า All menu หรือ My menu */}
             {
-                selectedIndex === 0 ? 
+                selectedIndex === 0 ?
                     // All
-                    <FlatList 
+                    <FlatList
                         style={{ padding: 40, paddingTop: 5, width: '100%' }}
                         // data={allMeals}
                         data={allMenus}
                         renderItem={renderData}
                         keyExtractor={item => item.name}
                         ItemSeparatorComponent={renderItemSeparator}
-                    /> : 
+                    /> :
                     // My Menu
-                    <View style={{width: '100%'}}>
+                    <View style={{ width: '100%' }}>
                         <SwipeableFlatList
-                            keyExtractor={(item) => item.id.toString()}
-                            data={myMeals}
+                            keyExtractor={(item) => item.key}
+                            data={myMenu}
                             renderItem={renderData}
                             maxSwipeDistance={240}
                             renderQuickActions={({ index, item }) => QuickActions(index, item)}
@@ -223,9 +245,9 @@ const AddMealsSegment = (props) => {
                             onSwipeableOpen={false}
                         />
                         {/* Add My Menu Button */}
-                        <TouchableHighlight 
+                        <TouchableHighlight
                             className="bg-Orange w-14 h-14 rounded-full justify-center items-center"
-                            style={{position: 'absolute', right: 30, bottom: 80, elevation: 3}}
+                            style={{ position: 'absolute', right: 30, bottom: 80, elevation: 3 }}
                             underlayColor="#EF8E6D"
                             onPress={handlePresentModalCreate}
                         >
