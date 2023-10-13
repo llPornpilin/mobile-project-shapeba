@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
     Modal, TouchableWithoutFeedback,
-    StyleSheet, View, Text, TouchableOpacity, TextInput, Animated, useWindowDimensions, SafeAreaView, Pressable
+    StyleSheet, View, Text, TouchableOpacity, TextInput, SafeAreaView, Pressable
 } from 'react-native';
-import { BottomSheetModal, BottomSheetModalProvider, Background } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, getDoc, addDoc, doc, query, where } from '../../firebase-cofig';
 
 
-// ---------------------- Create Own Menu ---------------------------------
-export const CreateMealBottomModal = (props) => {
+const UpdateBottomSheet = (props) => {
     //props
+    const info = props.menuInfo;
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const snapPoints = ["60%",];
     const [name, setName] = useState("");
     const [cal, setCal] = useState("");
     const [size, setSize] = useState("");
     const [u_id, setU_id] = useState("01");
+    setName(info.name);
+    console.log(info)
+    console.log("name", name)
 
     const isOpen = props.isOpen;
     const closeModal = () => {
@@ -23,34 +26,10 @@ export const CreateMealBottomModal = (props) => {
         setTimeout(() => {
             props.setIsOpen(false);
         }, 200);
+        // setCal("");
+        // setSize("");
+        // setName("");
     }
-
-    const handleModalDismiss = () => {
-        bottomSheetModalRef.current?.dismiss();
-    };
-
-    //add my menu to firebase
-    const saveMyMenu = async () => {
-        console.log(name, cal, size)
-        try {
-            const docRef = await addDoc(collection(db, "myMenu"), {
-                u_id: u_id,
-                name: name,
-                calories: cal,
-                servingSize: size,
-            });
-            //refresh my menu UI
-            props.getMyMenuById();
-            closeModal();
-            setCal("");
-            setSize("");
-            setName("");
-            console.log("Document written with ID: ", docRef.id);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
-
     return (
         <SafeAreaView>
             <BottomSheetModal
@@ -62,7 +41,7 @@ export const CreateMealBottomModal = (props) => {
             >
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
-                        Create My Menu
+                        Edit My Menu
                     </Text>
                     <View className="bg-white p-3" style={[styles.textInput, styles.textInputCreate]}>
                         <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Menu Name :</Text>
@@ -103,86 +82,19 @@ export const CreateMealBottomModal = (props) => {
                         <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                             <Text className="font-bold text-Orange text-lg">Cancel</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} onPress={saveMyMenu}>
-                            <Text className="font-bold text-white text-lg">Create</Text>
+                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} >
+                            <Text className="font-bold text-white text-lg">Done</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
                 {/* </Background> */}
             </BottomSheetModal>
         </SafeAreaView>
+
     )
 }
-// ---------------------- Add Menu ---------------------------------
-export const AddMealBottomModal = (props) => {
-    //props
-    const bottomSheetModalRef = props.bottomSheetModalRef;
-    const { onTouchOutside, title } = props
-    const snapPoints = ["40%"];
 
-    const isOpen = props.isOpen;
-    const closeModal = () => {
-        bottomSheetModalRef.current?.close();
-        setTimeout(() => {
-            props.setIsOpen(false);
-        }, 200);
-    }
-
-
-    const renderOutsideTouchable = (onTouch) => {
-        const view = <View style={{ flex: 1, width: '100%' }} />
-        if (!onTouch) return view
-        return (
-            <TouchableWithoutFeedback onPress={onTouch} style={{ flex: 1, width: '100%' }}>
-                {view}
-            </TouchableWithoutFeedback>
-        )
-    }
-
-    return (
-        // <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
-        //         {renderOutsideTouchable(onTouchOutside)}
-        <SafeAreaView>
-            <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={0}
-                snapPoints={snapPoints} s
-                backgroundStyle={{ borderRadius: 30, marginBottom: 0 }}
-                animationType={'fade'}
-            // onDismiss={() => props.setIsOpen(false)}
-            >
-
-                <View className="p-8">
-                    <Text className="text-xl mb-8 font-semibold">
-                        Menu Name
-                    </Text>
-                    <View className="bg-white p-3" style={styles.textInput}>
-                        <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
-                        <TextInput
-                            style={{ flex: 1 }}
-                            className="h-15 pl-3 pr-3"
-                            underlineColorAndroid="transparent"
-                            keyboardType="number-pad"
-                        // onChangeText={servingSize => setServingSize(servingSize)}
-                        // value={servingSize}
-                        />
-                        <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>
-                    </View>
-
-                    <View className="flex-row justify-center">
-                        <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
-                            <Text className="font-bold text-Orange text-lg">Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]}>
-                            <Text className="font-bold text-white text-lg">Add</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </BottomSheetModal>
-        </SafeAreaView>
-        // </View>
-    )
-}
+export default UpdateBottomSheet
 
 const styles = StyleSheet.create({
     container: {
@@ -218,4 +130,4 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBlockColor: '#4B4B4B',
     },
-});
+})

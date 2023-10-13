@@ -11,12 +11,13 @@ import SwipeableFlatList from 'react-native-swipeable-list';
 import { FontAwesome, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 // Bottom Modal
 import { AddMealBottomModal, CreateMealBottomModal } from './AddMealBottomSheet';
+import UpdateBottomSheet from './UpdateBottomSheet';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { addMealSelector } from '../store/slice/mealsSlice';
 import { setMenus, delMenu } from '../store/slice/mealsSlice';
 // Database
-import { db, collection, getDocs, query, where, deleteDoc, doc } from '../../firebase-cofig'
+import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
 import { useFocusEffect } from "@react-navigation/native";
 
 const allMeals = [
@@ -47,7 +48,7 @@ const AddMealsSegment = (props) => {
 
     // search props from header
     const search = props.search
-    console.log("search menu: ", search)
+    // console.log("search menu: ", search)
 
 
     // MyMenu from Database
@@ -89,7 +90,7 @@ const AddMealsSegment = (props) => {
                 tempDoc.push({ ...doc.data(), key: doc.id });
             });
             setMyMenu(tempDoc);
-            console.log(myMenu)
+            // console.log(myMenu)
         } catch (error) {
             console.error("Error fetching user menu: ", error);
         }
@@ -112,12 +113,12 @@ const AddMealsSegment = (props) => {
                     console.log("not found menu in API")
                     searchMenu(search);
                 });
-            console.log("all Menu " + JSON.stringify(allMenus, null, 2))
+            // console.log("all Menu " + JSON.stringify(allMenus, null, 2))
         }
         else {
             dispatch(delMenu())
         }
-        console.log("allMenu from nutrial API : ", allMenus)
+        // console.log("allMenu from nutrial API : ", allMenus)
     }
     // -----------------------------------------------------------------
 
@@ -133,6 +134,11 @@ const AddMealsSegment = (props) => {
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const bottomSheetModalRefCreate = useRef(null);
 
+    // update own menu bottom sheet
+    const [isOpenUpdate, setIsOpenUpdate] = useState(false);
+    const bottomSheetModalRefUpdate = useRef(null);
+
+    //open bottom sheet
     const handlePresentModalAdd = () => {
         console.log(isOpenAdd)
         bottomSheetModalRefAdd.current?.present();
@@ -145,6 +151,13 @@ const AddMealsSegment = (props) => {
         bottomSheetModalRefCreate.current?.present();
         setTimeout(() => {
             setIsOpenCreate(true);
+        }, 100);
+    }
+    const handlePresentModalUpdate = () => {
+        console.log(isOpenCreate)
+        bottomSheetModalRefUpdate.current?.present();
+        setTimeout(() => {
+            setIsOpenUpdate(true);
         }, 100);
     }
 
@@ -163,23 +176,24 @@ const AddMealsSegment = (props) => {
     }
 
     //swipe menu
-    const [menuInfo, setMenuInfo] = useState([])
+    const [menuInfo, setMenuInfo] = useState({})
     const QuickActions = (index, item) => {
         // console.log("index: ", index)
-        const deleteMenu = (val) => {
+        const deleteMenu = (val, index) => {
             setMenuInfo(val)
-            console.log("delete menu: ", val)
+            console.log("delete menu: ", menuInfo, index)
             dbDeleteMenu()
         }
         const updateMenu = (val) => {
-            setMenuInfo(item)
-            // console.log("menuInfo: ", menuInfo)
-            handlePresentModalCreate()
+            setMenuInfo(val)
+            console.log("menuInfo: ", menuInfo)
+            // dbUpdateMenu()
+            handlePresentModalUpdate()
         }
         return (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', }}>
                 <View style={[styles.button, { backgroundColor: '#EF5353' }]}>
-                    <Pressable onPress={() => deleteMenu(item)}>
+                    <Pressable onPress={() => deleteMenu(item, index)}>
                         <FontAwesome name="trash-o" size={28} color="white" />
                     </Pressable>
                 </View>
@@ -195,12 +209,29 @@ const AddMealsSegment = (props) => {
     //delete menu
     const dbDeleteMenu = async () => {
         try {
+            console.log("delete done: ", menuInfo.key)
             await deleteDoc(doc(db, "myMenu", menuInfo.key));
-            Alert.alert("Success", "Menu deleted successfully");
-            setMenuInfo([]);
             getMyMenuById();
+            Alert.alert("Success", "Menu deleted successfully");
+
         } catch (e) {
             Alert.alert("Error", "Error deleting document: " + e.message);
+        }
+    }
+
+    const dbUpdateMenu = async () => {
+        try {
+            console.log("update done: ", menuInfo.key)
+            await updateDoc(doc(db, "myMenu", menuInfo.key), {
+                name: menuInfo.name,
+                calories: menuInfo.calories,
+                servingSize: menuInfo.servingSize,
+            });
+            getMyMenuById();
+            Alert.alert("Success", "Menu update successfully");
+
+        } catch (e) {
+            Alert.alert("Error", "Error update document: " + e.message);
         }
     }
 
@@ -267,7 +298,8 @@ const AddMealsSegment = (props) => {
                     </View>
             }
             <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} />
-            <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} />
+            <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} getMyMenuById={getMyMenuById} />
+            <UpdateBottomSheet isOpen={isOpenUpdate} setIsOpen={setIsOpenUpdate} bottomSheetModalRef={bottomSheetModalRefUpdate} menuInfo={menuInfo} />
         </View>
     )
 }
