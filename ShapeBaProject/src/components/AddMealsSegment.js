@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight, Alert } from 'react-native';
 import React, { Component, useState, useRef, useEffect } from "react";
 
 // segmant tab
@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addMealSelector } from '../store/slice/mealsSlice';
 import { setMenus, delMenu } from '../store/slice/mealsSlice';
 // Database
-import { db, collection, getDocs, query, where } from '../../firebase-cofig'
+import { db, collection, getDocs, query, where, deleteDoc, doc } from '../../firebase-cofig'
 import { useFocusEffect } from "@react-navigation/native";
 
 const allMeals = [
@@ -35,40 +35,7 @@ const allMeals = [
     { id: 13, name: 'meals13' },
     { id: 14, name: 'meals14' },
 ];
-const myMeals = [
-    { id: 1, name: 'My meals1' },
-    { id: 2, name: 'My meals2' },
-    { id: 3, name: 'My meals3' },
-    { id: 4, name: 'My meals4' },
-    { id: 5, name: 'My meals5' },
-    { id: 6, name: 'My meals6' },
-    { id: 7, name: 'My meals7' },
-    { id: 8, name: 'My meals8' },
-    { id: 9, name: 'My meals9' },
-    { id: 10, name: 'My meals10' },
-    { id: 11, name: 'My meals11' },
-    { id: 12, name: 'My meals12' },
-    { id: 13, name: 'My meals13' },
-    { id: 14, name: 'My meals14' },
-];
 
-// Swipe Menu
-const QuickActions = (index, qaItem) => {
-    return (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', }}>
-            <View style={[styles.button, { backgroundColor: '#EF5353' }]}>
-                <Pressable>
-                    <FontAwesome name="trash-o" size={28} color="white" />
-                </Pressable>
-            </View>
-            <View style={[styles.button, { backgroundColor: '#FBBB57' }]}>
-                <Pressable>
-                    <Feather name="edit" size={24} color="white" />
-                </Pressable>
-            </View>
-        </View>
-    );
-};
 
 // Segment เปลี่ยนหน้า
 const AddMealsSegment = (props) => {
@@ -109,8 +76,27 @@ const AddMealsSegment = (props) => {
 
     }
 
+    const [u_id, setU_id] = useState("01");
+    const [myMenu, setMyMenu] = useState([]);
+
+    // Get My Menu by User ID
+    const getMyMenuById = async () => { // Pass the user ID as an argument
+        try {
+            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("u_id", "==", u_id))); // Use the user's ID passed as an argument
+            console.log("Total menu: ", querySnapshot.size);
+            const tempDoc = [];
+            querySnapshot.forEach((doc) => {
+                tempDoc.push({ ...doc.data(), key: doc.id });
+            });
+            setMyMenu(tempDoc);
+            console.log(myMenu)
+        } catch (error) {
+            console.error("Error fetching user menu: ", error);
+        }
+    }
+
     // ----------------------- Nutrition API ------------------------
-    useEffect(() => {
+    const apiSearch = async () => {
         var query = '1lb brisket and fries';
         if (search != "") {
             fetch('https://api.api-ninjas.com/v1/nutrition?query=' + search, {
@@ -131,8 +117,8 @@ const AddMealsSegment = (props) => {
         else {
             dispatch(delMenu())
         }
-    }, [search])
-    console.log("allMenu from nutrial API : ", allMenus)
+        console.log("allMenu from nutrial API : ", allMenus)
+    }
     // -----------------------------------------------------------------
 
 
@@ -176,33 +162,58 @@ const AddMealsSegment = (props) => {
         )
     }
 
-    const [u_id, setU_id] = useState("01");
-    const [myMenu, setMyMenu] = useState([]);
+    //swipe menu
+    const [menuInfo, setMenuInfo] = useState([])
+    const QuickActions = (index, item) => {
+        // console.log("index: ", index)
+        const deleteMenu = (val) => {
+            setMenuInfo(val)
+            console.log("delete menu: ", val)
+            dbDeleteMenu()
+        }
+        const updateMenu = (val) => {
+            setMenuInfo(item)
+            // console.log("menuInfo: ", menuInfo)
+            handlePresentModalCreate()
+        }
+        return (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', }}>
+                <View style={[styles.button, { backgroundColor: '#EF5353' }]}>
+                    <Pressable onPress={() => deleteMenu(item)}>
+                        <FontAwesome name="trash-o" size={28} color="white" />
+                    </Pressable>
+                </View>
+                <View style={[styles.button, { backgroundColor: '#FBBB57' }]}>
+                    <Pressable onPress={() => updateMenu(item)}>
+                        <Feather name="edit" size={24} color="white" />
+                    </Pressable>
+                </View>
+            </View>
+        );
+    };
 
-    // Get My Menu from Database
-    const getMyMenuById = async () => { // Pass the user ID as an argument
+    //delete menu
+    const dbDeleteMenu = async () => {
         try {
-            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("u_id", "==", u_id))); // Use the user's ID passed as an argument
-            console.log("Total menu: ", querySnapshot.size);
-            const tempDoc = [];
-            querySnapshot.forEach((doc) => {
-                tempDoc.push({ ...doc.data(), key: doc.id });
-            });
-            setMyMenu(tempDoc);
-            console.log(myMenu)
-        } catch (error) {
-            console.error("Error fetching user menu: ", error);
+            await deleteDoc(doc(db, "myMenu", menuInfo.key));
+            Alert.alert("Success", "Menu deleted successfully");
+            setMenuInfo([]);
+            getMyMenuById();
+        } catch (e) {
+            Alert.alert("Error", "Error deleting document: " + e.message);
         }
     }
 
+
     useFocusEffect(
         React.useCallback(() => {
+            apiSearch();
             getMyMenuById();
             return () => {
                 // Clear the menu state when the component is unfocused
                 setMyMenu([]);
             };
-        }, [])
+        }, [search])
     );
 
     return (
@@ -263,7 +274,7 @@ const AddMealsSegment = (props) => {
 
 const styles = StyleSheet.create({
     button: {
-        width: 80,
+        width: 70,
         alignItems: 'center',
         justifyContent: 'center',
     },

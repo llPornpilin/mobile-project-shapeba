@@ -29,21 +29,6 @@ export const CreateMealBottomModal = (props) => {
         bottomSheetModalRef.current?.dismiss();
     };
 
-
-    const getMyMenuById = async () => { // Pass the user ID as an argument
-        try {
-
-            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("u_id", "==", u_id))); // Use the user's ID passed as an argument
-            querySnapshot.forEach((doc) => {
-                console.log(doc.data()); // Log the data of each document in the query result
-            });
-
-        } catch (error) {
-            console.error("Error fetching user menu: ", error);
-        }
-    }
-
-
     //add my menu to firebase
     const saveMyMenu = async () => {
         console.log(name, cal, size)
