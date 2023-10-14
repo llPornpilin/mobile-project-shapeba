@@ -40,7 +40,6 @@ const allMeals = [
 
 // Segment เปลี่ยนหน้า
 const AddMealsSegment = (props) => {
-
     // for Redux
     const dispatch = useDispatch()
     const allMenusStore = useSelector(addMealSelector)
@@ -50,26 +49,33 @@ const AddMealsSegment = (props) => {
     const search = props.search
     // console.log("search menu: ", search)
 
+    // check if data from API
+    const [datasource, setDatasource] = useState("")
 
-    // MyMenu from Database
-    const searchMenu = async (searchMenuName) => {
+    // ------------------ MyMenu from Database ------------------------
+    const setDataFromDatabase = (tempDoc) => {
+        dispatch(setMenus(tempDoc));
+    };
+    const searchMenuInDatabase = async (searchMenuName) => {
+        console.log("allMenus dispatch", allMenus)
         try {
+            console.log("... finding menu in database")
             const myMenusDatabase = await getDocs(collection(db, "user"))
             const tempDoc = []
             myMenusDatabase.forEach(menu => {
                 for (const menuItem of menu.data().myMenu) {
+                    console.log("allmenu : ", menuItem)
+                    console.log("menuItem : ", menuItem.name)
+                    console.log("search name : ", searchMenuName)
                     if (menuItem.name === searchMenuName) {
                         tempDoc.push({ ...menuItem, key: menu.id });
-                        dispatch(setMenus(tempDoc))
-                        break;
+                        // dispatch(setMenus(tempDoc))
+                        // break;
                     }
                 }
             });
             console.log("searched menu from database => ", tempDoc)
-
-            if (tempDoc.length == 0) {
-                console.log("\nnot found menu !")
-            }
+            tempDoc.length > 0 ? setDataFromDatabase(tempDoc) : dispatch(delMenu())
         }
         catch (error) {
             console.error("Error occurred while searching the database:", error);
@@ -108,22 +114,23 @@ const AddMealsSegment = (props) => {
                 },
             })
                 .then(response => response.json())
-                .then(result => dispatch(setMenus(result)))
+                .then((result) => {
+                    dispatch(setMenus(result))
+                })
                 .catch((error) => {
-                    console.log("not found menu in API")
-                    searchMenu(search);
-                });
-            // console.log("all Menu " + JSON.stringify(allMenus, null, 2))
+                    console.log("not found menu in API !")
+                    searchMenuInDatabase(search);
+            });
         }
         else {
             dispatch(delMenu())
         }
-        // console.log("allMenu from nutrial API : ", allMenus)
     }
     // -----------------------------------------------------------------
 
 
     // select segment
+    // selectedIndex = 0 => AllMenu, selectedIndex = 1 => MyMenu,  
     const [selectedIndex, setSelectIndex] = useState(0)
 
     // add meal bottom sheet
@@ -134,13 +141,15 @@ const AddMealsSegment = (props) => {
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const bottomSheetModalRefCreate = useRef(null);
 
+    const [selectedMenu, setSelectMenu] = useState()
+
     // update own menu bottom sheet
     const [isOpenUpdate, setIsOpenUpdate] = useState(false);
     const bottomSheetModalRefUpdate = useRef(null);
 
     //open bottom sheet
-    const handlePresentModalAdd = () => {
-        console.log(isOpenAdd)
+    const handlePresentModalAdd = (menuData) => {
+        setSelectMenu(menuData)
         bottomSheetModalRefAdd.current?.present();
         setTimeout(() => {
             setIsOpenAdd(true);
@@ -166,12 +175,23 @@ const AddMealsSegment = (props) => {
     }
     const renderData = ({ item }) => {
         return (
-            <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={handlePresentModalAdd}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
+            <>
+            <TouchableHighlight
+                style={styles.touchable}
+                underlayColor="#F7F7FB"
+                onPress={() => {
+                    handlePresentModalAdd(item)
+                }}
+            >
+                <View className="flex-row justify-between p-3 items-center">
+                    <View className="pl-1">
+                        <Text className="text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
+                        <Text className=" text-xs pt-1">{item.serving_size_g} g {item.calories} cals</Text>
+                    </View>
                     <AntDesign name="plus" size={15} color="black" style={{ paddingRight: 10 }} />
                 </View>
             </TouchableHighlight>
+            </>
         )
     }
 
@@ -271,9 +291,9 @@ const AddMealsSegment = (props) => {
                             onSwipeableOpen={false}
                         />
                         {/* Add My Menu Button */}
-                        <TouchableHighlight
+                        <TouchableHighlight // FIXME: fix add button position
                             className="bg-Orange w-14 h-14 rounded-full justify-center items-center"
-                            style={{ position: 'absolute', right: 30, bottom: 80, elevation: 3 }}
+                            style={{ position: 'relative', right: -300, top: 220, elevation: 3 }}
                             underlayColor="#EF8E6D"
                             onPress={handlePresentModalCreate}
                         >
@@ -281,7 +301,7 @@ const AddMealsSegment = (props) => {
                         </TouchableHighlight>
                     </View>
             }
-            <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} />
+            <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} selectedMenu={selectedMenu} mealName={props.mealName} />
             <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} getMyMenuById={getMyMenuById} />
             <UpdateBottomSheet isOpen={isOpenUpdate} setIsOpen={setIsOpenUpdate} bottomSheetModalRef={bottomSheetModalRefUpdate} menuInfo={menuInfo} setMenuInfo={setMenuInfo} getMyMenuById={getMyMenuById}/>
         </View>

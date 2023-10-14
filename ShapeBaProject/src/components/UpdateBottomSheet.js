@@ -39,7 +39,7 @@ const UpdateBottomSheet = (props) => {
             await updateDoc(doc(db, "myMenu", props.menuInfo.key), {
                 name: props.menuInfo.name,
                 calories: props.menuInfo.calories,
-                servingSize: props.menuInfo.servingSize,
+                servingSize: props.menuInfo.serving_size_g,
             });
             props.getMyMenuById();
             closeModal();
@@ -79,8 +79,8 @@ const UpdateBottomSheet = (props) => {
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                            value={props.menuInfo.servingSize}
-                            onChangeText={(text) => props.setMenuInfo((prev) => ({ ...prev, servingSize: text }))}
+                            value={props.menuInfo.serving_size_g}
+                            onChangeText={(text) => props.setMenuInfo((prev) => ({ ...prev, serving_size_g: text }))}
                         />
                         <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>
                     </View>

@@ -8,6 +8,7 @@ const mealsSlice = createSlice({
     reducers: {
         setMenus(state, action) {
             // console.log("before add menu array lenght: " + state.allMenus.length)
+            console.log("... set menu")
             if (state.allMenus.length === 0) {
                 state.allMenus = [...state.allMenus, ...action.payload]
                 // console.log("After add menu array lenght: " + state.allMenus.length)
@@ -15,7 +16,7 @@ const mealsSlice = createSlice({
             return state
         },
         delMenu(state, action) {
-            console.log("remove menu")
+            console.log("... remove menu")
             state.allMenus = []
         },
         setEditMenu(state, action) {
