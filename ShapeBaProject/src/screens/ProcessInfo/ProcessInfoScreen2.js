@@ -1,10 +1,19 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import {progressCircle} from './ProcessInfoScreen1';
+import { progressCircle } from "./ProcessInfoScreen1";
+import { useDispatch, useSelector } from "react-redux";
+import { setaccomplish } from "../../store/slice/processInfoSlice1";
+import { processInfoSelector } from "../../store/slice/processInfoSlice1";
 
-// Page
 
 const ProcessInfoScreen2 = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const processInfo = useSelector(processInfoSelector);
+
+  const handleSelectGoal = (selectedGoal) => {
+    dispatch(setaccomplish(selectedGoal));
+    navigation.navigate("ProcessInfoScreen3");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.blueArea}>
@@ -16,7 +25,7 @@ const ProcessInfoScreen2 = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.whiteArea}>
-      <View style={styles.uiContainer}>
+        <View style={styles.uiContainer}>
           {progressCircle(1, "white", "#EC744A")}
           <View style={styles.line}></View>
           {progressCircle(2, "#EC744A", "white")}
@@ -39,25 +48,35 @@ const ProcessInfoScreen2 = ({ navigation }) => {
         </View>
 
         {/* input */}
-        <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.inputbetween}
-           onPress={() => navigation.navigate("ProcessInfoScreen3")}>
-            <Text className="text-sm text-white font-semibold">Maintain</Text>
-            <Text className="text-sm text-white font-semibold">weight</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputRowContainer}>
+        <View style={{ marginLeft: 55 }}>
           <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.inputL}  onPress={() => navigation.navigate("ProcessInfoScreen3")}>
-              <Text className="text-sm text-white font-semibold">Lose</Text>
-              <Text className="text-sm text-white font-semibold">weight</Text>
+            <TouchableOpacity
+              style={styles.inputbetween}
+              onPress={() => handleSelectGoal("Maintain weight")}
+            >
+              <Text style={styles.inputText}>Maintain</Text>
+              <Text style={styles.inputText}>weight</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.inputR}  onPress={() => navigation.navigate("ProcessInfoScreen3")}>
-              <Text className="text-sm text-white font-semibold">Gain</Text>
-              <Text className="text-sm text-white font-semibold">weight</Text>
-            </TouchableOpacity>
+          <View style={styles.inputRowContainer}>
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.inputL}
+                onPress={() => handleSelectGoal("Lose weight")}
+              >
+                <Text style={styles.inputText}>Lose</Text>
+                <Text style={styles.inputText}>weight</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.inputR}
+                onPress={() => handleSelectGoal("Gain weight")}
+              >
+                <Text style={styles.inputText}>Gain</Text>
+                <Text style={styles.inputText}>weight</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -139,9 +158,10 @@ const styles = StyleSheet.create({
     width: 100,
     justifyContent: "center",
     alignItems: "center",
+    marginLeft: 90,
   },
   inputR: {
-    marginTop: 15,
+    marginTop: 30,
     backgroundColor: "#FBBB57",
     color: "#333",
     borderRadius: 20,
@@ -151,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputL: {
-    marginTop: 15,
+    marginTop: 30,
     backgroundColor: "#EF8055",
     color: "#333",
     borderRadius: 20,
@@ -170,6 +190,15 @@ const styles = StyleSheet.create({
   ifont: {
     fontSize: 16,
     marginBottom: 8,
+  },
+  inputContainer: {
+    width: "45%",
+  },
+  inputText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   btn3: {
     paddingVertical: -2,

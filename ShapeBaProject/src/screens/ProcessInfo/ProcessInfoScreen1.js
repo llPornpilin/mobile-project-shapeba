@@ -18,7 +18,6 @@ import {
   setSelectedSex,
   setWeight,
   setHeight,
-  setBirthdate,
   setOpenStartDatePicker,
 } from "../../store/slice/processInfoSlice1";
 
@@ -127,7 +126,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                     style={styles.input}
                     value={processInfo.selectedStartDate}
                     editable={false}
-                    placeholder="Select Birthdate"
+                    placeholder=""
                   />
                 </TouchableOpacity>
                 <Calendar

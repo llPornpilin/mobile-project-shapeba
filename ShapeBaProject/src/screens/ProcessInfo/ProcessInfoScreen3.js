@@ -10,10 +10,21 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import {progressCircle} from './ProcessInfoScreen1';
+import { progressCircle } from "./ProcessInfoScreen1";
+import { setGoalweight, setActivitylevel } from "../../store/slice/processInfoSlice1";
+import { useDispatch, useSelector } from "react-redux";
+import { processInfoSelector } from "../../store/slice/processInfoSlice1";
+
+
 
 const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
+  const dispatch = useDispatch();
+  const processInfo = useSelector(processInfoSelector);
+  
+  const handleGoalChange = (text) => {
+    dispatch(setGoalweight(text));
+  };
 
   return (
     <KeyboardAvoidingView
@@ -26,16 +37,15 @@ const ProcessInfoScreen3 = ({ navigation }) => {
           <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
         </View>
         <View style={styles.whiteArea}>
-        <View style={styles.uiContainer}>
-          {progressCircle(1, "white", "#EC744A")}
-          <View style={styles.line}></View>
-          {progressCircle(2, "white", "#EC744A")}
-          <View style={styles.line}></View>
-          {progressCircle(3, "#EC744A", "white")}
-        </View>
+          <View style={styles.uiContainer}>
+            {progressCircle(1, "white", "#EC744A")}
+            <View style={styles.line}></View>
+            {progressCircle(2, "white", "#EC744A")}
+            <View style={styles.line}></View>
+            {progressCircle(3, "#EC744A", "white")}
+          </View>
           <View style={styles.Allinput}>
             <View style={styles.inputRowContainer}>
-
               <Text
                 style={{
                   ...styles.inputLabel,
@@ -51,13 +61,13 @@ const ProcessInfoScreen3 = ({ navigation }) => {
               </Text>
               <TextInput
                 style={styles.inputGowieght}
-                value=""
-                placeholder=""
+                value={processInfo.goalweight} // นำค่า goalweight มาจาก Redux state
+                onChangeText={(text) => dispatch(setGoalweight(text))} // เมื่อมีการเปลี่ยนแปลงใน TextInput ให้ dispatch action setGoalweight
+                keyboardType="number-pad"
+                maxLength={3}
               />
-
             </View>
             <View style={styles.inputRowContainer}>
-
               <Text
                 style={{
                   fontWeight: "bold",
@@ -77,9 +87,10 @@ const ProcessInfoScreen3 = ({ navigation }) => {
                 }
               >
                 <Picker
-                  selectedValue={selectedSex}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedSex(itemValue)
+                 selectedValue={processInfo.activitylevel}
+                 onValueChange={(itemValue) =>
+                   dispatch(setActivitylevel(itemValue))
+                 
                   }
                   style={
                     Platform.OS === "ios"
@@ -92,14 +103,8 @@ const ProcessInfoScreen3 = ({ navigation }) => {
                     label="Little or no exercise"
                     value="Little or no exercise"
                   />
-                  <Picker.Item
-                    label="1-3 times/week"
-                    value="1-3 times/week"
-                  />
-                  <Picker.Item
-                    label="4-5 times/week"
-                    value="4-5 times/week"
-                  />
+                  <Picker.Item label="1-3 times/week" value="1-3 times/week" />
+                  <Picker.Item label="4-5 times/week" value="4-5 times/week" />
                   <Picker.Item
                     label="Intense exercise 6-7 times/week"
                     value="Intense exercise 6-7 times/week"
@@ -125,7 +130,6 @@ const ProcessInfoScreen3 = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
