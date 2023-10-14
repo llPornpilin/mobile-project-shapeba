@@ -125,8 +125,7 @@ const AddMealsSegment = (props) => {
         else {
             dispatch(delMenu())
         }
-    }, [search])
-    console.log("allMenu : ", allMenus)
+    }
     // -----------------------------------------------------------------
 
 
@@ -176,6 +175,7 @@ const AddMealsSegment = (props) => {
     }
     const renderData = ({ item }) => {
         return (
+            <>
             <TouchableHighlight
                 style={styles.touchable}
                 underlayColor="#F7F7FB"
@@ -183,11 +183,15 @@ const AddMealsSegment = (props) => {
                     handlePresentModalAdd(item)
                 }}
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
+                <View className="flex-row justify-between p-3 items-center">
+                    <View className="pl-1">
+                        <Text className="text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
+                        <Text className=" text-xs pt-1">{item.serving_size_g} g {item.calories} cals</Text>
+                    </View>
                     <AntDesign name="plus" size={15} color="black" style={{ paddingRight: 10 }} />
                 </View>
             </TouchableHighlight>
+            </>
         )
     }
 
@@ -287,9 +291,9 @@ const AddMealsSegment = (props) => {
                             onSwipeableOpen={false}
                         />
                         {/* Add My Menu Button */}
-                        <TouchableHighlight
+                        <TouchableHighlight // FIXME: fix add button position
                             className="bg-Orange w-14 h-14 rounded-full justify-center items-center"
-                            style={{ position: 'absolute', right: 30, bottom: 80, elevation: 3 }}
+                            style={{ position: 'relative', right: -300, top: 220, elevation: 3 }}
                             underlayColor="#EF8E6D"
                             onPress={handlePresentModalCreate}
                         >

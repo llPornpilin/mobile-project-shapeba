@@ -7,7 +7,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 
 // ---------------------- Create Own Menu ---------------------------------
-export const CreateMealBottomModal = (props) => {
+export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่องกรอกข้อมูล สารอาหาร
     //props
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const snapPoints = ["60%",];
@@ -36,7 +36,7 @@ export const CreateMealBottomModal = (props) => {
                 u_id: u_id,
                 name: name,
                 calories: cal,
-                servingSize: size,
+                serving_size_g: size,
             });
             //refresh my menu UI
             props.getMyMenuById();
@@ -143,7 +143,7 @@ export const AddMealBottomModal = ( props ) => {
     }
 
     // ********************************* add selected menu to database ****************************************
-    const handleAddMenu = async () => { // TODO: >>> แก้ bottom sheet ถ้ายังไม่ใส่ serving size กด Add meal ไม่ได้ !! 
+    const handleAddMenu = async () => { // TODO: >>> แก้ bottom sheet ถ้ายังไม่ใส่ serving size กด Add meal ไม่ได้ !!
         // -------------------------- get current date ---------------------
         const getDate = new Date()
         const day = getDate.getDate()
@@ -266,6 +266,8 @@ export const AddMealBottomModal = ( props ) => {
         catch (error) {
             console.log(error)
         }
+        setServingSize("")
+        closeModal()
     }
     // *************************************************************************************************************
 
