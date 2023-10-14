@@ -17,11 +17,14 @@ const mealsSlice = createSlice({
         delMenu(state, action) {
             console.log("remove menu")
             state.allMenus = []
+        },
+        setEditMenu(state, action) {
+            state.editMenu = action.payload
         }
     }
 
 })
 
-export const { setMenus, delMenu } = mealsSlice.actions
+export const { setMenus, delMenu, setEditMenu } = mealsSlice.actions
 export const addMealSelector = (store) => store.addMeals
 export default mealsSlice.reducer

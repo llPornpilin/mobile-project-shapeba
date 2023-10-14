@@ -1,24 +1,28 @@
 import React, { useState } from 'react'
 import {
     Modal, TouchableWithoutFeedback,
-    StyleSheet, View, Text, TouchableOpacity, TextInput, SafeAreaView, Pressable
+    StyleSheet, View, Text, TouchableOpacity, TextInput, SafeAreaView, Pressable, Alert
 } from 'react-native';
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { db, collection, getDocs, getDoc, addDoc, doc, query, where } from '../../firebase-cofig';
+import { db, collection, getDocs, getDoc, addDoc, doc, query, where, updateDoc } from '../../firebase-cofig';
+//redux
+import { useSelector, useDispatch } from 'react-redux';
+import { setMenus, delMenu, setEditMenu, addMealSelector } from '../store/slice/mealsSlice';
 
 
 const UpdateBottomSheet = (props) => {
-    //props
-    const info = props.menuInfo;
+
     const bottomSheetModalRef = props.bottomSheetModalRef;
+    console.log("props", props.menuInfo)
+    //setMenuInfo object
+    // props.setMenuInfo((prev) => ({ ...prev, name: name }));
+
     const snapPoints = ["60%",];
-    const [name, setName] = useState("");
-    const [cal, setCal] = useState("");
-    const [size, setSize] = useState("");
+    // const [name, setName] = useState("");
+    // const [cal, setCal] = useState("");
+    // const [size, setSize] = useState("");
     const [u_id, setU_id] = useState("01");
-    setName(info.name);
-    console.log(info)
-    console.log("name", name)
+
 
     const isOpen = props.isOpen;
     const closeModal = () => {
@@ -26,9 +30,24 @@ const UpdateBottomSheet = (props) => {
         setTimeout(() => {
             props.setIsOpen(false);
         }, 200);
-        // setCal("");
-        // setSize("");
-        // setName("");
+    }
+
+    //update my menu to firebase
+    const dbUpdateMenu = async () => {
+        try {
+            console.log("update done: ", props.menuInfo.key, props.menuInfo.name)
+            await updateDoc(doc(db, "myMenu", props.menuInfo.key), {
+                name: props.menuInfo.name,
+                calories: props.menuInfo.calories,
+                servingSize: props.menuInfo.servingSize,
+            });
+            props.getMyMenuById();
+            closeModal();
+            Alert.alert("Success", "Menu update successfully");
+
+        } catch (e) {
+            Alert.alert("Error", "Error update document: " + e.message);
+        }
     }
     return (
         <SafeAreaView>
@@ -49,8 +68,8 @@ const UpdateBottomSheet = (props) => {
                             style={{ flex: 1 }}
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
-                            value={name}
-                            onChangeText={(text) => setName(text)}
+                            value={props.menuInfo.name}
+                            onChangeText={(text) => props.setMenuInfo((prev) => ({ ...prev, name: text }))}
                         />
                     </View>
                     <View className="bg-white p-3 mt-3" style={[styles.textInput, styles.textInputCreate]}>
@@ -60,8 +79,8 @@ const UpdateBottomSheet = (props) => {
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                            value={size}
-                            onChangeText={(text) => setSize(text)}
+                            value={props.menuInfo.servingSize}
+                            onChangeText={(text) => props.setMenuInfo((prev) => ({ ...prev, servingSize: text }))}
                         />
                         <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>
                     </View>
@@ -72,8 +91,8 @@ const UpdateBottomSheet = (props) => {
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                            value={cal}
-                            onChangeText={(text) => setCal(text)}
+                            value={props.menuInfo.calories}
+                            onChangeText={(text) => props.setMenuInfo((prev) => ({ ...prev, calories: text }))}
                         />
                         <Text className="text-base" style={{ justifyContent: 'flex-end' }}>cals.</Text>
                     </View>
@@ -82,7 +101,7 @@ const UpdateBottomSheet = (props) => {
                         <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                             <Text className="font-bold text-Orange text-lg">Cancel</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} >
+                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} onPress={dbUpdateMenu}>
                             <Text className="font-bold text-white text-lg">Done</Text>
                         </TouchableOpacity>
                     </View>

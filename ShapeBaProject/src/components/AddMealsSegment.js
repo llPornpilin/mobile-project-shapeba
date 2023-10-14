@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, FlatList, Modal, Pressable, TouchableHighlight, Alert } from 'react-native';
-import React, { Component, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 // segmant tab
 import SegmentedControlTab from "react-native-segmented-control-tab";
@@ -15,7 +15,7 @@ import UpdateBottomSheet from './UpdateBottomSheet';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { addMealSelector } from '../store/slice/mealsSlice';
-import { setMenus, delMenu } from '../store/slice/mealsSlice';
+import { setMenus, delMenu, setEditMenu } from '../store/slice/mealsSlice';
 // Database
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
 import { useFocusEffect } from "@react-navigation/native";
@@ -185,9 +185,9 @@ const AddMealsSegment = (props) => {
             dbDeleteMenu()
         }
         const updateMenu = (val) => {
+            console.log("menuInfo: ", val)
             setMenuInfo(val)
-            console.log("menuInfo: ", menuInfo)
-            // dbUpdateMenu()
+            // dispatch(setEditMenu(val))
             handlePresentModalUpdate()
         }
         return (
@@ -216,22 +216,6 @@ const AddMealsSegment = (props) => {
 
         } catch (e) {
             Alert.alert("Error", "Error deleting document: " + e.message);
-        }
-    }
-
-    const dbUpdateMenu = async () => {
-        try {
-            console.log("update done: ", menuInfo.key)
-            await updateDoc(doc(db, "myMenu", menuInfo.key), {
-                name: menuInfo.name,
-                calories: menuInfo.calories,
-                servingSize: menuInfo.servingSize,
-            });
-            getMyMenuById();
-            Alert.alert("Success", "Menu update successfully");
-
-        } catch (e) {
-            Alert.alert("Error", "Error update document: " + e.message);
         }
     }
 
@@ -299,7 +283,7 @@ const AddMealsSegment = (props) => {
             }
             <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} />
             <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} getMyMenuById={getMyMenuById} />
-            <UpdateBottomSheet isOpen={isOpenUpdate} setIsOpen={setIsOpenUpdate} bottomSheetModalRef={bottomSheetModalRefUpdate} menuInfo={menuInfo} />
+            <UpdateBottomSheet isOpen={isOpenUpdate} setIsOpen={setIsOpenUpdate} bottomSheetModalRef={bottomSheetModalRefUpdate} menuInfo={menuInfo} setMenuInfo={setMenuInfo} getMyMenuById={getMyMenuById}/>
         </View>
     )
 }
