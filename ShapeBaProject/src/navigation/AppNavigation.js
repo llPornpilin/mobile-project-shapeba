@@ -1,5 +1,7 @@
 import { Image } from 'expo-status-bar';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { AUTH } from "../../firebase-cofig";
+import { onAuthStateChanged } from 'firebase/auth'
 
 // Navigate
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -21,6 +23,8 @@ import RecommendScreen from '../screens/Dashboard/RecommendScreen';
 import TapToStart from '../screens/ProcessInfo/TapToStart';
 import HistoryScreen from '../screens/Profile/HistoryScreen';
 import InformationScreen from '../screens/Profile/InformationScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -37,18 +41,31 @@ const TopTab = createMaterialTopTabNavigator();
 
 // Navigator From Dashboard to AddMeal
 function MainNavigator() {
+    const [user, setUser] = useState(true)
+    useEffect(() => {
+        onAuthStateChanged(AUTH, (user) => {
+            console.log('user', user)
+        })
+    }, [])
+    
     return (
-        <MainStack.Navigator
+        <MainStack.Navigator initialRouteName='SignInScreen'
             screenOptions={{
                 headerShown: false,
             }}
         >
-            <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
+            { user ? 
+                <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
+                : 
+                <MainStack.Screen name="SignInScreen" component={SignInScreen} />
+            }
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
             />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
+            {/* <MainStack.Screen name="SignInScreen" component={SignInScreen} /> */}
+            
         </MainStack.Navigator>
     )
 }
@@ -77,6 +94,7 @@ function ProfileNavigate() {
 function MyTopTabs() {
     return (
         <TopTab.Navigator>
+            {/* <TopTab.Screen name="SignInScreen" component={SignInScreen} /> */}
             <TopTab.Screen name="DashboardDayScreen" component={DashboardDayScreen}
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
@@ -179,7 +197,11 @@ function BottomNavigate() {
     );
 }
 
+
+
 export default function AppNavigator() {
+    const [User, setUser] = useState(null)
+
     return (
         <NavigationContainer>
             <MainNavigator />

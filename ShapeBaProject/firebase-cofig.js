@@ -13,6 +13,8 @@ import {
     query,
     where,
 } from "firebase/firestore";
+import { getAuth } from 'firebase/auth'
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -30,6 +32,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const AUTH = getAuth(app)
 const db = getFirestore(app);
 
-export { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where, getDoc };
+export { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where, getDoc, AUTH };

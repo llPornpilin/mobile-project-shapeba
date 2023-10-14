@@ -7,13 +7,55 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { AUTH } from "../../firebase-cofig";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 
 // Page
 // import SignInScreen from './SignInScreen';
 import ProcessInfoScreen1 from './ProcessInfo/ProcessInfoScreen1';
+import { ActivityIndicator } from "react-native-paper";
 
 const SignInScreen = ({ navigation }) => {
+
+  const [email, setEmail] = useState ('');
+  const [password, setPassword] = useState ('');
+  const [loading, setLoading] = useState (false);
+
+  // console.log(email, password)
+  const auth = AUTH;
+
+  const signIn = async () => {
+    
+    setLoading(true);
+    try{
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+    }
+    catch(error) {
+      console.log(error)
+      alert('Sign In is failed: ' + error.message)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+  const signUp = async () => {
+    setLoading(true);
+    try{
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      alert('check your email')
+    }
+    catch(error) {
+      console.log(error)
+      alert('Sign up is failed: ' + error.message)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -29,38 +71,51 @@ const SignInScreen = ({ navigation }) => {
 
       <Text style={styles.LabelUsername}>User Name</Text>
       <TextInput
+        value={email}
         style={styles.inputUsername}
-        value="Lingling123"
         placeholder="Enter UserName"
+        autoCapitalize="none"
+        onChangeText={(text) => setEmail(text) } 
       />
       <Text style={styles.LabelPassword}>Password</Text>
       <TextInput
+        value={password}
+        onChangeText={(text) => setPassword(text) } 
         style={styles.inputPassword}
         secureTextEntry
-        value="Lingling123"
         placeholder="Enter Password"
+        
       />
-      <TouchableOpacity
-        style={styles.btn1}
-        onPress={() => props.navigations.navigate("#")}
-      >
-        <Text style={styles.btnText1}>Sign In</Text>
-      </TouchableOpacity>
-      <Text style={styles.orText}>or</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#EC744A"/>
+        ) : (
+          <View>
+            <TouchableOpacity style={styles.btn1} onPress={signIn}>
+              <Text style={styles.btnText1}>Sign In</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.btn1} onPress={signUp}>
+              <Text style={styles.btnText1}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+     
+      {/* <Text style={styles.orText}>or</Text>
       <TouchableOpacity
         style={styles.btn2}
-        onPress={() => props.navigations.navigate("#")}
+        onPress={() => navigation.navigate("#")}
       >
         <Text style={styles.btnText2}>Sign in with google</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={styles.signupContainer}>
         <Text>Don’t have an account?</Text>
         <TouchableOpacity
           style={styles.btn3}
-          onPress={() => props.navigations.navigate("#")}
+          onPress={() => navigation.navigate("#")}
         >
           <Text style={{ color: "#EC744A", fontWeight: "bold", marginLeft: 6 }}>
-            Sign In
+            Sign Up
           </Text>
         </TouchableOpacity>
       </View>
