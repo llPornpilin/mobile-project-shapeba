@@ -91,8 +91,9 @@ export const AddMealBottomModal = ( props ) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const {onTouchOutside, title} = props
-    const snapPoints = ["40%"];
 
+    // Bottom Sheet
+    const snapPoints = ["40%"];
     const isOpen = props.isOpen;
     const closeModal = () => {
         bottomSheetModalRef.current?.close();
@@ -100,7 +101,10 @@ export const AddMealBottomModal = ( props ) => {
             props.setIsOpen(false);
         }, 200);
     }
-    
+
+    // serving size textInput state
+    const [servingSize, setServingSize] = useState()
+
 
     const renderOutsideTouchable = (onTouch) => {
         const view = <View style={{flex: 1, width: '100%'}} />
@@ -113,7 +117,7 @@ export const AddMealBottomModal = ( props ) => {
     }
 
     // ********************************* add selected menu to database ****************************************
-    const handleAddMenu = async () => {
+    const handleAddMenu = async () => { // TODO: >>> แก้ bottom sheet ถ้ายังไม่ใส่ serving size กด Add meal ไม่ได้ !! 
         // -------------------------- get current date ---------------------
         const getDate = new Date()
         const day = getDate.getDate()
@@ -134,13 +138,13 @@ export const AddMealBottomModal = ( props ) => {
 
             const getDailyMealsDoc = await getDocs(dailyMealRef) // get doc where userId == ...
 
-            const mealData = { // data that will add to database
+            const mealData = { // data that will add to database (Calculate with serving size)
                 name: props.selectedMenu.name,
-                serving_size_g: props.selectedMenu.serving_size_g, // TODO: get value from textInput 
-                calories: props.selectedMenu.calories, // TODO: calculate calories
-                protein_g: props.selectedMenu.protein_g,
-                carbohydrates_total_g: props.selectedMenu.carbohydrates_total_g,
-                fat_total_g: props.selectedMenu.fat_total_g
+                serving_size_g: parseFloat(servingSize),
+                calories: (props.selectedMenu.calories / props.selectedMenu.serving_size_g * servingSize).toFixed(2),
+                protein_g: (props.selectedMenu.protein_g / props.selectedMenu.serving_size_g * servingSize).toFixed(2),
+                carbohydrates_total_g: (props.selectedMenu.carbohydrates_total_g / props.selectedMenu.serving_size_g * servingSize).toFixed(2),
+                fat_total_g: (props.selectedMenu.fat_total_g / props.selectedMenu.serving_size_g * servingSize).toFixed(2)
             }
 
             // ----------- format date data string to dd/mm/yyyy -----------
@@ -162,7 +166,7 @@ export const AddMealBottomModal = ( props ) => {
             }
             // ------------------------------------------------------------
 
-            // function add meal data for else case //TODO: ทำ function แล้วเรียกใช้ใน case 1.2 , 2
+            // function add meal data for else case
             async function addMealDoc() {
                 const mealsName = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
                 const newMealDoc = {
@@ -263,8 +267,8 @@ export const AddMealBottomModal = ( props ) => {
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                        // onChangeText={servingSize => setServingSize(servingSize)}
-                        // value={servingSize}
+                            onChangeText={servingSize => setServingSize(servingSize)}
+                            value={servingSize}
                         />
                         <Text className="text-base" style={{justifyContent: 'flex-end'}}>g.</Text>
                     </View>
