@@ -7,11 +7,15 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 
 // ---------------------- Create Own Menu ---------------------------------
-export const CreateMealBottomModal = ( props ) => {
+export const CreateMealBottomModal = (props) => {
     //props
-    const bottomSheetModalRef = props.bottomSheetModalRef; 
+    const bottomSheetModalRef = props.bottomSheetModalRef;
     const snapPoints = ["60%",];
-    
+    const [name, setName] = useState("");
+    const [cal, setCal] = useState("");
+    const [size, setSize] = useState("");
+    const [u_id, setU_id] = useState("01");
+
     const isOpen = props.isOpen;
     const closeModal = () => {
         bottomSheetModalRef.current?.close();
@@ -24,13 +28,35 @@ export const CreateMealBottomModal = ( props ) => {
         bottomSheetModalRef.current?.dismiss();
     };
 
+    //add my menu to firebase
+    const saveMyMenu = async () => {
+        console.log(name, cal, size)
+        try {
+            const docRef = await addDoc(collection(db, "myMenu"), {
+                u_id: u_id,
+                name: name,
+                calories: cal,
+                servingSize: size,
+            });
+            //refresh my menu UI
+            props.getMyMenuById();
+            closeModal();
+            setCal("");
+            setSize("");
+            setName("");
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
     return (
         <SafeAreaView>
             <BottomSheetModal
                 ref={bottomSheetModalRef}
                 index={0}
-                snapPoints={snapPoints} s
-                backgroundStyle={{ borderRadius: 30,}}
+                snapPoints={snapPoints}
+                backgroundStyle={{ borderRadius: 30, }}
                 onDismiss={() => props.setIsOpen(false)}
             >
                 <View className="p-8">
@@ -38,45 +64,45 @@ export const CreateMealBottomModal = ( props ) => {
                         Create My Menu
                     </Text>
                     <View className="bg-white p-3" style={[styles.textInput, styles.textInputCreate]}>
-                        <Text className="text-base" style={{justifyContent: 'flex-start'}}>Menu Name :</Text>
+                        <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Menu Name :</Text>
                         <TextInput
-                        style={{flex: 1}}
-                        className="h-15 pl-3 pr-3"
-                        underlineColorAndroid="transparent"
-                    // onChangeText={servingSize => setServingSize(servingSize)}
-                    // value={servingSize}
+                            style={{ flex: 1 }}
+                            className="h-15 pl-3 pr-3"
+                            underlineColorAndroid="transparent"
+                            value={name}
+                            onChangeText={(text) => setName(text)}
                         />
                     </View>
                     <View className="bg-white p-3 mt-3" style={[styles.textInput, styles.textInputCreate]}>
-                        <Text className="text-base" style={{justifyContent: 'flex-start'}}>Serving Size :</Text>
+                        <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
                         <TextInput
-                            style={{flex: 1}}
+                            style={{ flex: 1 }}
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                        // onChangeText={servingSize => setServingSize(servingSize)}
-                        // value={servingSize}
-                    />
-                        <Text className="text-base" style={{justifyContent: 'flex-end'}}>g.</Text>
+                            value={size}
+                            onChangeText={(text) => setSize(text)}
+                        />
+                        <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>
                     </View>
                     <View className="bg-white p-3 mt-3" style={[styles.textInput, styles.textInputCreate]}>
-                        <Text className="text-base" style={{justifyContent: 'flex-start'}}>Calories :</Text>
+                        <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Calories :</Text>
                         <TextInput
-                            style={{flex: 1}}
+                            style={{ flex: 1 }}
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                        // onChangeText={servingSize => setServingSize(servingSize)}
-                        // value={servingSize}
-                    />
-                        <Text className="text-base" style={{justifyContent: 'flex-end'}}>cals.</Text>
+                            value={cal}
+                            onChangeText={(text) => setCal(text)}
+                        />
+                        <Text className="text-base" style={{ justifyContent: 'flex-end' }}>cals.</Text>
                     </View>
-                
+
                     <View className="flex-row justify-center">
-                        <TouchableOpacity className="bg-white" style={[styles.button, {marginRight: 25}]} onPress={this.close}>
+                        <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                             <Text className="font-bold text-Orange text-lg">Cancel</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className="bg-Orange" style={[styles.button, {marginLeft: 25}]} onPress={this.close}>
+                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} onPress={saveMyMenu}>
                             <Text className="font-bold text-white text-lg">Create</Text>
                         </TouchableOpacity>
                     </View>
@@ -90,7 +116,7 @@ export const CreateMealBottomModal = ( props ) => {
 export const AddMealBottomModal = ( props ) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
-    const {onTouchOutside, title} = props
+    const { onTouchOutside, title } = props
 
     // Bottom Sheet
     const snapPoints = ["40%"];
@@ -107,10 +133,10 @@ export const AddMealBottomModal = ( props ) => {
 
 
     const renderOutsideTouchable = (onTouch) => {
-        const view = <View style={{flex: 1, width: '100%'}} />
+        const view = <View style={{ flex: 1, width: '100%' }} />
         if (!onTouch) return view
         return (
-            <TouchableWithoutFeedback onPress={onTouch} style={{flex: 1, width: '100%'}}>
+            <TouchableWithoutFeedback onPress={onTouch} style={{ flex: 1, width: '100%' }}>
                 {view}
             </TouchableWithoutFeedback>
         )
@@ -251,30 +277,30 @@ export const AddMealBottomModal = ( props ) => {
                 ref={bottomSheetModalRef}
                 index={0}
                 snapPoints={snapPoints} s
-                backgroundStyle={{ borderRadius: 30, marginBottom: 0}}
+                backgroundStyle={{ borderRadius: 30, marginBottom: 0 }}
                 animationType={'fade'}
-                // onDismiss={() => props.setIsOpen(false)}
+            // onDismiss={() => props.setIsOpen(false)}
             >
-                
+
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
                         Menu Name
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>
-                        <Text className="text-base" style={{justifyContent: 'flex-start'}}>Serving Size :</Text>
+                        <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
                         <TextInput
-                            style={{flex: 1}}
+                            style={{ flex: 1 }}
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
                             onChangeText={servingSize => setServingSize(servingSize)}
                             value={servingSize}
                         />
-                        <Text className="text-base" style={{justifyContent: 'flex-end'}}>g.</Text>
+                        <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>
                     </View>
-                    
+
                     <View className="flex-row justify-center">
-                        <TouchableOpacity className="bg-white" style={[styles.button, {marginRight: 25}]} onPress={this.close}>
+                        <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                             <Text className="font-bold text-Orange text-lg">Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity className="bg-Orange" style={[styles.button, {marginLeft: 25}]} onPress={() => handleAddMenu()}>
@@ -313,7 +339,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 30,
         elevation: 3,
-        underlineColorAndroid:"transparent",
+        underlineColorAndroid: "transparent",
     },
     textInput: {
         flexDirection: 'row',

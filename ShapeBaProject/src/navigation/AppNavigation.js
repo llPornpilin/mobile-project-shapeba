@@ -67,8 +67,8 @@ function ProfileNavigate() {
             <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
             <ProfileStack.Screen name="PersonalInfoScreen" component={PersonalInfoScreen} />
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
-            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen}/>
-            <ProfileStack.Screen name="InformationScreen" component={InformationScreen}/>
+            <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
+            <ProfileStack.Screen name="InformationScreen" component={InformationScreen} />
         </ProfileStack.Navigator>
     )
 }
@@ -140,9 +140,8 @@ function BottomNavigate() {
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
                         const routeName = getFocusedRouteNameFromRoute(route)
-                        // console.log(routeName)
+                        console.log(routeName)
                         if (routeName === 'DetailMealsScreen' || routeName === 'RecommendScreen') {
-
                             return { display: "none" }
                         }
                         return
@@ -153,20 +152,20 @@ function BottomNavigate() {
                     },
                 })}
             />
-            <BottomTab.Screen name="DetailMealsScreen" component={DetailMealsScreen}
+            {/* <BottomTab.Screen name="DetailMealsScreen" component={DetailMealsScreen}
                 options={{
                     tabBarIcon: () => btnPlus(),
                     presentation: "Modal",
                     headerShown: false,
                     title: ""
                 }}
-            />
+            /> */}
             <BottomTab.Screen name="Profile" component={ProfileNavigate}
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
                         const routeName = getFocusedRouteNameFromRoute(route)
-                        if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen' || routeName == 'InformationScreen')  {
-                            return {display: "none"}
+                        if (routeName == 'HistoryScreen' || routeName == 'StartNewGoalScreen' || routeName == 'InformationScreen') {
+                            return { display: "none" }
                         }
                         return
                     })(route),
