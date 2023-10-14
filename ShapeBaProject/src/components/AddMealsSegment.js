@@ -84,21 +84,11 @@ const AddMealsSegment = (props) => {
     // check if data from API
     const [datasource, setDatasource] = useState("")
 
-    // test API
-    // useEffect(() => {
-    //     fetch('https://jsonplaceholder.typicode.com/users')
-    //         .then(response => response.json())
-    //         .then(data => dispatch(setMenus(data)))
-        
-    //     console.log("all Menu " + JSON.stringify(allMenus, null, 2))
-    // }, [])
-
     // ------------------ MyMenu from Database ------------------------
     const setDataFromDatabase = (tempDoc) => {
         dispatch(setMenus(tempDoc));
-        setDatasource("Database");
     };
-    const searchMenuInDatabase = async (searchMenuName) => { // TODO: search in database before search in API
+    const searchMenuInDatabase = async (searchMenuName) => {
         console.log("allMenus dispatch", allMenus)
         try {
             console.log("... finding menu in database")
@@ -112,7 +102,6 @@ const AddMealsSegment = (props) => {
                     if (menuItem.name === searchMenuName) {
                         tempDoc.push({ ...menuItem, key: menu.id });
                         // dispatch(setMenus(tempDoc))
-                        // setDatasource("Database")
                         // break;
                     }
                 }
@@ -140,7 +129,6 @@ const AddMealsSegment = (props) => {
                 .then(response => response.json())
                 .then((result) => {
                     dispatch(setMenus(result))
-                    setDatasource("API")
                 })
                 .catch((error) => {
                     console.log("not found menu in API !")
@@ -193,7 +181,6 @@ const AddMealsSegment = (props) => {
                 style={styles.touchable}
                 underlayColor="#F7F7FB"
                 onPress={() => {
-                    // handlePresentModalAdd((datasource == "Database") || (selectedIndex == 1) ? item.key : item.name)
                     handlePresentModalAdd(item)
                 }}
             >
