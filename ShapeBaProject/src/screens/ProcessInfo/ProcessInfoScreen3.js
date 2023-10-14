@@ -116,7 +116,7 @@ const ProcessInfoScreen3 = ({ navigation }) => {
           <View style={styles.signupContainer}>
             <TouchableOpacity
               style={styles.btn3}
-              onPress={() => navigation.navigate("DashboardDayScreen")}
+              onPress={() => navigation.navigate("TapToStart")}
             >
               <Image
                 source={require("../../../assets/img/Arrow.jpg")}

@@ -11,7 +11,7 @@ const label = (img, text) => {
 
 }
 
-const TapToStart = () => {
+const TapToStart = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.box1}>
@@ -27,7 +27,7 @@ const TapToStart = () => {
                 {label(require("../../../assets/img/icons8-chart.png"), "Graph Summary ")}
                 {label(require("../../../assets/img/icons8-fix.png"), "Customize menu list")}
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("bottomNavigate")}>
                 <Text className="mb-5 mt-5 text-base font-semibold text-white">Tap to Start</Text>
             </TouchableOpacity>
 

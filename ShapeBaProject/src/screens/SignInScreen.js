@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { AUTH } from "../../firebase-cofig";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 // Page
 // import SignInScreen from './SignInScreen';
@@ -17,6 +19,10 @@ import ProcessInfoScreen1 from './ProcessInfo/ProcessInfoScreen1';
 import { ActivityIndicator } from "react-native-paper";
 
 const SignInScreen = ({ navigation }) => {
+
+  // const auth = initializeAuth(app, {
+  //   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  // });
 
   const [email, setEmail] = useState ('');
   const [password, setPassword] = useState ('');
@@ -26,7 +32,7 @@ const SignInScreen = ({ navigation }) => {
   const auth = AUTH;
 
   const signIn = async () => {
-    
+
     setLoading(true);
     try{
       const response = await signInWithEmailAndPassword(auth, email, password);

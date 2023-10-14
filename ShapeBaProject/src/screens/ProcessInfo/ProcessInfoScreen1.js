@@ -1,10 +1,27 @@
 import React, { useState } from "react";
 import {
-  View,Text,StyleSheet,TextInput,TouchableOpacity,Image,ScrollView,Platform,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Platform,
 } from "react-native";
-
 import { Picker } from "@react-native-picker/picker";
-// Page
+import Calendar from "../../components/Calendar";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  processInfoSelector,
+  setSelectedStartDate,
+  setSelectedSex,
+  setWeight,
+  setHeight,
+  setBirthdate,
+  setOpenStartDatePicker,
+} from "../../store/slice/processInfoSlice1";
+
 export const progressCircle = (number, color, textcolor) => {
   return (
     <View style={styles.uiItem}>
@@ -14,8 +31,15 @@ export const progressCircle = (number, color, textcolor) => {
     </View>
   );
 };
+
 const ProcessInfoScreen1 = ({ navigation }) => {
-  const [selectedSex, setSelectedSex] = useState("male");
+  const dispatch = useDispatch();
+  const processInfo = useSelector(processInfoSelector);
+
+  const openStartDatePicker = processInfo.openStartDatePicker;
+  const handleOnPressStartDate = () => {
+    dispatch(setOpenStartDatePicker(!openStartDatePicker));
+  };
 
   return (
     <ScrollView
@@ -55,7 +79,13 @@ const ProcessInfoScreen1 = ({ navigation }) => {
               >
                 Weight
               </Text>
-              <TextInput style={styles.input} value="" placeholder="" />
+              <TextInput
+                style={styles.input}
+                value={processInfo.weight}
+                onChangeText={(text) => dispatch(setWeight(text))}
+                keyboardType="number-pad"
+                maxLength={3}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -69,7 +99,13 @@ const ProcessInfoScreen1 = ({ navigation }) => {
               >
                 Height
               </Text>
-              <TextInput style={styles.input} value="" placeholder="" />
+              <TextInput
+                style={styles.input}
+                value={processInfo.height}
+                onChangeText={(text) => dispatch(setHeight(text))}
+                keyboardType="number-pad"
+                maxLength={3}
+              />
             </View>
           </View>
           <View style={styles.inputRowContainer}>
@@ -85,7 +121,23 @@ const ProcessInfoScreen1 = ({ navigation }) => {
               >
                 Birth Date
               </Text>
-              <TextInput style={styles.input} value="" placeholder="" />
+              <View>
+                <TouchableOpacity onPress={handleOnPressStartDate}>
+                  <TextInput
+                    style={styles.input}
+                    value={processInfo.selectedStartDate}
+                    editable={false}
+                    placeholder="Select Birthdate"
+                  />
+                </TouchableOpacity>
+                <Calendar
+                  openStartDatePicker={processInfo.openStartDatePicker}
+                  handleOnPressStartDate={handleOnPressStartDate}
+                  setSelectedStartDate={(date) =>
+                    dispatch(setSelectedStartDate(date))
+                  } // ปรับให้เรียก dispatch และ set ค่าใหม่เข้า state
+                />
+              </View>
             </View>
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text
@@ -106,9 +158,9 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                 }
               >
                 <Picker
-                  selectedValue={selectedSex}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedSex(itemValue)
+                  selectedValue={processInfo.selectedSex}
+                  onValueChange={(itemValue) =>
+                    dispatch(setSelectedSex(itemValue))
                   }
                   style={
                     Platform.OS === "ios"

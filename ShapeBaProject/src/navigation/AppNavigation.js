@@ -25,6 +25,9 @@ import HistoryScreen from '../screens/Profile/HistoryScreen';
 import InformationScreen from '../screens/Profile/InformationScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import ProcessInfoScreen1 from '../screens/ProcessInfo/ProcessInfoScreen1';
+import ProcessInfoScreen2 from '../screens/ProcessInfo/ProcessInfoScreen2';
+import ProcessInfoScreen3 from '../screens/ProcessInfo/ProcessInfoScreen3';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -50,7 +53,7 @@ function MainNavigator() {
     // }, [])
 
     return (
-        <MainStack.Navigator initialRouteName='SignInScreen'
+        <MainStack.Navigator
             screenOptions={{
                 headerShown: false,
             }}
@@ -60,12 +63,16 @@ function MainNavigator() {
                 :
                 <MainStack.Screen name="SignInScreen" component={SignInScreen} />
             } */}
+            <MainStack.Screen name="ProcessInfoScreen1" component={ProcessInfoScreen1} />
+            <MainStack.Screen name="ProcessInfoScreen2" component={ProcessInfoScreen2} />
+            <MainStack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
             <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
             />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
+           
             {/* <MainStack.Screen name="SignInScreen" component={SignInScreen} /> */}
 
         </MainStack.Navigator>
@@ -213,7 +220,7 @@ function BottomNavigate() {
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(true)
     useEffect(() => {
         onAuthStateChanged(AUTH, (user) => {
             console.log('user', user)

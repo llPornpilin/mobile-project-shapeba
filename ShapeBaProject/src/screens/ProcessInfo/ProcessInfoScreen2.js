@@ -40,20 +40,21 @@ const ProcessInfoScreen2 = ({ navigation }) => {
 
         {/* input */}
         <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.inputbetween}>
+          <TouchableOpacity style={styles.inputbetween}
+           onPress={() => navigation.navigate("ProcessInfoScreen3")}>
             <Text className="text-sm text-white font-semibold">Maintain</Text>
             <Text className="text-sm text-white font-semibold">weight</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.inputRowContainer}>
           <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.inputL}>
+            <TouchableOpacity style={styles.inputL}  onPress={() => navigation.navigate("ProcessInfoScreen3")}>
               <Text className="text-sm text-white font-semibold">Lose</Text>
               <Text className="text-sm text-white font-semibold">weight</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.inputR}>
+            <TouchableOpacity style={styles.inputR}  onPress={() => navigation.navigate("ProcessInfoScreen3")}>
               <Text className="text-sm text-white font-semibold">Gain</Text>
               <Text className="text-sm text-white font-semibold">weight</Text>
             </TouchableOpacity>
