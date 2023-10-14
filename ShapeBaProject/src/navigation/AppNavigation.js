@@ -35,42 +35,55 @@ import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../store/slice/frontEndSlice';
 
 const MainStack = createNativeStackNavigator();
+const LoginStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 // Navigator From Dashboard to AddMeal
 function MainNavigator() {
-    const [user, setUser] = useState(true)
-    useEffect(() => {
-        onAuthStateChanged(AUTH, (user) => {
-            console.log('user', user)
-        })
-    }, [])
-    
+    // const [user, setUser] = useState(null)
+    // useEffect(() => {
+    //     onAuthStateChanged(AUTH, (user) => {
+    //         console.log('user', user)
+    //     })
+    // }, [])
+
     return (
         <MainStack.Navigator initialRouteName='SignInScreen'
             screenOptions={{
                 headerShown: false,
             }}
         >
-            { user ? 
+            {/* {user ?
                 <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
-                : 
+                :
                 <MainStack.Screen name="SignInScreen" component={SignInScreen} />
-            }
+            } */}
+            <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
             <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
             />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
             {/* <MainStack.Screen name="SignInScreen" component={SignInScreen} /> */}
-            
+
         </MainStack.Navigator>
     )
 }
 
-
+function LogInNavigate() {
+    return (
+        <LoginStack.Navigator initialRouteName='SignInScreen'
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <LoginStack.Screen name="SignInScreen" component={SignInScreen} />
+            <LoginStack.Screen name="SignUpScreen" component={SignUpScreen} />
+        </LoginStack.Navigator>
+    )
+}
 
 
 // Navigator in Profile Page
@@ -197,14 +210,32 @@ function BottomNavigate() {
     );
 }
 
-
+const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-    const [User, setUser] = useState(null)
-
+    const [user, setUser] = useState(null)
+    useEffect(() => {
+        onAuthStateChanged(AUTH, (user) => {
+            console.log('user', user)
+        })
+    }, [])
     return (
-        <NavigationContainer>
-            <MainNavigator />
+        <NavigationContainer >
+            <Stack.Navigator initialRouteName='LogInNavigate'
+                screenOptions={{
+                    headerShown: false,
+                }}>
+                {user ?
+                    <Stack.Screen name="MainNavigator" component={MainNavigator} />
+                    :
+                    <Stack.Screen name="LogInNavigate" component={LogInNavigate} />
+                }
+
+
+
+            </Stack.Navigator>
+
+            {/* <MainNavigator /> */}
         </NavigationContainer>
     )
 }

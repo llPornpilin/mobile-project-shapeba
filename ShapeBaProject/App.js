@@ -25,20 +25,20 @@ export default function App() {
   // return (
   //   <TestNavigator />
   // )
-  // return (
-  //   <Provider store={store}>
-  //     <GestureHandlerRootView style={{ flex: 1 }} >
-  //       <BottomSheetModalProvider>
-  //         {/* <Calendar /> */}
-  //         <AppNavigator />
-
-  //       </BottomSheetModalProvider>
-  //     </GestureHandlerRootView>
-  //   </Provider>
-  // )
   return (
-    <SignInScreen/>
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }} >
+        <BottomSheetModalProvider>
+          {/* <Calendar /> */}
+          <AppNavigator />
+
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </Provider>
   )
+  // return (
+  //   <SignInScreen/>
+  // )
 
 }
 
