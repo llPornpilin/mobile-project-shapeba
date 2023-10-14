@@ -186,7 +186,7 @@ const AddMealsSegment = (props) => {
                 <View className="flex-row justify-between p-3 items-center">
                     <View className="pl-1">
                         <Text className="text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
-                        <Text className=" text-xs pt-1">{item.serving_size_g} g {item.calories} cals</Text>
+                        <Text className=" text-xs pt-1">{item.serving_size_g} g, {item.calories} cals</Text>
                     </View>
                     <AntDesign name="plus" size={15} color="black" style={{ paddingRight: 10 }} />
                 </View>
@@ -207,7 +207,6 @@ const AddMealsSegment = (props) => {
         const updateMenu = (val) => {
             console.log("menuInfo: ", val)
             setMenuInfo(val)
-            // dispatch(setEditMenu(val))
             handlePresentModalUpdate()
         }
         return (

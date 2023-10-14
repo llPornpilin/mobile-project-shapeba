@@ -158,7 +158,7 @@ export const AddMealBottomModal = ( props ) => {
         // ------------------------------------------------------------------
 
         try {
-            const userId = "04"; // FIXME: change "01" to real user id
+            const userId = "05"; // FIXME: change "01" to real user id
             const mealName = (props.mealName.split(" ").join("")).toLowerCase();
             const dailyMealRef = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
 

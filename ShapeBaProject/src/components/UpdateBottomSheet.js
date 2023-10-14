@@ -14,13 +14,8 @@ const UpdateBottomSheet = (props) => {
 
     const bottomSheetModalRef = props.bottomSheetModalRef;
     console.log("props", props.menuInfo)
-    //setMenuInfo object
-    // props.setMenuInfo((prev) => ({ ...prev, name: name }));
 
     const snapPoints = ["60%",];
-    // const [name, setName] = useState("");
-    // const [cal, setCal] = useState("");
-    // const [size, setSize] = useState("");
     const [u_id, setU_id] = useState("01");
 
 
@@ -39,7 +34,7 @@ const UpdateBottomSheet = (props) => {
             await updateDoc(doc(db, "myMenu", props.menuInfo.key), {
                 name: props.menuInfo.name,
                 calories: props.menuInfo.calories,
-                servingSize: props.menuInfo.serving_size_g,
+                serving_size_g: props.menuInfo.serving_size_g,
             });
             props.getMyMenuById();
             closeModal();
