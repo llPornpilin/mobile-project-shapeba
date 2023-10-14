@@ -11,7 +11,7 @@ import AddMealsSegment from '../../components/AddMealsSegment';
 import { useDispatch } from 'react-redux';
 import { setMenus } from '../../store/slice/mealsSlice';
 
-const AddMealsScreen = ({ navigation }) => {
+const AddMealsScreen = ({ navigation, route }) => {
     const [searchInput, setSearchInput] = useState("")
     const [btnSearch, setBtnSearch] = useState(false)
     
@@ -53,7 +53,7 @@ const AddMealsScreen = ({ navigation }) => {
                     </View>
                 </View>
             </Header>
-            <AddMealsSegment search={btnSearch ? searchInput : ""} />
+            <AddMealsSegment search={btnSearch ? searchInput : ""} mealName={route.params.mealName} />
         </View>
     )
 }

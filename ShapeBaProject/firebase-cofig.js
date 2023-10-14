@@ -8,6 +8,9 @@ import {
     doc,
     deleteDoc,
     updateDoc,
+    arrayUnion,
+    query,
+    where
 } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,4 +31,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc };
+export { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where };

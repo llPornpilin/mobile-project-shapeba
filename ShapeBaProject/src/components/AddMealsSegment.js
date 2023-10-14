@@ -72,7 +72,6 @@ const QuickActions = (index, qaItem) => {
 
 // Segment เปลี่ยนหน้า
 const AddMealsSegment = (props) => {
-
     // for Redux
     const dispatch = useDispatch()
     const allMenusStore = useSelector(addMealSelector)
@@ -81,6 +80,9 @@ const AddMealsSegment = (props) => {
     // search props from header
     const search = props.search
     console.log("search menu: ", search)
+
+    // check if data from API
+    const [datasource, setDatasource] = useState("")
 
     // test API
     // useEffect(() => {
@@ -91,32 +93,39 @@ const AddMealsSegment = (props) => {
     //     console.log("all Menu " + JSON.stringify(allMenus, null, 2))
     // }, [])
 
-    // MyMenu from Database
-    const searchMenu = async (searchMenuName) => {
+    // ------------------ MyMenu from Database ------------------------
+    const setDataFromDatabase = (tempDoc) => {
+        dispatch(setMenus(tempDoc));
+        setDatasource("Database");
+    };
+    const searchMenuInDatabase = async (searchMenuName) => { // TODO: search in database before search in API
+        console.log("allMenus dispatch", allMenus)
         try {
+            console.log("... finding menu in database")
             const myMenusDatabase = await getDocs(collection(db, "user"))
             const tempDoc = []
             myMenusDatabase.forEach(menu => {
                 for (const menuItem of menu.data().myMenu) {
+                    console.log("allmenu : ", menuItem)
+                    console.log("menuItem : ", menuItem.name)
+                    console.log("search name : ", searchMenuName)
                     if (menuItem.name === searchMenuName) {
                         tempDoc.push({ ...menuItem, key: menu.id });
-                        dispatch(setMenus(tempDoc))
-                        break;
+                        // dispatch(setMenus(tempDoc))
+                        // setDatasource("Database")
+                        // break;
                     }
                 }
             });
             console.log("searched menu from database => ", tempDoc)
-
-            if (tempDoc.length == 0) {
-                console.log("\nnot found menu !")
-            }
+            tempDoc.length > 0 ? setDataFromDatabase(tempDoc) : dispatch(delMenu())
         }
         catch (error) {
             console.error("Error occurred while searching the database:", error);
         }
         
     }
-
+    // FIXME: search menu ได้จากทีละแหล่ง (ถ้าหาใน db ก่อน ต่อไปจะหาจาก API ไม่ได้ และกลับกัน ถ้าหาจาก API ก่อน จะหาจาก db ไม่ได้)
     // ----------------------- Nutrition API ------------------------
     useEffect(() => {
         var query = '1lb brisket and fries';
@@ -129,21 +138,25 @@ const AddMealsSegment = (props) => {
             },
             })
                 .then(response => response.json())
-                .then(result => dispatch(setMenus(result)))
+                .then((result) => {
+                    dispatch(setMenus(result))
+                    setDatasource("API")
+                })
                 .catch((error) => {
-                    console.log("not found menu in API")
-                    searchMenu(search);
+                    console.log("not found menu in API !")
+                    searchMenuInDatabase(search);
             });
         }
         else {
             dispatch(delMenu())
         }
     }, [search])
-    console.log("allMenu from nutrial API : ", allMenus)
+    console.log("allMenu : ", allMenus)
     // -----------------------------------------------------------------
 
 
     // select segment
+    // selectedIndex = 0 => AllMenu, selectedIndex = 1 => MyMenu,  
     const [selectedIndex, setSelectIndex] = useState(0)
 
     // add meal bottom sheet
@@ -154,8 +167,10 @@ const AddMealsSegment = (props) => {
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const bottomSheetModalRefCreate = useRef(null);
 
-    const handlePresentModalAdd = () => {
-        console.log(isOpenAdd)
+    const [selectedMenu, setSelectMenu] = useState()
+
+    const handlePresentModalAdd = (menuData) => {
+        setSelectMenu(menuData)
         bottomSheetModalRefAdd.current?.present();
         setTimeout(() => {
             setIsOpenAdd(true);
@@ -174,7 +189,14 @@ const AddMealsSegment = (props) => {
     }
     const renderData = ({ item }) => {
         return (
-            <TouchableHighlight style={styles.touchable} underlayColor="#F7F7FB" onPress={handlePresentModalAdd}>
+            <TouchableHighlight
+                style={styles.touchable}
+                underlayColor="#F7F7FB"
+                onPress={() => {
+                    // handlePresentModalAdd((datasource == "Database") || (selectedIndex == 1) ? item.key : item.name)
+                    handlePresentModalAdd(item)
+                }}
+            >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text className="mb-5 mt-5 text-base font-semibold" style={{ flex: 1 }}>{item.name}</Text>
                     <AntDesign name="plus" size={15} color="black" style={{paddingRight: 10}} />
@@ -233,7 +255,7 @@ const AddMealsSegment = (props) => {
                         </TouchableHighlight>
                     </View>
             }
-            <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} />
+            <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} selectedMenu={selectedMenu} mealName={props.mealName} />
             <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} />
         </View>
     )

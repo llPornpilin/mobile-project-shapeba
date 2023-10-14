@@ -113,7 +113,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
                 onSwipeableOpen={false}
             />
             <View style={{ width: '100%', alignItems: 'center', marginBottom: 0, }}>
-                <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen')}>
+                <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen', {mealName: route.params.header})}>
                     <Text className="font-bold text-white" >Add More Meal</Text>
                 </TouchableOpacity>
             </View>
