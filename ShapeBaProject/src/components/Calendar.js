@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import DatePicker from "react-native-modern-datepicker";
 import { getFormatedDate } from "react-native-modern-datepicker";
+import { calculateTDEE } from "../store/slice/processInfoSlice1";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import {
 } from "../store/slice/frontEndSlice";
 
 const Calendar = (props) => {
+    
   const openStartDatePicker = props.openStartDatePicker;
   const today = new Date();
   const startDate = getFormatedDate(

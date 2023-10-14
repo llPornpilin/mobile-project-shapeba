@@ -11,17 +11,29 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { progressCircle } from "./ProcessInfoScreen1";
-import { setGoalweight, setActivitylevel } from "../../store/slice/processInfoSlice1";
+import {
+  setGoalweight,
+  setActivitylevel,
+  setAge
+} from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
-
+import { calculateTDEE } from "../../store/slice/processInfoSlice1";
 
 
 const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
-  
+
+  // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
+  const handleCalculateTDEE = () => {
+    dispatch(setAge(25));
+    const tdee = calculateTDEE(processInfo);
+    // ทำอะไรกับค่า tdee ที่ได้ต่อไป
+    // ...
+  };
+
   const handleGoalChange = (text) => {
     dispatch(setGoalweight(text));
   };
@@ -87,10 +99,9 @@ const ProcessInfoScreen3 = ({ navigation }) => {
                 }
               >
                 <Picker
-                 selectedValue={processInfo.activitylevel}
-                 onValueChange={(itemValue) =>
-                   dispatch(setActivitylevel(itemValue))
-                 
+                  selectedValue={processInfo.activitylevel}
+                  onValueChange={(itemValue) =>
+                    dispatch(setActivitylevel(itemValue))
                   }
                   style={
                     Platform.OS === "ios"
@@ -121,7 +132,10 @@ const ProcessInfoScreen3 = ({ navigation }) => {
           <View style={styles.signupContainer}>
             <TouchableOpacity
               style={styles.btn3}
-              onPress={() => navigation.navigate("TapToStart")}
+              onPress={() => {
+                navigation.navigate("TapToStart");
+                handleCalculateTDEE();
+              }}
             >
               <Image
                 source={require("../../../assets/img/Arrow.jpg")}

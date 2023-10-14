@@ -1,7 +1,12 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import React from 'react'
+import { processInfoSelector } from "../../store/slice/processInfoSlice1";
+import { calculateTDEE } from '../../store/slice/processInfoSlice1';
+import { useDispatch, useSelector } from "react-redux";
+
 
 const label = (img, text) => {
+    
     return (
         <View style={styles.c1}>
             <Image source={img} style={{ width: 50, height: 50 }}></Image>
@@ -12,13 +17,16 @@ const label = (img, text) => {
 }
 
 const TapToStart = ({ navigation }) => {
+    const processInfo = useSelector(processInfoSelector);
+    const tdee = calculateTDEE(processInfo);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.box1}>
                 <Text className="font-bold text-2xl text-Green mt-5">TARGET WEIGHT</Text>
                 <Text className="font-bold text-2xl text-Green">55 KG</Text>
                 <Text className="font-bold text-lg text-Green">Your daily energy require</Text>
-                <Text className="font-bold text-2xl text-Orange mt-3">2130 Cals / Day</Text>
+                <Text className="font-bold text-2xl text-Orange mt-3">{tdee} Cals / Day</Text>
                 <Text className="font-bold text-sm text-Green mt-3">during 2 month</Text>
             </View>
             <View className="mt-11">
