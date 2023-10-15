@@ -221,10 +221,10 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
     const [user, setUser] = useState(null)
-    console.log('user', user.email, user.uid)
+    // console.log('user', user.email, user.uid)
     useEffect(() => {
         onAuthStateChanged(AUTH, (user) => {
-            // console.log('user', user.uid)
+            console.log('user', user)
             setUser(user)
         })
     }, [])

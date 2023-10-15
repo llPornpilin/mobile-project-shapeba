@@ -48,6 +48,7 @@ const Calendar = (props) => {
             <DatePicker
               mode="calendar"
               // minimumDate={startDate}
+              maximumDate={startDate}
               selected={startedDate}
               onDateChanged={handleChangeStartDate}
               onSelectedChange={(date) => props.setSelectedStartDate(date)} // เปลี่ยนชื่อฟังก์ชันนี้

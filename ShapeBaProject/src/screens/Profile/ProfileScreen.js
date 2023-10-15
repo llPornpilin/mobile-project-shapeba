@@ -16,6 +16,9 @@ import {
   StatusBar,
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
+//firebase
+import { AUTH } from "../../../firebase-cofig";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const ProfileScreen = ({ navigation }) => {
   // CurrentweightPopup
@@ -77,7 +80,7 @@ const ProfileScreen = ({ navigation }) => {
             <View
               style={
                 (styles.progressbar,
-                { flexDirection: "row", alignItems: "center" })
+                  { flexDirection: "row", alignItems: "center" })
               }
             >
               <View style={{ marginRight: 10 }}>
@@ -111,15 +114,15 @@ const ProfileScreen = ({ navigation }) => {
               borderRadius: 20,
               marginTop: 15,
               marginLeft: 300,
-              alignItems:'center'
+              alignItems: 'center'
             }}
             onPress={() => navigation.navigate("InformationScreen")}
           >
             <Image
-                source={require("../../../assets/img/icons8-i.png")}
-                style={{ width: 20, height: 35, marginTop: -4}}
-                resizeMode="contain"
-              />
+              source={require("../../../assets/img/icons8-i.png")}
+              style={{ width: 20, height: 35, marginTop: -4 }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.information}></TouchableOpacity>
           <View style={styles.Details}>
@@ -308,9 +311,11 @@ const ProfileScreen = ({ navigation }) => {
               value={isEnabled}
             />
           </View>
+
+          {/* logout button */}
           <TouchableOpacity
             style={styles.btnLogout}
-            onPress={() => props.navigations.navigate("#")}
+            onPress={() => AUTH.signOut()}
           >
             <Text
               style={{
