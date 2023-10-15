@@ -36,6 +36,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../store/slice/frontEndSlice';
+import { userSelector, setUserId, setUserEmail } from '../store/slice/userSlice';
 
 const MainStack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -51,7 +52,7 @@ function MainNavigator() {
     //         console.log('user', user)
     //     })
     // }, [])
-
+    const userStore = useSelector(frontEndSelector);
     return (
         <MainStack.Navigator
             screenOptions={{
@@ -63,12 +64,13 @@ function MainNavigator() {
                 :
                 <MainStack.Screen name="SignInScreen" component={SignInScreen} />
             } */}
+
             <MainStack.Screen name="ProcessInfoScreen1" component={ProcessInfoScreen1} />
             <MainStack.Screen name="ProcessInfoScreen2" component={ProcessInfoScreen2} />
             <MainStack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
+
             <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
-            <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen}
-            />
+            <MainStack.Screen name="DetailMealsScreen" component={userStore.loginState === "signup" ? ProcessInfoScreen1 : BottomNavigate} />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
@@ -221,13 +223,14 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
     const [user, setUser] = useState(null)
-    // console.log('user', user.email, user.uid)
+    //redux
+    const dispatch = useDispatch();
     useEffect(() => {
         onAuthStateChanged(AUTH, (user) => {
             console.log('user', user)
             setUser(user)
         })
-    }, [])
+    }, [user])
     return (
         <NavigationContainer >
             <Stack.Navigator initialRouteName='LogInNavigate'

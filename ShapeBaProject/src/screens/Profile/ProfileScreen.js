@@ -16,9 +16,10 @@ import {
   StatusBar,
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
-//firebase
-import { AUTH } from "../../../firebase-cofig";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector, setUserId, setUserEmail } from "../../store/slice/userSlice";
+import { setStateLogin } from "../../store/slice/frontEndSlice";
 
 const ProfileScreen = ({ navigation }) => {
   // CurrentweightPopup
@@ -31,6 +32,10 @@ const ProfileScreen = ({ navigation }) => {
 
   const [selectedSex, setSelectedSex] = useState("male");
   const [isEnabled, setIsEnabled] = useState(false);
+
+  // Redux
+  const dispatch = useDispatch();
+  const userStore = useSelector(userSelector);
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
@@ -315,7 +320,13 @@ const ProfileScreen = ({ navigation }) => {
           {/* logout button */}
           <TouchableOpacity
             style={styles.btnLogout}
-            onPress={() => AUTH.signOut()}
+            onPress={() => {
+              dispatch(setUserEmail('emty'))
+              dispatch(setUserId('emty'))
+              dispatch(setStateLogin(""))
+              AUTH.signOut()
+              console.log('logout', userStore.userId, userStore.userEmail)
+            }}
           >
             <Text
               style={{

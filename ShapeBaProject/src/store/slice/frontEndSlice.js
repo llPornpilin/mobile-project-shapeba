@@ -6,6 +6,7 @@ const frontEndSlice = createSlice({
     initialState: {
         favorite: "Chocolate Bar",
         openStartDatePicker: false,
+        loginState: ""
     },
     //function
     reducers: {
@@ -24,9 +25,12 @@ const frontEndSlice = createSlice({
         },
         setOpenStartDatePicker(state, action) {
             state.openStartDatePicker = action.payload
+        },
+        setStateLogin(state, action) {
+            state.loginState = action.payload
         }
     }
 })
-export const { setFavorite, setOpenStartDatePicker } = frontEndSlice.actions
+export const { setFavorite, setOpenStartDatePicker, setStateLogin } = frontEndSlice.actions
 export const frontEndSelector = (store) => store.frontEnd;
 export default frontEndSlice.reducer

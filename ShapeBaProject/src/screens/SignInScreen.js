@@ -10,22 +10,31 @@ import {
 import React, { useState } from "react";
 import { AUTH } from "../../firebase-cofig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+// Firebase
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 
 // Page
 import { ActivityIndicator } from "react-native-paper";
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector, setUserId, setUserEmail } from '../store/slice/userSlice'
+import { frontEndSelector, setStateLogin } from "../store/slice/frontEndSlice";
+
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  // console.log(email, password)
   const auth = AUTH;
+  //redux
+  const dispatch = useDispatch();
+  const userStore = useSelector(userSelector);
 
   const signIn = async () => {
-
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      dispatch(setStateLogin("signin"))
       // console.log(response);
     }
     catch (error) {
@@ -40,8 +49,21 @@ const SignInScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
-      // console.log(response);
+      dispatch(setStateLogin("signup"))
+      console.log("response uid: ", response.user.uid);
+      console.log("response email: ", response.user.email);
       alert('check your email')
+
+      dispatch(setUserId(response.user.uid))
+      dispatch(setUserEmail(response.user.email))
+      const docRef = await addDoc(collection(db, "user"), {
+        user_id: response.user.uid,
+        email: response.user.email,
+        birthDate: '',
+        sex: ''
+      });
+      console.log("Document written with ID: ", docRef.id);
+
     }
     catch (error) {
       console.log(error)

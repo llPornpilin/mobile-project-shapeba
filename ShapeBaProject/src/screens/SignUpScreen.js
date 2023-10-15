@@ -11,6 +11,7 @@ import {
 import React from "react";
 
 const SignUpScreen = () => {
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor:'#fff', alignItems:'center' }}>
       <Image
@@ -44,11 +45,11 @@ const SignUpScreen = () => {
           placeholder="Confirm Password"
         />
         <TouchableOpacity
-        style={styles.btn1}
-        onPress={() => props.navigations.navigate("#")}
-      >
-        <Text style={styles.btnText1}>Sign Up</Text>
-      </TouchableOpacity>
+          style={styles.btn1}
+          onPress={() => props.navigations.navigate("#")}
+        >
+          <Text style={styles.btnText1}>Sign Up</Text>
+        </TouchableOpacity>
       <Text style={styles.orText}>or</Text>
       <TouchableOpacity style={styles.btn2} onPress={()=> props.navigations.navigate("#")}>
           <Text style={styles.btnText2}>Sign up with google</Text>

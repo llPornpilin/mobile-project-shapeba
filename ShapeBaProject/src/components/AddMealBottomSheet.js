@@ -1,20 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, TouchableWithoutFeedback, 
-StyleSheet, View, Text, TouchableOpacity, TextInput, SafeAreaView, Alert} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+    Modal, TouchableWithoutFeedback,
+    StyleSheet, View, Text, TouchableOpacity, TextInput, SafeAreaView, Alert
+} from 'react-native';
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-
 // firebase
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
 
 // ---------------------- Create Own Menu ---------------------------------
 export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่องกรอกข้อมูล สารอาหาร
     //props
     const bottomSheetModalRef = props.bottomSheetModalRef;
+    //redux
+    const dispatch = useDispatch();
+    const userStore = useSelector(userSelector);
+    console.log("bottom sheet: ", userStore.userId)
+
     const snapPoints = ["60%",];
     const [name, setName] = useState("");
     const [cal, setCal] = useState("");
     const [size, setSize] = useState("");
-    const [u_id, setU_id] = useState("01");
+    const [u_id, setU_id] = useState(userStore.userId);
+
 
     const isOpen = props.isOpen;
     const closeModal = () => {
@@ -113,10 +123,12 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
     )
 }
 // ---------------------- Add Menu ---------------------------------
-export const AddMealBottomModal = ( props ) => {
+export const AddMealBottomModal = (props) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const { onTouchOutside, title } = props
+    //redux
+    const userStore = useSelector(userSelector);
 
     // Bottom Sheet
     const snapPoints = ["40%"];
@@ -144,6 +156,7 @@ export const AddMealBottomModal = ( props ) => {
 
     // ********************************* add selected menu to database ****************************************
     const handleAddMenu = async () => { // TODO: >>> แก้ bottom sheet ถ้ายังไม่ใส่ serving size กด Add meal ไม่ได้ !!
+
         // -------------------------- get current date ---------------------
         const getDate = new Date()
         const day = getDate.getDate()
@@ -158,9 +171,9 @@ export const AddMealBottomModal = ( props ) => {
         // ------------------------------------------------------------------
 
         try {
-            const userId = "05"; // FIXME: change "01" to real user id
+            // const userId = "05"; // FIXME: change "01" to real user id
             const mealName = (props.mealName.split(" ").join("")).toLowerCase();
-            const dailyMealRef = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
+            const dailyMealRef = query(collection(db, "dailyMeal"), where("user_id", "==", userStore.userId));
 
             const getDailyMealsDoc = await getDocs(dailyMealRef) // get doc where userId == ...
 
@@ -185,10 +198,10 @@ export const AddMealBottomModal = ( props ) => {
                 const day = date.getDate();
                 const month = date.getMonth() + 1;
                 const year = date.getFullYear();
-            
+
                 const formattedDay = day.toString().padStart(2, '0');
                 const formattedMonth = month.toString().padStart(2, '0');
-            
+
                 return `${formattedDay}/${formattedMonth}/${year}`;
             }
             // ------------------------------------------------------------
@@ -197,7 +210,7 @@ export const AddMealBottomModal = ( props ) => {
             async function addMealDoc() {
                 const mealsName = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
                 const newMealDoc = {
-                    user_id: userId, // FIXME: change to real user id
+                    user_id: userStore.userId, // FIXME: change to real user id
                     dateInfo: {
                         date: currentDate,
                         dayOfWeek: dayName
@@ -234,18 +247,18 @@ export const AddMealBottomModal = ( props ) => {
                     const dateFromDatabase = formatDateToDdMmYyyy(convertDateFromString(dateString)) // change date format
 
                     // compare current date to date from database if equal >> already has document >> push meal array
-                    if (currentDate === dateFromDatabase){
+                    if (currentDate === dateFromDatabase) {
                         console.log("case 1.1")
                         mealArray.push(mealData)
 
-                        const updateMeal = {[mealName]: mealArray}
+                        const updateMeal = { [mealName]: mealArray }
                         await updateDoc(doc.ref, updateMeal)
-                        .then(() => {
-                            console.log("<<< ADD MEAL SUCCESS >>>");
-                        })
-                        .catch((error) => {
-                            console.error("ADD MEAL FAIL >>> ", error);
-                        });
+                            .then(() => {
+                                console.log("<<< ADD MEAL SUCCESS >>>");
+                            })
+                            .catch((error) => {
+                                console.error("ADD MEAL FAIL >>> ", error);
+                            });
 
                         foundMatch = true
                     }
@@ -306,7 +319,7 @@ export const AddMealBottomModal = ( props ) => {
                         <TouchableOpacity className="bg-white" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
                             <Text className="font-bold text-Orange text-lg">Cancel</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className="bg-Orange" style={[styles.button, {marginLeft: 25}]} onPress={() => handleAddMenu()}>
+                        <TouchableOpacity className="bg-Orange" style={[styles.button, { marginLeft: 25 }]} onPress={() => handleAddMenu()}>
                             <Text className="font-bold text-white text-lg">Add</Text>
                         </TouchableOpacity>
                     </View>

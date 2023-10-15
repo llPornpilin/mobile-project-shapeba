@@ -11,6 +11,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { color } from 'd3';
 // Firebase
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../../firebase-cofig'
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserId, setUserEmail, userSelector } from '../../store/slice/userSlice';
 
 
 const greenHeader = (navigation, mealName, sumCalories) => {
@@ -94,15 +96,16 @@ const DetailMealsScreen = ({ navigation, route }) => {
     // --------------------------- set meal data from database ---------------------------------
     const [mealData, setMealData] = useState([])
     const mealName = (route.params.header.split(" ").join("")).toLowerCase()
-    const userId = "05" // FIXME: >> change to real user id
+    const userStore = useSelector(userSelector);
+    const userId = userStore.userId // FIXME: >> change to real user id
     const selectedDate = "15/10/2023" // FIXME: >> change to real selected date
     const [sumCalories, setSumCalories] = useState(0)
 
     const getmealData = async () => {
         try {
             const querysnapshot = query(collection(db, "dailyMeal")
-            ,where("user_id", "==", userId)
-            ,where("dateInfo.date", "==", selectedDate))
+                , where("user_id", "==", userId)
+                , where("dateInfo.date", "==", selectedDate))
             const filterMealDocs = await getDocs(querysnapshot)
 
             const tempDoc = []
@@ -113,7 +116,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
                 // }
                 menuInSelectedMeal.forEach((menu) => {
                     setSumCalories(parseFloat(sumCalories) + parseFloat(menu.calories))
-                    tempDoc.push({...menu, key: menu.id})
+                    tempDoc.push({ ...menu, key: menu.id })
                 })
             });
             console.log("cals: ", sumCalories)
@@ -155,7 +158,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
                 onSwipeableOpen={false}
             />
             <View style={{ width: '100%', alignItems: 'center', marginBottom: 0, }}>
-                <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen', {mealName: route.params.header})}>
+                <TouchableOpacity style={styles.btnAddMeal} onPress={() => navigation.navigate('AddMealsScreen', { mealName: route.params.header })}>
                     <Text className="font-bold text-white" >Add More Meal</Text>
                 </TouchableOpacity>
             </View>
