@@ -72,7 +72,7 @@ function MainNavigator() {
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
-           
+
             {/* <MainStack.Screen name="SignInScreen" component={SignInScreen} /> */}
 
         </MainStack.Navigator>
@@ -220,10 +220,12 @@ function BottomNavigate() {
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-    const [user, setUser] = useState(true)
+    const [user, setUser] = useState(null)
+    console.log('user', user.email, user.uid)
     useEffect(() => {
         onAuthStateChanged(AUTH, (user) => {
-            console.log('user', user)
+            // console.log('user', user.uid)
+            setUser(user)
         })
     }, [])
     return (

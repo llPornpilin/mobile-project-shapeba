@@ -20,7 +20,7 @@ import {
 } from "../store/slice/frontEndSlice";
 
 const Calendar = (props) => {
-    
+
   const openStartDatePicker = props.openStartDatePicker;
   const today = new Date();
   const startDate = getFormatedDate(
@@ -47,7 +47,7 @@ const Calendar = (props) => {
           <View style={styles.modalView}>
             <DatePicker
               mode="calendar"
-              minimumDate={startDate}
+              // minimumDate={startDate}
               selected={startedDate}
               onDateChanged={handleChangeStartDate}
               onSelectedChange={(date) => props.setSelectedStartDate(date)} // เปลี่ยนชื่อฟังก์ชันนี้

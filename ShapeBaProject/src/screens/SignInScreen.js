@@ -24,9 +24,9 @@ const SignInScreen = ({ navigation }) => {
   //   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
   // });
 
-  const [email, setEmail] = useState ('');
-  const [password, setPassword] = useState ('');
-  const [loading, setLoading] = useState (false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // console.log(email, password)
   const auth = AUTH;
@@ -34,11 +34,11 @@ const SignInScreen = ({ navigation }) => {
   const signIn = async () => {
 
     setLoading(true);
-    try{
+    try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      // console.log(response);
     }
-    catch(error) {
+    catch (error) {
       console.log(error)
       alert('Sign In is failed: ' + error.message)
     }
@@ -48,12 +48,12 @@ const SignInScreen = ({ navigation }) => {
   }
   const signUp = async () => {
     setLoading(true);
-    try{
+    try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      // console.log(response);
       alert('check your email')
     }
-    catch(error) {
+    catch (error) {
       console.log(error)
       alert('Sign up is failed: ' + error.message)
     }
@@ -81,32 +81,32 @@ const SignInScreen = ({ navigation }) => {
         style={styles.inputUsername}
         placeholder="Enter UserName"
         autoCapitalize="none"
-        onChangeText={(text) => setEmail(text) } 
+        onChangeText={(text) => setEmail(text)}
       />
       <Text style={styles.LabelPassword}>Password</Text>
       <TextInput
         value={password}
-        onChangeText={(text) => setPassword(text) } 
+        onChangeText={(text) => setPassword(text)}
         style={styles.inputPassword}
         secureTextEntry
         placeholder="Enter Password"
-        
+
       />
       {loading ? (
-        <ActivityIndicator size="large" color="#EC744A"/>
-        ) : (
-          <View>
-            <TouchableOpacity style={styles.btn1} onPress={signIn}>
-              <Text style={styles.btnText1}>Sign In</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.btn1} onPress={signUp}>
-              <Text style={styles.btnText1}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-        )
+        <ActivityIndicator size="large" color="#EC744A" />
+      ) : (
+        <View>
+          <TouchableOpacity style={styles.btn1} onPress={signIn}>
+            <Text style={styles.btnText1}>Sign In</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btn1} onPress={signUp}>
+            <Text style={styles.btnText1}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      )
       }
-     
+
       {/* <Text style={styles.orText}>or</Text>
       <TouchableOpacity
         style={styles.btn2}
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     elevation: 5,
     marginTop: 60,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   btn2: {
     marginTop: 10,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
     elevation: 5,
-    justifyContent:'center'
+    justifyContent: 'center'
 
   },
   btn3: {
