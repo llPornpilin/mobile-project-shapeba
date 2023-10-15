@@ -5,6 +5,7 @@ import { calculateTDEE } from '../../store/slice/processInfoSlice1';
 import { useDispatch, useSelector } from "react-redux";
 
 
+
 const label = (img, text) => {
     
     return (
@@ -24,10 +25,10 @@ const TapToStart = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.box1}>
                 <Text className="font-bold text-2xl text-Green mt-5">TARGET WEIGHT</Text>
-                <Text className="font-bold text-2xl text-Green">55 KG</Text>
+                <Text className="font-bold text-2xl text-Green">{processInfo.goalweight} KG</Text>
                 <Text className="font-bold text-lg text-Green">Your daily energy require</Text>
                 <Text className="font-bold text-2xl text-Orange mt-3">{tdee} Cals / Day</Text>
-                <Text className="font-bold text-sm text-Green mt-3">during 2 month</Text>
+                <Text className="font-bold text-sm text-Green mt-3">during {processInfo.months} month</Text>
             </View>
             <View className="mt-11">
                 {label(require("../../../assets/img/icons8-note.png"), "Record What You Eat")}

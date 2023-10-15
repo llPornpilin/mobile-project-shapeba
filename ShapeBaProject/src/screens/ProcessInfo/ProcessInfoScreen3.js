@@ -28,7 +28,7 @@ const ProcessInfoScreen3 = ({ navigation }) => {
 
   // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
   const handleCalculateTDEE = () => {
-    dispatch(setAge(25));
+    // dispatch(setAge(25));
     const tdee = calculateTDEE(processInfo);
     // ทำอะไรกับค่า tdee ที่ได้ต่อไป
     // ...

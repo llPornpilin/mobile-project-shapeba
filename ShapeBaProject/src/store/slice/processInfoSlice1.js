@@ -6,27 +6,27 @@ export const calculateTDEE = (state) => {
 
   let bmr = 0;
   if (selectedSex === 'male') {
-    bmr = 88.362 + (13.397 * weight) + (4.799 * height * 100) - (5.677 * age);
+    bmr = (88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)).toFixed(0);
   } else if (selectedSex === 'female') {
-    bmr = 47.593 + (9.247 * weight) + (3.098 * height * 100) - (4.330 * age);
+    bmr = (447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)).toFixed(0);
   }
 
   let tdee = 0;
   switch (activitylevel) {
     case 'Little or no exercise':
-      tdee = bmr * 1.2;
+      tdee = (bmr * 1.2).toFixed(0);
       break;
     case '1-3 times/week':
-      tdee = bmr * 1.375;
+      tdee = (bmr * 1.375).toFixed(0);
       break;
     case '4-5 times/week':
-      tdee = bmr * 1.55;
+      tdee = (bmr * 1.55).toFixed(0);
       break;
     case 'Intense exercise 6-7 times/week':
-      tdee = bmr * 1.725;
+      tdee = (bmr * 1.725).toFixed(0);
       break;
     case 'Very intense exercise daily':
-      tdee = bmr * 1.9;
+      tdee = (bmr * 1.9).toFixed(0);
       break;
     default:
       tdee = bmr;
@@ -38,13 +38,19 @@ export const calculateTDEE = (state) => {
     tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
   }
 
-console.log("TDEE:", tdee);
-console.log("Weight:", weight);
-console.log("Height:", height);
-console.log("Sex:", selectedSex);
-console.log("Activity Level:", activitylevel);
-console.log("Age:", age);
-console.log("Accomplish:", accomplish);
+  // คำนวณเวลาที่ต้องใช้ในการลดหรือเพิ่มน้ำหนัก
+  const weightChange = 10; // น้ำหนักที่ต้องการเปลี่ยน
+  const calorieChange = 500; // แคลลอรีที่เปลี่ยนแปลง
+  const months = weightChange * 7700 / calorieChange; // 7700 คือแคลอรีที่เผาผลาญในการลดหนามน้ำหนัก 1 กิโลกรัม
+
+  console.log("TDEE:", tdee);
+  console.log("Weight:", weight);
+  console.log("Height:", height);
+  console.log("Sex:", selectedSex);
+  console.log("Activity Level:", activitylevel);
+  console.log("Age:", age);
+  console.log("Accomplish:", accomplish);
+  console.log(`To ${accomplish} ${weightChange} kg, it will take approximately ${months.toFixed(0)} months.`);
 
   return tdee;
 };
@@ -61,6 +67,7 @@ const initialState = {
   goalweight:'',
   activitylevel:'',
   age: '',
+  months:''
 };
 
 const processInfoSlice1 = createSlice({
@@ -69,7 +76,7 @@ const processInfoSlice1 = createSlice({
   reducers: {
     setSelectedStartDate: (state, action) => {
       state.selectedStartDate = action.payload;
-      console.log(state.openStartDatePicker)
+      console.log(state.selectedStartDate)
     },
     setSelectedSex: (state, action) => {
       state.selectedSex = action.payload;
@@ -90,6 +97,8 @@ const processInfoSlice1 = createSlice({
     },
     setOpenStartDatePicker: (state, action) => {
       state.openStartDatePicker = action.payload;
+      
+
     },
     setaccomplish: (state, action) => {
       state.accomplish = action.payload;
@@ -106,6 +115,10 @@ const processInfoSlice1 = createSlice({
     setAge: (state, action) => { // action สำหรับ set ค่า age
       state.age = action.payload;
     },
+    setMonths: (state, action) => {
+      state.months = action.payload;
+      console.log(state.months)
+    },
   }
 });
 
@@ -120,6 +133,8 @@ export const {
   setGoalweight,
   setActivitylevel,
   setAge,
+  setMonths
+
 } = processInfoSlice1.actions;
 
 export const processInfoSelector = (state) => state.processInfo;
