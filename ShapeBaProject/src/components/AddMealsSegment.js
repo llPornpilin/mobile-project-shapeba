@@ -89,7 +89,7 @@ const AddMealsSegment = (props) => {
     // Get My Menu by User ID
     const getMyMenuById = async () => { // Pass the user ID as an argument
         try {
-            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("u_id", "==", u_id))); // Use the user's ID passed as an argument
+            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("user_id", "==", u_id))); // Use the user's ID passed as an argument
             console.log("Total menu: ", querySnapshot.size);
             const tempDoc = [];
             querySnapshot.forEach((doc) => {
@@ -277,7 +277,7 @@ const AddMealsSegment = (props) => {
                         ItemSeparatorComponent={renderItemSeparator}
                     /> :
                     // My Menu
-                    <View style={{ width: '100%' }}>
+                    <View style={{ width: '100%', height: '100%' }}>
                         <SwipeableFlatList
                             keyExtractor={(item) => item.key}
                             data={myMenu}
@@ -291,8 +291,8 @@ const AddMealsSegment = (props) => {
                         />
                         {/* Add My Menu Button */}
                         <TouchableHighlight // FIXME: fix add button position
-                            className="bg-Orange w-14 h-14 rounded-full justify-center items-center"
-                            style={{ position: 'relative', right: -300, top: 220, elevation: 3 }}
+                            className="absolute bottom-20 right-8 bg-Orange w-14 h-14 rounded-full justify-center items-center elevation-3"
+                            style={{elevation: 3}}
                             underlayColor="#EF8E6D"
                             onPress={handlePresentModalCreate}
                         >

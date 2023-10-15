@@ -33,7 +33,7 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
         console.log(name, cal, size)
         try {
             const docRef = await addDoc(collection(db, "myMenu"), {
-                u_id: u_id,
+                user_id: u_id,
                 name: name,
                 calories: cal,
                 serving_size_g: size,
@@ -165,6 +165,7 @@ export const AddMealBottomModal = ( props ) => {
             const getDailyMealsDoc = await getDocs(dailyMealRef) // get doc where userId == ...
 
             const mealData = { // data that will add to database (Calculate with serving size)
+                id: ((Math.random() * (1 - 0) + 0) * 100 + "").substr(3, 12) + props.selectedMenu.name,
                 name: props.selectedMenu.name,
                 serving_size_g: parseFloat(servingSize),
                 calories: (props.selectedMenu.calories / props.selectedMenu.serving_size_g * servingSize).toFixed(2),
@@ -230,10 +231,10 @@ export const AddMealBottomModal = ( props ) => {
                     const mealArray = dailyMealData[mealName] || [] // เก็บอาหารใน Array ตามมื้อที่เลือกไว้
 
                     const dateString = doc.data().dateInfo.date
-                    const dateDromDatabase = formatDateToDdMmYyyy(convertDateFromString(dateString)) // change date format
+                    const dateFromDatabase = formatDateToDdMmYyyy(convertDateFromString(dateString)) // change date format
 
                     // compare current date to date from database if equal >> already has document >> push meal array
-                    if (currentDate === dateDromDatabase){
+                    if (currentDate === dateFromDatabase){
                         console.log("case 1.1")
                         mealArray.push(mealData)
 

@@ -1,15 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Pressable, useState, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Pressable, SafeAreaView } from 'react-native';
 import { Header } from 'react-native-elements';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import SwipeableFlatList from 'react-native-swipeable-list';
 import { FontAwesome, Feather } from '@expo/vector-icons';
+import React, { useState } from 'react'
+import { useFocusEffect } from "@react-navigation/native";
 
 // Page
 import { color } from 'd3';
+// Firebase
+import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../../firebase-cofig'
 
 
-const greenHeader = (navigation, mealName) => {
+const greenHeader = (navigation, mealName, sumCalories) => {
     return (
         <Header backgroundColor="#025146" containerStyle={styles.header}
             leftComponent={
@@ -26,7 +30,7 @@ const greenHeader = (navigation, mealName) => {
                     <View style={{ marginRight: 3, marginTop: 3 }}>
                         <Entypo name="flash" size={22} color="white" />
                     </View>
-                    <Text style={{ color: 'white', fontSize: 20, width: '150%', fontWeight: 'bold' }}>720 cals</Text>
+                    <Text style={{ color: 'white', fontSize: 20, width: '150%', fontWeight: 'bold' }}>{sumCalories} cals</Text>
                 </View>
             }
         >
@@ -34,33 +38,24 @@ const greenHeader = (navigation, mealName) => {
     )
 }
 
+// renderItem
 export const DetailMealsPattern = ({ item }) => {
     return (
         <>
             <View style={{ paddingLeft: 10, backgroundColor: 'white' }}>
                 <Text className="font-semibold mt-3 text-base">{item.name}</Text>
-                <Text className="mb-3">100 g , 30 cals</Text>
+                <Text className="mb-3">{item.serving_size_g} g , {item.calories} cals</Text>
             </View>
         </>
     )
 }
 
-const extractItemKey = item => {
-    return item.id.toString();
-};
-
+// separator
 export function renderItemSeparator() {
     return <View style={{ backgroundColor: '#A4A4A4', height: 1 }} />;
 }
 
 const DetailMealsScreen = ({ navigation, route }) => {
-    // function delete meals
-    const deleteItem = itemId => {
-        // const newState = [...data];
-        // const filteredState = newState.filter(item => item.id !== itemId);
-        // return setData(filteredState);
-    };
-
     // item in swipe
     const QuickActions = (index, qaItem) => {
         return (
@@ -96,12 +91,59 @@ const DetailMealsScreen = ({ navigation, route }) => {
         { id: 14, name: 'meals14' },
     ];
 
+    // --------------------------- set meal data from database ---------------------------------
+    const [mealData, setMealData] = useState([])
+    const mealName = (route.params.header.split(" ").join("")).toLowerCase()
+    const userId = "05" // FIXME: >> change to real user id
+    const selectedDate = "15/10/2023" // FIXME: >> change to real selected date
+    const [sumCalories, setSumCalories] = useState(0)
+
+    const getmealData = async () => {
+        try {
+            const querysnapshot = query(collection(db, "dailyMeal")
+            ,where("user_id", "==", userId)
+            ,where("dateInfo.date", "==", selectedDate))
+            const filterMealDocs = await getDocs(querysnapshot)
+
+            const tempDoc = []
+            filterMealDocs.forEach((doc) => {
+                const menuInSelectedMeal = doc.data()[mealName]
+                // if (menuInSelectedMeal.length == 0) { // TODO: >> (show sth. if not found data)
+                //     console.log("< NOT FOUND DATA >")
+                // }
+                menuInSelectedMeal.forEach((menu) => {
+                    setSumCalories(parseFloat(sumCalories) + parseFloat(menu.calories))
+                    tempDoc.push({...menu, key: menu.id})
+                })
+            });
+            console.log("cals: ", sumCalories)
+
+            setMealData(tempDoc)
+        }
+        catch (error) {
+            console.error("Error get meal data: ", error)
+        }
+
+    }
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("screen: ", mealName)
+            console.log(((Math.random() * (1 - 0) + 0) * 100 + "").substr(3, 12))
+            getmealData();
+            return () => {
+                // Clear the meal state when the component is unfocused
+                setMealData([]);
+            };
+        }, [])
+    );
+    // ----------------------------------------------------------------------------------------
+
     return (
         <View style={styles.container}>
-            {greenHeader(navigation, route.params.header)}
+            {greenHeader(navigation, route.params.header, sumCalories)}
             <SwipeableFlatList
-                keyExtractor={extractItemKey}
-                data={allMeals}
+                keyExtractor={(item) => item.key}
+                data={mealData}
                 renderItem={({ item }) => (
                     <DetailMealsPattern item={item} />
                 )}
