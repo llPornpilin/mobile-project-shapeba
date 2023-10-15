@@ -20,6 +20,8 @@ import { PaperProvider } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector, setUserId, setUserEmail } from "../../store/slice/userSlice";
 import { setStateLogin } from "../../store/slice/frontEndSlice";
+// Firebase
+import { AUTH } from "../../../firebase-cofig";
 
 const ProfileScreen = ({ navigation }) => {
   // CurrentweightPopup

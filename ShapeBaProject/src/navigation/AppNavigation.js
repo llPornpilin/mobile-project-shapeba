@@ -70,7 +70,7 @@ function MainNavigator() {
             <MainStack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
 
             <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
-            <MainStack.Screen name="DetailMealsScreen" component={userStore.loginState === "signup" ? ProcessInfoScreen1 : BottomNavigate} />
+            <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <MainStack.Screen name="TapToStart" component={TapToStart} />
