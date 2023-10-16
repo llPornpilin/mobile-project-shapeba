@@ -138,6 +138,7 @@ export const AddMealBottomModal = (props) => {
         setTimeout(() => {
             props.setIsOpen(false);
         }, 200);
+        console.log("close modal")
     }
 
     // serving size textInput state
@@ -309,7 +310,7 @@ export const AddMealBottomModal = (props) => {
                             className="h-15 pl-3 pr-3"
                             underlineColorAndroid="transparent"
                             keyboardType="number-pad"
-                            onChangeText={servingSize => setServingSize(servingSize)}
+                            onChangeText={(text) => setServingSize(text)}
                             value={servingSize}
                         />
                         <Text className="text-base" style={{ justifyContent: 'flex-end' }}>g.</Text>

@@ -35,6 +35,8 @@ const SignInScreen = ({ navigation }) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       dispatch(setStateLogin("signin"))
+      dispatch(setUserId(response.user.uid))
+      dispatch(setUserEmail(response.user.email))
       // console.log(response);
     }
     catch (error) {
