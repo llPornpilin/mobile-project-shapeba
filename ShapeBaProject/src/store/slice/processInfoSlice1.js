@@ -11,6 +11,20 @@ import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion,
 //   return age;
 // };
 
+const UpdateUser = async () => {
+        try {
+            await updateDoc(doc(db, "user", student.key), {
+                id: id,
+                name: name,
+                gpa: gpa,
+            });
+            Alert.alert("Success", "Student updated successfully");
+            navigation.navigate("StudentList");
+        } catch (e) {
+            Alert.alert("Error", "Error updating document: ", e.message);
+        }
+    }
+
 export const calculateTimeToGoal = (state) => {
   const { goalweight, weight, accomplish } = state;
 
@@ -90,12 +104,18 @@ const initialState = {
   activitylevel: null, // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
   age: 0,
   months: "",
+  userIdprocess: '',
 };
 
 const processInfoSlice1 = createSlice({
   name: "processInfo",
   initialState,
   reducers: {
+
+    setUserIdprocess(state, action) {
+      state.userId = action.payload
+      console.log("set user id: " + state.userId)
+  },
     setSelectedStartDate: (state, action) => {
       state.selectedStartDate = action.payload;
       console.log(state.selectedStartDate);
@@ -172,6 +192,7 @@ export const {
   setActivitylevel,
   setAge,
   setMonths,
+  userIdprocess
 } = processInfoSlice1.actions;
 
 export const processInfoSelector = (state) => state.processInfo;

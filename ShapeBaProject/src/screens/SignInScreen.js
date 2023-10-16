@@ -77,6 +77,7 @@ const SignInScreen = ({ navigation }) => {
   }
 
   return (
+    
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
@@ -84,6 +85,7 @@ const SignInScreen = ({ navigation }) => {
         alignItems: "center",
       }}
     >
+      <View style={{justifyContent:'center', alignItems:'center', flex:1}}>
       <Image
         source={require("../../assets/img/Icon.jpg")}
         style={{ width: 200, height: 200, marginTop: 20 }}
@@ -114,8 +116,8 @@ const SignInScreen = ({ navigation }) => {
             <Text style={styles.btnText1}>Sign In</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btn1} onPress={signUp}>
-            <Text style={styles.btnText1}>Sign Up</Text>
+          <TouchableOpacity style={styles.btn2} onPress={signUp}>
+            <Text style={styles.btnText2}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       )
@@ -128,7 +130,7 @@ const SignInScreen = ({ navigation }) => {
       >
         <Text style={styles.btnText2}>Sign in with google</Text>
       </TouchableOpacity> */}
-      <View style={styles.signupContainer}>
+      {/* <View style={styles.signupContainer}>
         <Text>Don’t have an account?</Text>
         <TouchableOpacity
           style={styles.btn3}
@@ -138,8 +140,10 @@ const SignInScreen = ({ navigation }) => {
             Sign Up
           </Text>
         </TouchableOpacity>
+      </View> */}
       </View>
     </ScrollView>
+    
   );
 };
 
