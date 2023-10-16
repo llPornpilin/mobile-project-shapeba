@@ -37,9 +37,9 @@ export const calculateTDEE = (state) => {
 
   let bmr = 0;
   if (selectedSex === "male") {
-    bmr = (88.362 + ( 13.397 * weight + 4.799 * height - 5.677 * age)).toFixed(0);
+    bmr = (88.362 + (13.397 * weight + 4.799 * height - 5.677 * age)).toFixed(0);
   } else if (selectedSex === "female") {
-    bmr = (447.593 + ( 9.247 * weight + 3.098 * height - 4.33 * age)).toFixed(0);
+    bmr = (447.593 + (9.247 * weight + 3.098 * height - 4.33 * age)).toFixed(0);
   }
 
   let tdee = 0;
@@ -62,28 +62,21 @@ export const calculateTDEE = (state) => {
     default:
       tdee = bmr;
   }
-
+  tdee = parseInt(tdee);
   if (accomplish === "Lose weight") {
     tdee -= 500; // ลดแคลลอรีลง 500 ถ้าเป็นการลดน้ำหนัก
   } else if (accomplish === "Gain weight") {
     tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
+    console.log(typeof tdee, tdee)
   }
-
-  console.log("TDEE:", tdee);
-  console.log("Weight:", weight);
-  console.log("Height:", height);
-  console.log("Sex:", selectedSex);
-  console.log("Activity Level:", activitylevel);
-  console.log("Age:", age);
-  console.log("Accomplish:", accomplish);
 
   return tdee;
 };
 
-const saveUserInfo = () => {
+// const saveUserInfo = () => {
 
 
-}
+// }
 
 const initialState = {
   // selectedStartDate: '',
@@ -128,7 +121,7 @@ const processInfoSlice1 = createSlice({
       // Calculate the difference in years
       const part = state.birthdate.split("/");
       let age = getCurrentDate.getFullYear() - parseInt(part[0]);
-     
+
       // Check if the birthday hasn't occurred this year yet
       if (
         getCurrentDate.getMonth() < part[1] ||
