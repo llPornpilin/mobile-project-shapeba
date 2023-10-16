@@ -19,7 +19,10 @@ import {
   setWeight,
   setHeight,
   setOpenStartDatePicker,
+  setBirthdate, // เพิ่ม import setBirthdate
+  setAge,
 } from "../../store/slice/processInfoSlice1";
+import { calculateAge } from "../../store/slice/processInfoSlice1";
 
 export const progressCircle = (number, color, textcolor) => {
   return (
@@ -39,6 +42,14 @@ const ProcessInfoScreen1 = ({ navigation }) => {
   const handleOnPressStartDate = () => {
     dispatch(setOpenStartDatePicker(!openStartDatePicker));
   };
+
+  const handleAgeChange = (selectedStartDate, birthdate) => {
+    const age = calculateAge(birthdate);
+    dispatch(setSelectedStartDate(selectedStartDate)); 
+    dispatch(setBirthdate(birthdate)); 
+    dispatch(setAge(age.toString()));
+  };
+  
 
   return (
     <ScrollView
@@ -133,8 +144,8 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                   openStartDatePicker={processInfo.openStartDatePicker}
                   handleOnPressStartDate={handleOnPressStartDate}
                   setSelectedStartDate={(date) =>
-                    dispatch(setSelectedStartDate(date))
-                  } // ปรับให้เรียก dispatch และ set ค่าใหม่เข้า state
+                    handleAgeChange(date, processInfo.selectedStartDate)
+                  }
                 />
               </View>
             </View>
@@ -157,7 +168,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                 }
               >
                 <Picker
-                  selectedValue={processInfo.selectedSex}
+                  selectedValue={processInfo.selectedSex || "default"} // ทำการเปลี่ยนแปลงเพื่อให้มีค่า default เมื่อ selectedSex เป็น null หรือค่าว่าง
                   onValueChange={(itemValue) =>
                     dispatch(setSelectedSex(itemValue))
                   }
@@ -168,6 +179,11 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                   }
                   mode="dropdown"
                 >
+                  <Picker.Item
+                    label="Select Sex"
+                    value="default"
+                    enabled={false}
+                  />
                   <Picker.Item label="Male" value="male" />
                   <Picker.Item label="Female" value="female" />
                 </Picker>

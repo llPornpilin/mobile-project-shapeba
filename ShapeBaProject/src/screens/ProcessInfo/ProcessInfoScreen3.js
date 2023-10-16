@@ -8,18 +8,19 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { progressCircle } from "./ProcessInfoScreen1";
 import {
   setGoalweight,
   setActivitylevel,
-  setAge
+  setAge,
+  setWeight,
 } from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
-import { processInfoSelector } from "../../store/slice/processInfoSlice1";
-import { calculateTDEE } from "../../store/slice/processInfoSlice1";
-
+import { processInfoSelector, calculateTDEE, calculateAge,  } from "../../store/slice/processInfoSlice1";
+import { calculateTimeToGoal } from "../../store/slice/processInfoSlice1";
 
 const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
@@ -28,15 +29,21 @@ const ProcessInfoScreen3 = ({ navigation }) => {
 
   // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
   const handleCalculateTDEE = () => {
-    // dispatch(setAge(25));
-    const tdee = calculateTDEE(processInfo);
-    // ทำอะไรกับค่า tdee ที่ได้ต่อไป
-    // ...
+    const { goalweight, weight, birthdate } = processInfo;
+    
+    // คำนวณอายุ
+    const age = calculateAge(birthdate);
+  
+    if (weight - goalweight > 10) {
+      Alert.alert("คำเตือน", "น้ำหนักที่กรอกมากเกินไป กรุณากรอกใหม่");
+      dispatch(setWeight("")); // รีเซ็ตค่าน้ำหนักให้ว่าง
+    } else {
+      dispatch(setAge(age.toString())); // อัปเดตอายุ
+      const tdee = calculateTDEE(processInfo);
+      navigation.navigate("TapToStart");
+    }
   };
-
-  const handleGoalChange = (text) => {
-    dispatch(setGoalweight(text));
-  };
+  
 
   return (
     <KeyboardAvoidingView
@@ -132,10 +139,7 @@ const ProcessInfoScreen3 = ({ navigation }) => {
           <View style={styles.signupContainer}>
             <TouchableOpacity
               style={styles.btn3}
-              onPress={() => {
-                navigation.navigate("TapToStart");
-                handleCalculateTDEE();
-              }}
+              onPress={handleCalculateTDEE} // ตรวจสอบว่าเรียกใช้ handleCalculateTDEE ตรงนี้
             >
               <Image
                 source={require("../../../assets/img/Arrow.jpg")}

@@ -1,7 +1,7 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import React from 'react'
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
-import { calculateTDEE } from '../../store/slice/processInfoSlice1';
+import { calculateTDEE, calculateTimeToGoal } from '../../store/slice/processInfoSlice1';
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -20,6 +20,7 @@ const label = (img, text) => {
 const TapToStart = ({ navigation }) => {
     const processInfo = useSelector(processInfoSelector);
     const tdee = calculateTDEE(processInfo);
+    const { monthsToGoal } = calculateTimeToGoal(processInfo);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -28,7 +29,7 @@ const TapToStart = ({ navigation }) => {
                 <Text className="font-bold text-2xl text-Green">{processInfo.goalweight} KG</Text>
                 <Text className="font-bold text-lg text-Green">Your daily energy require</Text>
                 <Text className="font-bold text-2xl text-Orange mt-3">{tdee} Cals / Day</Text>
-                <Text className="font-bold text-sm text-Green mt-3">during {processInfo.months} month</Text>
+                <Text className="font-bold text-sm text-Green mt-3">during {monthsToGoal} month</Text>
             </View>
             <View className="mt-11">
                 {label(require("../../../assets/img/icons8-note.png"), "Record What You Eat")}

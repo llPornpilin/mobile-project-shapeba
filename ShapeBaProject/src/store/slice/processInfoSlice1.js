@@ -1,8 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export const calculateAge = (birthdate) => {
+  const currentYear = new Date().getFullYear();
+  const birthYear = new Date(birthdate).getFullYear();
+  console.log('currentYear ', currentYear );
+  console.log('birthYear ', birthYear );
+  const age = currentYear - birthYear;
+  return age;
+};
+
+export const calculateTimeToGoal = (state) => {
+  const { goalweight, weight, accomplish } = state;
+
+  const weightChange = Math.abs(goalweight - weight);
+  const calorieChange = 500;
+  const daysInWeek = 7;
+  const daysInMonth = 30;
+
+  const weeksToGoal = weightChange * 7700 / calorieChange / daysInWeek;
+  const monthsToGoal = weightChange * 7700 / calorieChange / daysInMonth;
+
+  const timeUnit = accomplish === 'Gain weight' ? 'month' : 'week';
+
+
+  return {
+    weeksToGoal: Math.floor(weeksToGoal),
+    monthsToGoal: Math.floor(monthsToGoal),
+    timeUnit,
+  };
+};
 //TDEE
 export const calculateTDEE = (state) => {
-  const { weight, height, selectedSex, activitylevel, age, accomplish } = state;
+
+  const { weight, height, selectedSex, activitylevel, accomplish, age } = state;
+  // const age = calculateAge(birthdate); 
 
   let bmr = 0;
   if (selectedSex === 'male') {
@@ -35,13 +66,9 @@ export const calculateTDEE = (state) => {
   if (accomplish === 'Lose weight') {
     tdee -= 500; // ลดแคลลอรีลง 500 ถ้าเป็นการลดน้ำหนัก
   } else if (accomplish === 'Gain weight') {
-    tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
+    tdee = tdee + 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
   }
 
-  // คำนวณเวลาที่ต้องใช้ในการลดหรือเพิ่มน้ำหนัก
-  const weightChange = 10; // น้ำหนักที่ต้องการเปลี่ยน
-  const calorieChange = 500; // แคลลอรีที่เปลี่ยนแปลง
-  const months = weightChange * 7700 / calorieChange; // 7700 คือแคลอรีที่เผาผลาญในการลดหนามน้ำหนัก 1 กิโลกรัม
 
   console.log("TDEE:", tdee);
   console.log("Weight:", weight);
@@ -50,7 +77,7 @@ export const calculateTDEE = (state) => {
   console.log("Activity Level:", activitylevel);
   console.log("Age:", age);
   console.log("Accomplish:", accomplish);
-  console.log(`To ${accomplish} ${weightChange} kg, it will take approximately ${months.toFixed(0)} months.`);
+ 
 
   return tdee;
 };
@@ -58,16 +85,16 @@ export const calculateTDEE = (state) => {
 
 const initialState = {
   selectedStartDate: '',
-  selectedSex: '',
+  selectedSex: null,  // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
   weight: '',
   height: '',
   birthdate: '',
   openStartDatePicker: false,
   accomplish: '',
-  goalweight:'',
-  activitylevel:'',
-  age: '',
-  months:''
+  goalweight: '',
+  activitylevel: null,  // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
+  age: null,
+  months: ''
 };
 
 const processInfoSlice1 = createSlice({
@@ -112,9 +139,9 @@ const processInfoSlice1 = createSlice({
       state.activitylevel = action.payload;
       console.log(state.activitylevel)
     },
-    setAge: (state, action) => { // action สำหรับ set ค่า age
-      state.age = action.payload;
-    },
+    setAge: (state, action) => {
+      state.age = parseInt(action.payload); // แปลง payload เป็นตัวเลขและอัปเดตอายุใน state
+    },   
     setMonths: (state, action) => {
       state.months = action.payload;
       console.log(state.months)
