@@ -8,7 +8,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
+import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice'
 
 // ---------------------- Create Own Menu ---------------------------------
 export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่องกรอกข้อมูล สารอาหาร

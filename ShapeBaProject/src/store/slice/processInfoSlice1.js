@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../../firebase-cofig'
 
 // export const calculateAge = (birthdate) => {
 //   const currentYear = new Date();
@@ -36,9 +37,9 @@ export const calculateTDEE = (state) => {
 
   let bmr = 0;
   if (selectedSex === "male") {
-    bmr = (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age).toFixed(0);
+    bmr = (88.362 + ( 13.397 * weight + 4.799 * height - 5.677 * age)).toFixed(0);
   } else if (selectedSex === "female") {
-    bmr = (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age).toFixed(0);
+    bmr = (447.593 + ( 9.247 * weight + 3.098 * height - 4.33 * age)).toFixed(0);
   }
 
   let tdee = 0;
@@ -65,7 +66,7 @@ export const calculateTDEE = (state) => {
   if (accomplish === "Lose weight") {
     tdee -= 500; // ลดแคลลอรีลง 500 ถ้าเป็นการลดน้ำหนัก
   } else if (accomplish === "Gain weight") {
-    tdee = tdee + 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
+    tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
   }
 
   console.log("TDEE:", tdee);
@@ -78,6 +79,11 @@ export const calculateTDEE = (state) => {
 
   return tdee;
 };
+
+const saveUserInfo = () => {
+
+
+}
 
 const initialState = {
   // selectedStartDate: '',
