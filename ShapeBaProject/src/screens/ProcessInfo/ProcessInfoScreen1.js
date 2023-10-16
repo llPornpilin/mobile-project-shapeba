@@ -14,7 +14,7 @@ import Calendar from "../../components/Calendar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   processInfoSelector,
-  setSelectedStartDate,
+  // setSelectedStartDate,
   setSelectedSex,
   setWeight,
   setHeight,
@@ -22,7 +22,6 @@ import {
   setBirthdate, // เพิ่ม import setBirthdate
   setAge,
 } from "../../store/slice/processInfoSlice1";
-import { calculateAge } from "../../store/slice/processInfoSlice1";
 
 export const progressCircle = (number, color, textcolor) => {
   return (
@@ -43,13 +42,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
     dispatch(setOpenStartDatePicker(!openStartDatePicker));
   };
 
-  const handleAgeChange = (selectedStartDate, birthdate) => {
-    const age = calculateAge(birthdate);
-    dispatch(setSelectedStartDate(selectedStartDate)); 
-    dispatch(setBirthdate(birthdate)); 
-    dispatch(setAge(age.toString()));
-  };
-  
+
 
   return (
     <ScrollView
@@ -135,16 +128,16 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                 <TouchableOpacity onPress={handleOnPressStartDate}>
                   <TextInput
                     style={styles.input}
-                    value={processInfo.selectedStartDate}
+                    value={processInfo.birthdate}
                     editable={false}
-                    placeholder=""
+                    placeholder="Birth Date"
                   />
                 </TouchableOpacity>
                 <Calendar
                   openStartDatePicker={processInfo.openStartDatePicker}
                   handleOnPressStartDate={handleOnPressStartDate}
                   setSelectedStartDate={(date) =>
-                    handleAgeChange(date, processInfo.selectedStartDate)
+                    dispatch(setBirthdate(date))
                   }
                 />
               </View>
