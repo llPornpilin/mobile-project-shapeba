@@ -28,6 +28,8 @@ const frontEndSlice = createSlice({
         },
         setStateLogin(state, action) {
             state.loginState = action.payload
+            console.log(">>> set state <<<")
+            console.log("action: ", action.payload)
         }
     }
 })

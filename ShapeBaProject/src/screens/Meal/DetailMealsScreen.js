@@ -4,11 +4,12 @@ import { Header } from 'react-native-elements';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import SwipeableFlatList from 'react-native-swipeable-list';
 import { FontAwesome, Feather } from '@expo/vector-icons';
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
 
-// Page
-import { color } from 'd3';
+// Bottom Sheet
+import UpdateSizeBottomModal from '../../components/UpdateSizeBottomSheet';
+
 // Firebase
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../../firebase-cofig'
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,50 +58,79 @@ export function renderItemSeparator() {
     return <View style={{ backgroundColor: '#A4A4A4', height: 1 }} />;
 }
 
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Main Component >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const DetailMealsScreen = ({ navigation, route }) => {
+    // selected meal
+    const mealName = (route.params.header.split(" ").join("")).toLowerCase()
+
+    // reduct store
+    const userStore = useSelector(userSelector);
+    const userId = userStore.userId
+
+    // ------ edit serving size meal bottom sheet -------
+    const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetModalRef = useRef(null);
+    const [editMenuInfo, setEditMenuInfo] = useState()
+
+    const bottomSheetEditHandler = (editMenuData) => {
+        setIsEditMenu(false)
+        setEditMenuInfo(editMenuData)
+        bottomSheetModalRef.current?.present();
+        setTimeout(() => {
+            setIsOpen(true);
+        }, 100);
+    }
+    
+    // ------------ delete menu handler ---------------
+    const daleteMealHandler = async (deleteMenuId) => {
+        console.log("Deleted Menu id: ", deleteMenuId)
+        try {
+            const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
+            const dailyMealRef = await getDocs(querySnapshot)
+
+            dailyMealRef.forEach(async (doc) => {
+                const updateMeal = doc.data()[mealName].filter(menu => menu.id !== deleteMenuId)
+                const docRef = doc.ref;
+                await updateDoc(docRef, {
+                    [mealName]: updateMeal
+                })
+            })
+            getmealData()
+        }
+        catch(error) {
+            console.log("delete meal error >> ", error)
+        }
+    }
+
+
     // item in swipe
-    const QuickActions = (index, qaItem) => {
+    const QuickActions = (index, item) => {
         return (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', }}>
-                <View style={[styles.button, { backgroundColor: '#EF5353' }]}>
-                    <Pressable>
+                <TouchableOpacity style={[styles.button, { backgroundColor: '#EF5353' }]}>
+                    <Pressable onPress={() => daleteMealHandler(item.id)}>
                         <FontAwesome name="trash-o" size={28} color="white" />
                     </Pressable>
-                </View>
-                <View style={[styles.button, { backgroundColor: '#FBBB57' }]}>
-                    <Pressable>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.button, { backgroundColor: '#FBBB57' }]}>
+                    <Pressable onPress={() => bottomSheetEditHandler(item)}>
                         <Feather name="edit" size={24} color="white" />
                     </Pressable>
-                </View>
+                </TouchableOpacity>
             </View>
         );
     };
 
-    const allMeals = [
-        { id: 1, name: 'meals1' },
-        { id: 2, name: 'meals2' },
-        { id: 3, name: 'meals3' },
-        { id: 4, name: 'meals4' },
-        { id: 5, name: 'meals5' },
-        { id: 6, name: 'meals6' },
-        { id: 7, name: 'meals7' },
-        { id: 8, name: 'meals8' },
-        { id: 9, name: 'meals9' },
-        { id: 10, name: 'meals10' },
-        { id: 11, name: 'meals11' },
-        { id: 12, name: 'meals12' },
-        { id: 13, name: 'meals13' },
-        { id: 14, name: 'meals14' },
-    ];
-
     // --------------------------- set meal data from database ---------------------------------
     const [mealData, setMealData] = useState([])
-    const mealName = (route.params.header.split(" ").join("")).toLowerCase()
-    const userStore = useSelector(userSelector);
-    const userId = userStore.userId // FIXME: >> change to real user id
-    const selectedDate = "15/10/2023" // FIXME: >> change to real selected date
+    const selectedDate = "17/10/2023" // FIXME: >> change to real selected date
     const [sumCalories, setSumCalories] = useState(0)
 
+    // check state edit menu
+    const [isEditMenu, setIsEditMenu] = useState(false)
+
+    // show menu in meal
     const getmealData = async () => {
         try {
             const querysnapshot = query(collection(db, "dailyMeal")
@@ -128,6 +158,8 @@ const DetailMealsScreen = ({ navigation, route }) => {
         }
 
     }
+    
+
     useFocusEffect(
         React.useCallback(() => {
             console.log("screen: ", mealName)
@@ -137,7 +169,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
                 // Clear the meal state when the component is unfocused
                 setMealData([]);
             };
-        }, [])
+        }, [isEditMenu])
     );
     // ----------------------------------------------------------------------------------------
 
@@ -162,6 +194,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
                     <Text className="font-bold text-white" >Add More Meal</Text>
                 </TouchableOpacity>
             </View>
+            <UpdateSizeBottomModal setIsEditMenu={setIsEditMenu} mealName={mealName} editMenuInfo={editMenuInfo} isOpen={isOpen} setIsOpen={setIsOpen} bottomSheetModalRef={bottomSheetModalRef} />
         </View>
     )
 }

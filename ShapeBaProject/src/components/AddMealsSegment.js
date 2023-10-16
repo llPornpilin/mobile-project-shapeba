@@ -292,7 +292,7 @@ const AddMealsSegment = (props) => {
                             onSwipeableOpen={false}
                         />
                         {/* Add My Menu Button */}
-                        <TouchableHighlight // FIXME: fix add button position
+                        <TouchableHighlight
                             className="absolute bottom-20 right-8 bg-Orange w-14 h-14 rounded-full justify-center items-center elevation-3"
                             style={{ elevation: 3 }}
                             underlayColor="#EF8E6D"

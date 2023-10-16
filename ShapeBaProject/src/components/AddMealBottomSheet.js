@@ -123,16 +123,17 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
     )
 }
 // ---------------------- Add Menu ---------------------------------
-export const AddMealBottomModal = (props) => {
+export const AddMealBottomModal = (props, {navigation}) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const { onTouchOutside, title } = props
     //redux
     const userStore = useSelector(userSelector);
-
+    console.log(">>>>>> ", props.selectedMenu)
     // Bottom Sheet
     const snapPoints = ["40%"];
     const isOpen = props.isOpen;
+    console.log("add meal bottom sheet: ", isOpen)
     const closeModal = () => {
         bottomSheetModalRef.current?.close();
         setTimeout(() => {
@@ -143,17 +144,6 @@ export const AddMealBottomModal = (props) => {
 
     // serving size textInput state
     const [servingSize, setServingSize] = useState()
-
-
-    const renderOutsideTouchable = (onTouch) => {
-        const view = <View style={{ flex: 1, width: '100%' }} />
-        if (!onTouch) return view
-        return (
-            <TouchableWithoutFeedback onPress={onTouch} style={{ flex: 1, width: '100%' }}>
-                {view}
-            </TouchableWithoutFeedback>
-        )
-    }
 
     // ********************************* add selected menu to database ****************************************
     const handleAddMenu = async () => { // TODO: >>> แก้ bottom sheet ถ้ายังไม่ใส่ serving size กด Add meal ไม่ได้ !!
@@ -283,12 +273,11 @@ export const AddMealBottomModal = (props) => {
         }
         setServingSize("")
         closeModal()
+        // navigation.navigate('DetailMealsScreen')
     }
     // *************************************************************************************************************
 
     return (
-        // <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
-        //         {renderOutsideTouchable(onTouchOutside)}
         <SafeAreaView>
             <BottomSheetModal
                 ref={bottomSheetModalRef}
@@ -301,7 +290,7 @@ export const AddMealBottomModal = (props) => {
 
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
-                        Menu Name
+                        {/* {props.selectedMenu.name} */}
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>
                         <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
@@ -327,7 +316,6 @@ export const AddMealBottomModal = (props) => {
                 </View>
             </BottomSheetModal>
         </SafeAreaView>
-        // </View>
     )
 }
 
