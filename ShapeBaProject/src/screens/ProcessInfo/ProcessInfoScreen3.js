@@ -19,7 +19,7 @@ import {
   setWeight,
 } from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
-import { processInfoSelector, calculateTDEE  } from "../../store/slice/processInfoSlice1";
+import { processInfoSelector, calculateTDEE } from "../../store/slice/processInfoSlice1";
 import { calculateTimeToGoal } from "../../store/slice/processInfoSlice1";
 
 const ProcessInfoScreen3 = ({ navigation }) => {
@@ -29,18 +29,17 @@ const ProcessInfoScreen3 = ({ navigation }) => {
 
   // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
   const handleCalculateTDEE = () => {
-    const { goalweight, weight} = processInfo;
-    
-  
+    const { goalweight, weight } = processInfo;
+
+
     if (weight - goalweight > 10) {
       Alert.alert("คำเตือน", "น้ำหนักที่กรอกมากเกินไป กรุณากรอกใหม่");
       dispatch(setWeight("")); // รีเซ็ตค่าน้ำหนักให้ว่าง
     } else {
-      const tdee = calculateTDEE(processInfo);
       navigation.navigate("TapToStart");
     }
   };
-  
+
 
   return (
     <KeyboardAvoidingView

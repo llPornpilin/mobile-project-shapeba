@@ -64,24 +64,50 @@ export const calculateTDEE = (state) => {
     console.log(typeof tdee, tdee)
   }
   saveUserInfo(selectedSex, birthdate)
+  saveGoalInfo(state, tdee)
   return tdee;
 };
 
+//user_id here
+const getUserId = async () => {
+  let userId = ''
+  userId = await new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(AUTH, (user) => {
+      if (user) {
+        console.log('from store', user.uid);
+        unsubscribe(); // Unsubscribe from the listener
+        resolve(user.uid);
+      } else {
+        reject(new Error("User is not authenticated."));
+      }
+    });
+  });
+  return userId;
+}
+
+// Get goal by User ID
+const getGoalById = async (userId) => { // Pass the user ID as an argument
+  try {
+    // const userId = await getUserId();
+    const querySnapshot = await getDocs(query(collection(db, "goal"), where("user_id", "==", userId), where("status", "==", "doing"))); // Use the user's ID passed as an argument
+    console.log("Total goal: ", querySnapshot.size);
+    const tempDoc = [];
+    querySnapshot.forEach((doc) => {
+      tempDoc.push({ ...doc.data(), key: doc.id });
+    });
+    console.log("goal user", tempDoc);
+    return tempDoc.length == 0;
+
+  } catch (error) {
+    console.error("Error fetching user goal: ", error);
+  }
+}
+
 const saveUserInfo = async (selectedSex, birthdate) => {
   try {
-    let userId = await new Promise((resolve, reject) => {
-      const unsubscribe = onAuthStateChanged(AUTH, (user) => {
-        if (user) {
-          console.log('from store', user.uid);
-          unsubscribe(); // Unsubscribe from the listener
-          resolve(user.uid);
-        } else {
-          reject(new Error("User is not authenticated."));
-        }
-      });
-    });
+    const userId = await getUserId();
     console.log("User is authenticated. userId: ", userId)
-    console.log("birth", birthdate, selectedSex)
+    // console.log("birth", birthdate, selectedSex)
     await updateDoc(doc(db, "user", userId), {
       birthDate: birthdate,
       sex: selectedSex
@@ -93,6 +119,37 @@ const saveUserInfo = async (selectedSex, birthdate) => {
     console.log(e.message)
   }
 
+}
+
+//add goal in firebase
+const saveGoalInfo = async (state, tdee) => {
+  try {
+    const userId = await getUserId();
+    const isGoalEmpty = await getGoalById(userId);
+    console.log("byId", isGoalEmpty);
+
+    if (isGoalEmpty) {
+      const docRef = await addDoc(collection(db, "goal"), {
+        user_id: userId,
+        TDEE: tdee,
+        accomplish: state.accomplish,
+        activityLevel: state.activitylevel,
+        goalWeight: state.goalweight,
+        height: state.height,
+        historyWeight: [
+          {
+            date: new Date().toLocaleDateString(),
+            weight: state.weight,
+          }
+        ],
+        status: "doing",
+      });
+      console.log("save goal: ", docRef.id);
+    }
+
+  } catch (e) {
+    console.error("Error adding goal: ", e);
+  }
 }
 
 const initialState = {
@@ -153,7 +210,7 @@ const processInfoSlice1 = createSlice({
       ) {
         age--;
       }
-      // console.log("Age: ", age);
+      console.log("Age: ", age);
       setAge(age)
 
     },
