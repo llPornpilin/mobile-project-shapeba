@@ -1,29 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../../firebase-cofig'
+import { AUTH } from "../../../firebase-cofig";
+import { onAuthStateChanged } from 'firebase/auth'
 
-// export const calculateAge = (birthdate) => {
-//   const currentYear = new Date();
-//   const birthYear = new Date(birthdate);
-//   console.log('currentYear ', currentYear );
-//   console.log('birthYear ', birthYear );
-//   console.log('birthdate ', birthdate );
-//   const age = currentYear - birthYear;
-//   return age;
-// };
 
-const UpdateUser = async () => {
-        try {
-            await updateDoc(doc(db, "user", student.key), {
-                id: id,
-                name: name,
-                gpa: gpa,
-            });
-            Alert.alert("Success", "Student updated successfully");
-            navigation.navigate("StudentList");
-        } catch (e) {
-            Alert.alert("Error", "Error updating document: ", e.message);
-        }
-    }
 
 export const calculateTimeToGoal = (state) => {
   const { goalweight, weight, accomplish } = state;
@@ -46,7 +26,7 @@ export const calculateTimeToGoal = (state) => {
 };
 //TDEE
 export const calculateTDEE = (state) => {
-  const { weight, height, selectedSex, activitylevel, accomplish, age } = state;
+  const { weight, height, selectedSex, activitylevel, accomplish, age, birthdate } = state;
   // const age = calculateAge(birthdate);
 
   let bmr = 0;
@@ -83,18 +63,41 @@ export const calculateTDEE = (state) => {
     tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
     console.log(typeof tdee, tdee)
   }
-
+  saveUserInfo(selectedSex, birthdate)
   return tdee;
 };
 
-// const saveUserInfo = () => {
+const saveUserInfo = async (selectedSex, birthdate) => {
+  try {
+    let userId = await new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+          console.log('from store', user.uid);
+          unsubscribe(); // Unsubscribe from the listener
+          resolve(user.uid);
+        } else {
+          reject(new Error("User is not authenticated."));
+        }
+      });
+    });
+    console.log("User is authenticated. userId: ", userId)
+    console.log("birth", birthdate, selectedSex)
+    await updateDoc(doc(db, "user", userId), {
+      birthDate: birthdate,
+      sex: selectedSex
+    });
+    console.log("Success")
 
+  } catch (e) {
 
-// }
+    console.log(e.message)
+  }
+
+}
 
 const initialState = {
   // selectedStartDate: '',
-  selectedSex: null, // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
+  selectedSex: "", // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
   weight: "",
   height: "",
   birthdate: "",
@@ -115,7 +118,7 @@ const processInfoSlice1 = createSlice({
     setUserIdprocess(state, action) {
       state.userId = action.payload
       console.log("set user id: " + state.userId)
-  },
+    },
     setSelectedStartDate: (state, action) => {
       state.selectedStartDate = action.payload;
       console.log(state.selectedStartDate);

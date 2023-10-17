@@ -28,6 +28,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ProcessInfoScreen1 from '../screens/ProcessInfo/ProcessInfoScreen1';
 import ProcessInfoScreen2 from '../screens/ProcessInfo/ProcessInfoScreen2';
 import ProcessInfoScreen3 from '../screens/ProcessInfo/ProcessInfoScreen3';
+import StartScreen from '../screens/StartScreen';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -88,8 +89,10 @@ function LogInNavigate() {
                 headerShown: false,
             }}
         >
+            {/* <LoginStack.Screen name="StartScreen" component={StartScreen} /> */}
             <LoginStack.Screen name="SignInScreen" component={SignInScreen} />
             <LoginStack.Screen name="SignUpScreen" component={SignUpScreen} />
+
         </LoginStack.Navigator>
     )
 }

@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { AUTH } from "../../firebase-cofig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 // Firebase
-import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where, setDoc } from '../../firebase-cofig'
 
 // Page
 import { ActivityIndicator } from "react-native-paper";
@@ -58,13 +58,13 @@ const SignInScreen = ({ navigation }) => {
 
       dispatch(setUserId(response.user.uid))
       dispatch(setUserEmail(response.user.email))
-      const docRef = await addDoc(collection(db, "user"), {
-        user_id: response.user.uid,
+      //add user to firebase
+      const docRef = await setDoc(doc(db, "user", response.user.uid), {
         email: response.user.email,
         birthDate: '',
         sex: ''
       });
-      console.log("Document written with ID: ", docRef.id);
+
 
     }
     catch (error) {
@@ -77,7 +77,7 @@ const SignInScreen = ({ navigation }) => {
   }
 
   return (
-    
+
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
@@ -85,52 +85,52 @@ const SignInScreen = ({ navigation }) => {
         alignItems: "center",
       }}
     >
-      <View style={{justifyContent:'center', alignItems:'center', flex:1}}>
-      <Image
-        source={require("../../assets/img/Icon.jpg")}
-        style={{ width: 200, height: 200, marginTop: 20 }}
-      />
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Image
+          source={require("../../assets/img/Icon.jpg")}
+          style={{ width: 200, height: 200, marginTop: 20 }}
+        />
 
-      <Text style={styles.LabelUsername}>User Name</Text>
-      <TextInput
-        value={email}
-        style={styles.inputUsername}
-        placeholder="Enter UserName"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <Text style={styles.LabelPassword}>Password</Text>
-      <TextInput
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        style={styles.inputPassword}
-        secureTextEntry
-        placeholder="Enter Password"
+        <Text style={styles.LabelUsername}>User Name</Text>
+        <TextInput
+          value={email}
+          style={styles.inputUsername}
+          placeholder="Enter UserName"
+          autoCapitalize="none"
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Text style={styles.LabelPassword}>Password</Text>
+        <TextInput
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          style={styles.inputPassword}
+          secureTextEntry
+          placeholder="Enter Password"
 
-      />
-      {loading ? (
-        <ActivityIndicator size="large" color="#EC744A" />
-      ) : (
-        <View>
-          <TouchableOpacity style={styles.btn1} onPress={signIn}>
-            <Text style={styles.btnText1}>Sign In</Text>
-          </TouchableOpacity>
+        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#EC744A" />
+        ) : (
+          <View>
+            <TouchableOpacity style={styles.btn1} onPress={signIn}>
+              <Text style={styles.btnText1}>Sign In</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btn2} onPress={signUp}>
-            <Text style={styles.btnText2}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-      )
-      }
+            <TouchableOpacity style={styles.btn2} onPress={signUp}>
+              <Text style={styles.btnText2}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        )
+        }
 
-      {/* <Text style={styles.orText}>or</Text>
+        {/* <Text style={styles.orText}>or</Text>
       <TouchableOpacity
         style={styles.btn2}
         onPress={() => navigation.navigate("#")}
       >
         <Text style={styles.btnText2}>Sign in with google</Text>
       </TouchableOpacity> */}
-      {/* <View style={styles.signupContainer}>
+        {/* <View style={styles.signupContainer}>
         <Text>Don’t have an account?</Text>
         <TouchableOpacity
           style={styles.btn3}
@@ -143,7 +143,7 @@ const SignInScreen = ({ navigation }) => {
       </View> */}
       </View>
     </ScrollView>
-    
+
   );
 };
 
