@@ -19,8 +19,14 @@ import {
   setWeight,
 } from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
-import { processInfoSelector, calculateTDEE } from "../../store/slice/processInfoSlice1";
+import {
+  processInfoSelector,
+  calculateTDEE,
+} from "../../store/slice/processInfoSlice1";
 import { calculateTimeToGoal } from "../../store/slice/processInfoSlice1";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { Dropdown } from "react-native-element-dropdown";
 
 const ProcessInfoScreen3 = ({ navigation }) => {
   const [selectedSex, setSelectedSex] = useState("male");
@@ -31,7 +37,6 @@ const ProcessInfoScreen3 = ({ navigation }) => {
   const handleCalculateTDEE = () => {
     const { goalweight, weight } = processInfo;
 
-
     if (weight - goalweight > 10) {
       Alert.alert("คำเตือน", "น้ำหนักที่กรอกมากเกินไป กรุณากรอกใหม่");
       dispatch(setWeight("")); // รีเซ็ตค่าน้ำหนักให้ว่าง
@@ -40,113 +45,137 @@ const ProcessInfoScreen3 = ({ navigation }) => {
     }
   };
 
+  const activityLevel = [
+    { label: "little or no exercise", value: "little or no exercise" },
+    { label: "1-3 times/week", value: "1-3 times/week" },
+    { label: "4-5 times/week", value: "4-5 times/week" },
+    {
+      label: "Intense exercise 6-7 times/week",
+      value: "Intense exercise 6-7 times/week",
+    },
+    {
+      label: "Very intense exercise daily",
+      value: "Very intense exercise daily",
+    },
+  ];
+
+  const SignupSchema3 = Yup.object().shape({
+    goalweight: Yup.number()
+    .required("Enter Your GoalWeight !"),
+    activitylevel: Yup.string()
+      .notOneOf(["default"], "Select Activity Level !")
+      .required("Select Activity Level !"),
+  });
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <Formik
+      initialValues={{
+        goalweight: processInfo.goalweight,
+        activitylevel: processInfo.activitylevel,
+      }}
+      validationSchema={SignupSchema3}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.GreenArea}>
-          <Text style={styles.Letget}>Add Your Goal Weight</Text>
-          <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
-        </View>
-        <View style={styles.whiteArea}>
-          <View style={styles.uiContainer}>
-            {progressCircle(1, "white", "#EC744A")}
-            <View style={styles.line}></View>
-            {progressCircle(2, "white", "#EC744A")}
-            <View style={styles.line}></View>
-            {progressCircle(3, "#EC744A", "white")}
-          </View>
-          <View style={styles.Allinput}>
-            <View style={styles.inputRowContainer}>
-              <Text
-                style={{
-                  ...styles.inputLabel,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 30,
-                  marginLeft: 13,
-                  fontSize: 16,
-                }}
-              >
-                Goal Weight
-              </Text>
-              <TextInput
-                style={styles.inputGowieght}
-                value={processInfo.goalweight} // นำค่า goalweight มาจาก Redux state
-                onChangeText={(text) => dispatch(setGoalweight(text))} // เมื่อมีการเปลี่ยนแปลงใน TextInput ให้ dispatch action setGoalweight
-                keyboardType="number-pad"
-                maxLength={3}
-              />
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        setFieldTouched,
+        isValid,
+        handleSubmit,
+      }) => (
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.GreenArea}>
+              <Text style={styles.Letget}>Add Your Goal Weight</Text>
+              <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
             </View>
-            <View style={styles.inputRowContainer}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 10,
-                  fontSize: 16,
-                }}
-              >
-                Activity Level
-              </Text>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? styles.pickerContainerIOS
-                    : styles.pickerContainerAndroid
-                }
-              >
-                <Picker
-                  selectedValue={processInfo.activitylevel}
-                  onValueChange={(itemValue) =>
-                    dispatch(setActivitylevel(itemValue))
-                  }
-                  style={
-                    Platform.OS === "ios"
-                      ? styles.pickerIOS
-                      : styles.pickerAndroid
-                  }
-                  mode="dropdown"
+            <View style={styles.whiteArea}>
+              <View style={styles.uiContainer}>
+                {progressCircle(1, "white", "#EC744A")}
+                <View style={styles.line}></View>
+                {progressCircle(2, "white", "#EC744A")}
+                <View style={styles.line}></View>
+                {progressCircle(3, "#EC744A", "white")}
+              </View>
+              <View style={styles.Allinput}>
+                <View style={styles.inputRowContainer}>
+                  <Text
+                    style={{
+                      ...styles.inputLabel,
+                      fontWeight: "bold",
+                      color: "#575757",
+                      marginTop: 30,
+                      marginLeft: 5,
+                      fontSize: 16,
+                    }}
+                  >
+                    Goal Weight
+                  </Text>
+                  <TextInput
+                    style={styles.inputGowieght}
+                    value={processInfo.goalweight} // นำค่า goalweight มาจาก Redux state
+                    onChangeText={(text) => {
+                      handleChange("goalweight")(text);
+                      dispatch(setGoalweight(text));
+                    }} // เมื่อมีการเปลี่ยนแปลงใน TextInput ให้ dispatch action setGoalweight
+                    keyboardType="number-pad"
+                    maxLength={3}
+                  />
+                  {errors.goalweight && (
+                    <Text style={styles.errorsText}>{errors.goalweight}</Text>
+                  )}
+                </View>
+                <View style={styles.inputRowContainer}>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      color: "#575757",
+                      marginTop: 10,
+                      fontSize: 16,
+                    }}
+                  >
+                    Activity Level
+                  </Text>
+                  <Dropdown
+                    style={styles.dropdownStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    data={activityLevel}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder=""
+                    value={processInfo.activitylevel}
+                    onChange={(item) => {
+                      handleChange("activitylevel")(item.value);
+                      dispatch(setActivitylevel(item.value)); // ส่งไปยัง Redux store
+                    }}
+                  />
+                   {errors.activitylevel && <Text style={styles.errorsText}>{errors.activitylevel}</Text>}
+                </View>
+              </View>
+
+              <View style={styles.signupContainer}>
+                <TouchableOpacity
+                  style={styles.btn3}
+                  onPress={handleCalculateTDEE} // ตรวจสอบว่าเรียกใช้ handleCalculateTDEE ตรงนี้
                 >
-                  <Picker.Item
-                    label="Little or no exercise"
-                    value="Little or no exercise"
+                  <Image
+                    source={require("../../../assets/img/Arrow.jpg")}
+                    style={(styles.img, { width: 35, height: 35 })}
+                    resizeMode="contain"
                   />
-                  <Picker.Item label="1-3 times/week" value="1-3 times/week" />
-                  <Picker.Item label="4-5 times/week" value="4-5 times/week" />
-                  <Picker.Item
-                    label="Intense exercise 6-7 times/week"
-                    value="Intense exercise 6-7 times/week"
-                  />
-                  <Picker.Item
-                    label="Very intense exercise daily"
-                    value="Very intense exercise daily"
-                  />
-                </Picker>
+                </TouchableOpacity>
               </View>
             </View>
-          </View>
-
-          <View style={styles.signupContainer}>
-            <TouchableOpacity
-              style={styles.btn3}
-              onPress={handleCalculateTDEE} // ตรวจสอบว่าเรียกใช้ handleCalculateTDEE ตรงนี้
-            >
-              <Image
-                source={require("../../../assets/img/Arrow.jpg")}
-                style={(styles.img, { width: 35, height: 35 })}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
+    </Formik>
   );
 };
 
@@ -228,6 +257,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 55,
     width: 330,
+    paddingHorizontal: 20
   },
   inputRowContainer: {
     marginBottom: 40,
@@ -268,6 +298,21 @@ const styles = StyleSheet.create({
     height: 50,
     width: "330",
     color: "#333",
+  },
+  dropdownStyle: {
+    marginTop: 20,
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderRadius: 25,
+    height: 55,
+    width: 330,
+    paddingHorizontal: 20,
+  },
+  errorsText: {
+    fontSize: 13,
+    color: "#C03232",
+    marginLeft: 10,
+    marginTop: 10,
   },
 });
 
