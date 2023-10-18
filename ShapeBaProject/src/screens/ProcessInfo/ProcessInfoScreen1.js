@@ -22,6 +22,9 @@ import {
   setBirthdate, // เพิ่ม import setBirthdate
   setAge,
 } from "../../store/slice/processInfoSlice1";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { Dropdown } from 'react-native-element-dropdown';
 
 export const progressCircle = (number, color, textcolor) => {
   return (
@@ -33,6 +36,20 @@ export const progressCircle = (number, color, textcolor) => {
   );
 };
 
+const SignupSchema = Yup.object().shape({
+  weight: Yup.number()
+    // .min(1, 'Too Short!')
+    // .max(3, 'Too Long!')
+    .required("Enter Your Weight !"),
+  height: Yup.number()
+  .required("Enter Your Height !"),
+  birthdate: Yup.date()
+  .required("Enter Your BirthDate !"),
+  selectedSex: Yup.string()
+    .notOneOf(["default"], "Select Sex !")
+    .required("Select Sex !"),
+});
+
 const ProcessInfoScreen1 = ({ navigation }) => {
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
@@ -42,162 +59,189 @@ const ProcessInfoScreen1 = ({ navigation }) => {
     dispatch(setOpenStartDatePicker(!openStartDatePicker));
   };
 
-
+  const sex = [
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'FeMale' },
+];
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
+    <Formik
+      initialValues={{
+        weight: processInfo.weight,
+        height: processInfo.height,
+        birthdate: processInfo.birthdate,
+        selectedSex: processInfo.selectedSex,
       }}
+      validationSchema={SignupSchema}
     >
-      <View style={styles.blueArea}>
-        <View>
-          <Text style={styles.Texttop}>Let’s Get Start</Text>
-        </View>
-        <View>
-          <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
-        </View>
-      </View>
-      <View style={styles.whiteArea}>
-        <View style={styles.uiContainer}>
-          {progressCircle(1, "#EC744A", "white")}
-          <View style={styles.line}></View>
-          {progressCircle(2, "white", "#EC744A")}
-          <View style={styles.line}></View>
-          {progressCircle(3, "white", "#EC744A")}
-        </View>
-        <View style={styles.Allinput}>
-          <View style={styles.inputRowContainer}>
-            <View style={{ flex: 1, marginRight: 10 }}>
-              <Text
-                style={{
-                  ...styles.inputLabel,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 30,
-                }}
-              >
-                Weight
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={processInfo.weight}
-                onChangeText={(text) => dispatch(setWeight(text))}
-                keyboardType="number-pad"
-                maxLength={3}
-              />
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        setFieldTouched,
+        isValid,
+        handleSubmit,
+      }) => (
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: "#fff",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View style={styles.blueArea}>
+            <View>
+              <Text style={styles.Texttop}>Let’s Get Start</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  ...styles.inputLabel,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 30,
-                }}
-              >
-                Height
-              </Text>
-              <TextInput
-                style={styles.input}
-                value={processInfo.height}
-                onChangeText={(text) => dispatch(setHeight(text))}
-                keyboardType="number-pad"
-                maxLength={3}
-              />
+            <View>
+              <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
             </View>
           </View>
-          <View style={styles.inputRowContainer}>
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  ...styles.inputLabel,
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 30,
-                }}
-              >
-                Birth Date
-              </Text>
-              <View>
-                <TouchableOpacity onPress={handleOnPressStartDate}>
+          <View style={styles.whiteArea}>
+            <View style={styles.uiContainer}>
+              {progressCircle(1, "#EC744A", "white")}
+              <View style={styles.line}></View>
+              {progressCircle(2, "white", "#EC744A")}
+              <View style={styles.line}></View>
+              {progressCircle(3, "white", "#EC744A")}
+            </View>
+            <View style={styles.Allinput}>
+              <View style={styles.inputRowContainer}>
+                <View style={{ flex: 1, marginRight: 10 }}>
+                  <Text
+                    style={{
+                      ...styles.inputLabel,
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      color: "#575757",
+                      marginTop: 30,
+                    }}
+                  >
+                    Weight
+                  </Text>
                   <TextInput
                     style={styles.input}
-                    value={processInfo.birthdate}
-                    editable={false}
-                    placeholder="Birth Date"
+                    value={values.weight}
+                    onChangeText={(text) => {
+                      handleChange("weight")(text);
+                      dispatch(setWeight(text));
+                    }}
+                    keyboardType="number-pad"
+                    maxLength={3}
                   />
-                </TouchableOpacity>
-                <Calendar
-                  openStartDatePicker={processInfo.openStartDatePicker}
-                  handleOnPressStartDate={handleOnPressStartDate}
-                  setSelectedStartDate={(date) =>
-                    dispatch(setBirthdate(date))
-                  }
-                />
+                  {errors.weight && (
+                    <Text style={styles.errorsText}>{errors.weight}</Text>
+                  )}
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={{
+                      ...styles.inputLabel,
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      color: "#575757",
+                      marginTop: 30,
+                    }}
+                  >
+                    Height
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    value={processInfo.height}
+                    onChangeText={(text) => {
+                      handleChange("height")(text);
+                      dispatch(setHeight(text));
+                    }}
+                    keyboardType="number-pad"
+                    maxLength={3}
+                  />
+                  {errors.height && (
+                    <Text style={styles.errorsText}>{errors.height}</Text>
+                  )}
+                </View>
+              </View>
+              <View style={styles.inputRowContainer}>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={{
+                      ...styles.inputLabel,
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      color: "#575757",
+                      marginTop: 30,
+                    }}
+                  >
+                    Birth Date
+                  </Text>
+                  <View>
+                    <TouchableOpacity onPress={handleOnPressStartDate}>
+                      <TextInput
+                        style={styles.input}
+                        value={values.birthdate}
+                        editable={false}
+                        placeholder=""
+                      />
+                    </TouchableOpacity>
+                    {errors.birthdate && (
+                      <Text style={styles.errorsText}>{errors.birthdate}</Text>
+                    )}
+
+                    <Calendar
+                      openStartDatePicker={processInfo.openStartDatePicker}
+                      handleOnPressStartDate={handleOnPressStartDate}
+                      setSelectedStartDate={(date) =>
+                        dispatch(setBirthdate(date))
+                      }
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      color: "#575757",
+                      marginTop: 30,
+                    }}
+                  >
+                    Sex
+                  </Text>
+                  <Dropdown
+                        style={styles.dropdownStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        data={sex}
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder=""
+                        value={values.selectedSex}
+                        onChange={(item) => {
+                          handleChange("selectedSex")(item.value);
+                          dispatch(setSelectedSex(item.value)); // ส่งไปยัง Redux store
+                        }}
+                    />
+                     {errors.selectedSex && <Text style={styles.errorsText}>{errors.selectedSex}</Text>}
+                </View>
               </View>
             </View>
-            <View style={{ flex: 1, marginLeft: 10 }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  marginLeft: 5,
-                  color: "#575757",
-                  marginTop: 30,
-                }}
+            <View style={styles.signupContainer}>
+              <TouchableOpacity
+                style={styles.btn3}
+                onPress={() => navigation.navigate("ProcessInfoScreen2")}
               >
-                Sex
-              </Text>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? styles.pickerContainerIOS
-                    : styles.pickerContainerAndroid
-                }
-              >
-                <Picker
-                  selectedValue={processInfo.selectedSex || "default"} // ทำการเปลี่ยนแปลงเพื่อให้มีค่า default เมื่อ selectedSex เป็น null หรือค่าว่าง
-                  onValueChange={(itemValue) =>
-                    dispatch(setSelectedSex(itemValue))
-                  }
-                  style={
-                    Platform.OS === "ios"
-                      ? styles.pickerIOS
-                      : styles.pickerAndroid
-                  }
-                  mode="dropdown"
-                >
-                  <Picker.Item
-                    label="Select Sex"
-                    value="default"
-                    enabled={false}
-                  />
-                  <Picker.Item label="Male" value="male" />
-                  <Picker.Item label="Female" value="female" />
-                </Picker>
-              </View>
+                <Image
+                  source={require("../../../assets/img/Arrow.jpg")}
+                  style={(styles.img, { width: 35, height: 35 })}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View style={styles.signupContainer}>
-          <TouchableOpacity
-            style={styles.btn3}
-            onPress={() => navigation.navigate("ProcessInfoScreen2")}
-          >
-            <Image
-              source={require("../../../assets/img/Arrow.jpg")}
-              style={(styles.img, { width: 35, height: 35 })}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+        </ScrollView>
+      )}
+    </Formik>
   );
 };
 
@@ -270,9 +314,10 @@ const styles = StyleSheet.create({
     color: "#333",
     borderRadius: 25,
     paddingVertical: 12,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     marginRight: 10,
-    width: "100%",
+    width:160,
+    height:50
   },
   inputRowContainer: {
     flexDirection: "row",
@@ -321,6 +366,20 @@ const styles = StyleSheet.create({
     width: "100%",
     color: "#333",
   },
+  errorsText: {
+    fontSize: 12,
+    color: "#C03232",
+    marginLeft: 7,
+    marginTop: 5,
+  },
+  dropdownStyle: {
+    borderRadius: 25,
+    paddingLeft: 15,
+    backgroundColor: "#f0f0f0",
+    height: 50,
+    marginTop: 20,
+    width:160,
+},
 });
 
 export default ProcessInfoScreen1;
