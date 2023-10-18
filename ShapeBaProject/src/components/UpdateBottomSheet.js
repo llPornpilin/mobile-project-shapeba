@@ -13,7 +13,7 @@ import { setMenus, delMenu, setEditMenu, addMealSelector } from '../store/slice/
 const UpdateBottomSheet = (props) => {
 
     const bottomSheetModalRef = props.bottomSheetModalRef;
-    console.log("props", props.menuInfo)
+    // console.log("props", props.menuInfo)
 
     const snapPoints = ["60%",];
     const [u_id, setU_id] = useState("01");

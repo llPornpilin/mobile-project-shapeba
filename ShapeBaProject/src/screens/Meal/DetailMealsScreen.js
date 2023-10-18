@@ -29,7 +29,7 @@ const greenHeader = (navigation, mealName, sumCalories) => {
             }
             // centerComponent={{icon: 'menu', color: '#fff', iconStyle: {color: 'white', paddingLeft: 90, marginTop: 5}}}
             rightComponent={
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginLeft: -15}}>
                     <View style={{ marginRight: 3, marginTop: 3 }}>
                         <Entypo name="flash" size={22} color="white" />
                     </View>
@@ -124,7 +124,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
 
     // --------------------------- set meal data from database ---------------------------------
     const [mealData, setMealData] = useState([])
-    const selectedDate = "17/10/2023" // FIXME: >> change to real selected date
+    const selectedDate = "18/10/2023" // FIXME: >> change to real selected date
     const [sumCalories, setSumCalories] = useState(0)
 
     // check state edit menu
@@ -132,6 +132,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
 
     // show menu in meal
     const getmealData = async () => {
+        let plusCal = 0
         try {
             const querysnapshot = query(collection(db, "dailyMeal")
                 , where("user_id", "==", userId)
@@ -145,11 +146,12 @@ const DetailMealsScreen = ({ navigation, route }) => {
                 //     console.log("< NOT FOUND DATA >")
                 // }
                 menuInSelectedMeal.forEach((menu) => {
-                    setSumCalories(parseFloat(sumCalories) + parseFloat(menu.calories))
+                    plusCal += parseFloat(menu.calories)
+                    console.log("+ each menu cals: ", menu.calories)
                     tempDoc.push({ ...menu, key: menu.id })
                 })
+                setSumCalories(plusCal)
             });
-            console.log("cals: ", sumCalories)
 
             setMealData(tempDoc)
         }
@@ -175,7 +177,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            {greenHeader(navigation, route.params.header, sumCalories)}
+            {greenHeader(navigation, route.params.header, sumCalories.toFixed(2))}
             <SwipeableFlatList
                 keyExtractor={(item) => item.key}
                 data={mealData}

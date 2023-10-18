@@ -42,7 +42,7 @@ const UpdateSizeBottomModal = (props) => {
                 const currentMealData = doc.data()[mealName]
                 const updateMealData = currentMealData.map((menu) => {
                     if (menu.id == props.editMenuInfo.id) {
-                        return {...menu, serving_size_g: updateServingSize}
+                        return {...menu, serving_size_g: updateServingSize, calories: (menu.calories / menu.serving_size_g * updateServingSize).toFixed(2)}
                     }
                     return menu
                 })
@@ -54,7 +54,7 @@ const UpdateSizeBottomModal = (props) => {
 
                 props.setIsEditMenu(true); // --> useFocuseEffect fetch update menu (in DetailMealScreen)
                 closeModal()
-                setUpdateServingSize("")
+                setUpdateServingSize(" ")
             })
         }
         catch(error) {
@@ -75,8 +75,11 @@ const UpdateSizeBottomModal = (props) => {
 
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
-                        {/* {props.editMenuInfo.name} // FIXME: bottom sheet show ตลอด  */}
-                        Menu name
+                        {
+                            props.editMenuInfo !== undefined
+                            ? props.editMenuInfo.name
+                            : ""
+                        }
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>
                         <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
