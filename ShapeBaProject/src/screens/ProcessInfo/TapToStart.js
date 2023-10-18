@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 const label = (img, text) => {
-    
+
     return (
         <View style={styles.c1}>
             <Image source={img} style={{ width: 50, height: 50 }}></Image>
@@ -37,7 +37,7 @@ const TapToStart = ({ navigation }) => {
                 {label(require("../../../assets/img/icons8-chart.png"), "Graph Summary ")}
                 {label(require("../../../assets/img/icons8-fix.png"), "Customize menu list")}
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate("bottomNavigate")}>
+            <TouchableOpacity onPress={() => navigation.navigate("BottomNavigate")}>
                 <Text className="mb-5 mt-5 text-base font-semibold text-white">Tap to Start</Text>
             </TouchableOpacity>
 

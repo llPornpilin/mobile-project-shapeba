@@ -18,7 +18,7 @@ import { ActivityIndicator } from "react-native-paper";
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector, setUserId, setUserEmail } from '../store/slice/userSlice'
-import { frontEndSelector, setStateLogin } from "../store/slice/frontEndSlice";
+import { frontEndSelector, setStateSignUp } from "../store/slice/frontEndSlice";
 
 
 const SignInScreen = ({ navigation }) => {
@@ -34,7 +34,6 @@ const SignInScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      dispatch(setStateLogin("signin"))
       dispatch(setUserId(response.user.uid))
       dispatch(setUserEmail(response.user.email))
       // console.log(response);
@@ -51,7 +50,7 @@ const SignInScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
-      dispatch(setStateLogin("signup"))
+      dispatch(setStateSignUp(true))
       console.log("response uid: ", response.user.uid);
       console.log("response email: ", response.user.email);
       alert('check your email')

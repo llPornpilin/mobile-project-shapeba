@@ -19,7 +19,7 @@ import { PaperProvider } from "react-native-paper";
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector, setUserId, setUserEmail } from "../../store/slice/userSlice";
-import { setStateLogin } from "../../store/slice/frontEndSlice";
+import { setStateSignUp } from "../../store/slice/frontEndSlice";
 // Firebase
 import { AUTH } from "../../../firebase-cofig";
 
@@ -325,7 +325,7 @@ const ProfileScreen = ({ navigation }) => {
             onPress={() => {
               dispatch(setUserEmail('emty'))
               dispatch(setUserId('emty'))
-              dispatch(setStateLogin(""))
+              dispatch(setStateSignUp(false))
               AUTH.signOut()
               console.log('logout', userStore.userId, userStore.userEmail)
             }}

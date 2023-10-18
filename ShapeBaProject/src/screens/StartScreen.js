@@ -24,21 +24,13 @@ const StartScreen = ({ navigation }) => {
         style={[styles.img, { transform: [{ scale: scaleAnimate }] }]}
         resizeMode="contain"
       />
-      <View style={{justifyContent:'flex-end'}}>
+      <View style={{ justifyContent: 'flex-end' }}>
         <TouchableOpacity
           style={styles.btn1}
-          onPress={() => navigation.navigate('SignInNavigator')}
+          onPress={() => navigation.navigate('SignInScreen')}
         >
-          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20, textAlign:'center' }}>
+          <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20, textAlign: 'center' }}>
             Sign In
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn2}
-          onPress={() => navigation.navigate('SignUpNavigator')}
-        >
-          <Text style={{ color: "#025146", fontWeight: "bold", fontSize: 20, textAlign:'center' }}>
-            Sign Up
           </Text>
         </TouchableOpacity>
       </View>
@@ -49,7 +41,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems:'center',
+    alignItems: 'center',
   },
   img: {
     height: 220,
@@ -61,8 +53,8 @@ const styles = StyleSheet.create({
     width: 340,
     borderRadius: 30,
     backgroundColor: "#025146",
-    justifyContent:'center',
-    elevation:5,
+    justifyContent: 'center',
+    elevation: 5,
     marginTop: 160
   },
   btn2: {
@@ -73,7 +65,7 @@ const styles = StyleSheet.create({
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
     elevation: 5,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   textbtn1: {
     color: "#FFFFFF",

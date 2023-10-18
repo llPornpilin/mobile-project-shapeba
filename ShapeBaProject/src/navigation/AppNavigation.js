@@ -44,39 +44,56 @@ const LoginStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
+const processInfoStack = createNativeStackNavigator();
+const homeStack = createNativeStackNavigator();
 
+
+function ProcessInfoNavigate() {
+    return (
+        <processInfoStack.Navigator screenOptions={{ headerShown: false }}>
+            <processInfoStack.Screen name="ProcessInfoScreen1" component={ProcessInfoScreen1} />
+            <processInfoStack.Screen name="ProcessInfoScreen2" component={ProcessInfoScreen2} />
+            <processInfoStack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
+            <processInfoStack.Screen name="TapToStart" component={TapToStart} />
+
+            <processInfoStack.Screen name="BottomNavigate" component={BottomNavigate} />
+            <processInfoStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
+            <processInfoStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
+            <processInfoStack.Screen name="RecommendScreen" component={RecommendScreen} />
+
+        </processInfoStack.Navigator>
+    )
+
+}
+
+function HomeNavigate() {
+    return (
+        <homeStack.Navigator screenOptions={{ headerShown: false }}>
+            <homeStack.Screen name="BottomNavigate" component={BottomNavigate} />
+            <homeStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
+            <homeStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
+            <homeStack.Screen name="RecommendScreen" component={RecommendScreen} />
+
+        </homeStack.Navigator>
+    )
+
+}
 // Navigator From Dashboard to AddMeal
 function MainNavigator() {
-    // const [user, setUser] = useState(null)
-    // useEffect(() => {
-    //     onAuthStateChanged(AUTH, (user) => {
-    //         console.log('user', user)
-    //     })
-    // }, [])
     const userStore = useSelector(frontEndSelector);
+    console.log(userStore.SignUpState)
     return (
-        <MainStack.Navigator
+        <MainStack.Navigator initialRouteName='ProcessInfoNavigate'
             screenOptions={{
                 headerShown: false,
             }}
+
         >
-            {/* {user ?
-                <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
+            {userStore.SignUpState ?
+                <MainStack.Screen name="ProcessInfoNavigate" component={ProcessInfoNavigate} />
                 :
-                <MainStack.Screen name="SignInScreen" component={SignInScreen} />
-            } */}
-
-            <MainStack.Screen name="ProcessInfoScreen1" component={ProcessInfoScreen1} />
-            <MainStack.Screen name="ProcessInfoScreen2" component={ProcessInfoScreen2} />
-            <MainStack.Screen name="ProcessInfoScreen3" component={ProcessInfoScreen3} />
-
-            <MainStack.Screen name="bottomNavigate" component={BottomNavigate} />
-            <MainStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
-            <MainStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
-            <MainStack.Screen name="RecommendScreen" component={RecommendScreen} />
-            <MainStack.Screen name="TapToStart" component={TapToStart} />
-
-            {/* <MainStack.Screen name="SignInScreen" component={SignInScreen} /> */}
+                <MainStack.Screen name="HomeNavigate" component={HomeNavigate} />
+            }
 
         </MainStack.Navigator>
     )
@@ -84,12 +101,12 @@ function MainNavigator() {
 
 function LogInNavigate() {
     return (
-        <LoginStack.Navigator initialRouteName='SignInScreen'
+        <LoginStack.Navigator initialRouteName='StartScreen'
             screenOptions={{
                 headerShown: false,
             }}
         >
-            {/* <LoginStack.Screen name="StartScreen" component={StartScreen} /> */}
+            <LoginStack.Screen name="StartScreen" component={StartScreen} />
             <LoginStack.Screen name="SignInScreen" component={SignInScreen} />
             <LoginStack.Screen name="SignUpScreen" component={SignUpScreen} />
 
