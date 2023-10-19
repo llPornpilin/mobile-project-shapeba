@@ -100,6 +100,14 @@ const DashboardDayScreen = ({ navigation }) => {
             setIsOpen(true);
         }, 100);
     }
+    //close modal
+    const closeModal = () => {
+        bottomSheetModalRef.current?.close();
+        setTimeout(() => {
+            setIsOpen(false);
+        }, 200);
+    }
+
 
 
     animationState.current = 0;
@@ -267,7 +275,7 @@ const DashboardDayScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-            <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
+            <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} closeModal={closeModal} setTitleMeal={setTitleMeal} />
         </SafeAreaView>
 
     )

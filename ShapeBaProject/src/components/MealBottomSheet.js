@@ -36,13 +36,6 @@ const MealBottomSheet = (props) => {
     const snapPoints = ["25%", "60%",];
     // console.log("isOpen", isOpen)
 
-    const closeModal = () => {
-        bottomSheetModalRef.current?.close();
-        setTimeout(() => {
-            props.setIsOpen(false);
-        }, 200);
-    }
-
     const chooseMeal = (title) => {
         // console.log(title)
         props.setTitleMeal(title)
@@ -84,7 +77,7 @@ const MealBottomSheet = (props) => {
                         {mealMenu("Dinner")}
                         {mealMenu("After Dinner")}
                         <View className="bg-white w-full -mt-3">
-                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} >
+                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={props.closeModal}>
                                 <Text className="font-bold text-white text-lg">Cancel</Text>
                             </TouchableOpacity>
                         </View>
