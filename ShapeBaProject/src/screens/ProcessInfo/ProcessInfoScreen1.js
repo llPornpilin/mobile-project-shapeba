@@ -11,6 +11,7 @@ import {
   StatusBar,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { AntDesign } from '@expo/vector-icons';
 import Calendar from "../../components/Calendar";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,6 +27,7 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
+import { set } from "react-hook-form";
 
 export const progressCircle = (number, color, textcolor) => {
   return (
@@ -41,15 +43,7 @@ const SignupSchema = Yup.object().shape({
   weight: Yup.number()
     .required("Enter Your Weight !"),
   height: Yup.number()
-  .required("Enter Your Height !"),
-  birthdate: Yup.string()
-    .nullable()
-    .required("Enter Your BirthDate !")
-    // .matches(
-    //   /^(19|20)\d\d\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/,
-    //   "Invalid date format. Use YYYY/MM/DD"
-    // )
-    ,
+    .required("Enter Your Height !"),
   selectedSex: Yup.string()
     .notOneOf(["default"], "Select Sex !")
     .required("Select Sex !"),
@@ -58,7 +52,11 @@ const SignupSchema = Yup.object().shape({
 const ProcessInfoScreen1 = ({ navigation }) => {
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
+  // dispatch(setBirthdate(''))
   console.log("Firstttttttttttt >>>> ", processInfo.birthdate)
+  //bitrhdate
+  const [birthDate, setBirthDate] = useState('')
+  const [birthDateError, setBirthDateError] = useState('')
 
   const openStartDatePicker = processInfo.openStartDatePicker;
   const handleOnPressStartDate = () => {
@@ -77,7 +75,6 @@ const ProcessInfoScreen1 = ({ navigation }) => {
       initialValues={{
         weight: '',
         height: '',
-        birthdate: processInfo.birthdate,
         selectedSex: '',
       }}
       validationSchema={SignupSchema}
@@ -94,14 +91,14 @@ const ProcessInfoScreen1 = ({ navigation }) => {
         isValid,
         handleSubmit,
       }) => (
-        
-     
+
+
         <View style={styles.contrainer}>
-        <StatusBar
-        barStyle="dark-content"
-        animated={true}
-        backgroundColor="#025146"
-      />
+          <StatusBar
+            barStyle="dark-content"
+            animated={true}
+            backgroundColor="#025146"
+          />
           <View style={{ marginTop: 60, marginRight: 90 }}>
             <Text style={styles.Texttop}>Let’s Get Start</Text>
             <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
@@ -195,24 +192,25 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                   <View>
                     <TouchableOpacity onPress={handleOnPressStartDate}>
                       <TextInput
-                        editable = {false}
+                        editable={false}
                         style={styles.input}
-                        value={values.birthdate}
-                        onChangeText={(text) => {
-                          handleChange("birthdate")(text);
-                          // dispatch(setBirthdate(text)); // Dispatch setBirthdate ที่นี่
-                        }}
+                        value={birthDate}
+                        placeholder="YYYY/MM/DD"
+
                       />
                     </TouchableOpacity>
-                    {errors.birthdate && (
-                      <Text style={styles.errorsText}>{errors.birthdate}</Text>
-                    )}
-                  
+                    {birthDateError ? (
+                      <Text style={styles.errorsText}>{birthDateError}</Text>
+                    ) : null}
+
                     <Calendar
                       openStartDatePicker={processInfo.openStartDatePicker}
                       handleOnPressStartDate={handleOnPressStartDate}
-                      setSelectedStartDate={(date) =>
-                          dispatch(setBirthdate(date))
+                      setSelectedStartDate={(date) => {
+                        setBirthDate(date)
+                        dispatch(setBirthdate(date))
+                        setBirthDateError('') // ล้าง error ทุกครั้งที่มีการแก้ไขค่า
+                      }
                       }
                     />
                   </View>
@@ -251,7 +249,19 @@ const ProcessInfoScreen1 = ({ navigation }) => {
             <View style={styles.signupContainer}>
               <TouchableOpacity
                 style={styles.btn3}
-                onPress={() => navigation.navigate("ProcessInfoScreen2")}
+                onPress={() => {
+                  //check birthdate
+                  if (birthDate == '') {
+                    setBirthDateError('Enter Your BirthDate !')
+                    return;
+                  }
+                  else if (errors.weight || errors.height || errors.selectedSex) {
+                    return;
+                  }
+                  else {
+                    navigation.navigate("ProcessInfoScreen2")
+                  }
+                }}
               >
                 <Image
                   source={require("../../../assets/img/Arrow.jpg")}
@@ -354,7 +364,7 @@ const styles = StyleSheet.create({
   errorsText: {
     fontSize: 12,
     color: "#C03232",
-    marginLeft:15,
+    marginLeft: 15,
     marginTop: 5
   },
   dropdownStyle: {
