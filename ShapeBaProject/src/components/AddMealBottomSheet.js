@@ -46,6 +46,9 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
                 name: name,
                 calories: cal,
                 serving_size_g: size,
+                carbohydrates_total_g: 0,
+                fat_total_g: 0,
+                protein_g: 0,
             });
             //refresh my menu UI
             props.getMyMenuById();
@@ -122,7 +125,7 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
     )
 }
 // ---------------------- Add Menu ---------------------------------
-export const AddMealBottomModal = (props, {navigation}) => {
+export const AddMealBottomModal = (props, { navigation }) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
     const { onTouchOutside, title } = props

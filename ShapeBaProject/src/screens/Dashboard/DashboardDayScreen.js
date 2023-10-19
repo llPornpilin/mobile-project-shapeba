@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
 import { Button } from 'react-native-elements';
-import Animated from 'react-native-reanimated';
+import { useFocusEffect } from "@react-navigation/native";
 //component
 import DonutChart from "../../components/DonutChart";
-import { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
 import BottomSheet from '../../components/MealBottomSheet';
@@ -16,6 +16,10 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../../store/slice/frontEndSlice';
+import { userSelector } from '../../store/slice/userSlice'
+//firebase
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where, } from '../../../firebase-cofig';
+import { set } from 'react-hook-form';
 
 
 const listMeal = (icon, meal, cal, navigation) => {
@@ -54,6 +58,14 @@ const DashboardDayScreen = ({ navigation }) => {
     //get data from redux
     const dispatch = useDispatch();
     const frontEndStore = useSelector(frontEndSelector);
+    const userStore = useSelector(userSelector);
+    const [dailyMenu, setDailyMenu] = useState([]);
+
+    const [carb, setCarb] = useState(0);
+    const [fat, setFat] = useState(0);
+    const [protein, setProtein] = useState(0);
+    const [cal, setCal] = useState(0);
+
 
     //for DatePicker
     const openStartDatePicker = frontEndStore.openStartDatePicker;
@@ -88,14 +100,74 @@ const DashboardDayScreen = ({ navigation }) => {
         easing: Easing.inOut(Easing.cubic),
     });
 
+    // Get Daily meal by User ID
+    const getDailyMenuById = async () => { // Pass the user ID as an argument
+        try {
+            console.log("get daily menu", userStore.userId)
+            const querySnapshot = await getDocs(query(collection(db, "dailyMeal"), where("user_id", "==", userStore.userId))); // Use the user's ID passed as an argument
+            console.log("Total menu: ", querySnapshot.size);
+            const tempDoc = [];
+            querySnapshot.forEach((doc) => {
+                tempDoc.push({ ...doc.data(), key: doc.id });
+            });
+            setDailyMenu(tempDoc);
+        } catch (error) {
+            console.error("Error fetching user menu: ", error);
+        }
+    }
+
+
+    const extractMeals = (category) => {
+        const meals = dailyMenu.map((day) => day[category]);
+        // Flatten the array if each category is an array of meals
+        return meals.flat();
+    };
+
+    //calculate total nutrition & cal
+    const totalNutrition = extractMeals("breakfast").reduce((acc, food) => {
+        // Convert the values to numbers for calculations
+        const calories = parseFloat(food.calories);
+        const fat = parseFloat(food.fat_total_g);
+        const protein = parseFloat(food.protein_g);
+        const carbohydrates = parseFloat(food.carbohydrates_total_g);
+
+        // Sum the values
+        acc.calories += calories;
+        acc.fat += fat;
+        acc.protein += protein;
+        acc.carbohydrates += carbohydrates;
+
+        return acc;
+    }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
+
+    // setCal(totalNutrition.calories)
+    // setCarb(totalNutrition.carbohydrates)
+    // setFat(totalNutrition.fat)
+    // setProtein(totalNutrition.protein)
+    console.log("Total Calories:", totalNutrition.calories);
+    console.log("Total Fat (g):", totalNutrition.fat);
+    console.log("Total Protein (g):", totalNutrition.protein);
+    console.log("Total Carbohydrates (g):", totalNutrition.carbohydrates);
+
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getDailyMenuById();
+            console.log(userStore.userId, "today menu", dailyMenu)
+            return () => {
+                // Clear the menu state when the component is unfocused
+                setDailyMenu([]);
+            };
+        }, [])
+    );
+
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
     const smallerFont = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
 
     if (!font || !smallerFont) {
         return <View />;
     }
-
-    // const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
