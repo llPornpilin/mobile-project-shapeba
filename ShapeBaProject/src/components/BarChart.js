@@ -10,20 +10,41 @@ import {
 } from "@shopify/react-native-skia";
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Easing, StyleSheet, View, Animated } from "react-native";
-
+// chart
 import * as d3 from "d3";
+// firebase
+import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
+import { useFocusEffect } from "@react-navigation/native";
+
+
+
+// ---------------- get current date --------------------------
+const currentDate = new Date();
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
+const year = currentDate.getFullYear();
+const dayOfWeek = currentDate.getDay()
+const today = `${day}/${month}/${year}`; // String type
+
+const sundayDateFull = new Date(currentDate)
+sundayDateFull.setDate(currentDate.getDate() - dayOfWeek)
+const sundayDay = String(sundayDateFull.getDate()).padStart(2, '0')
+const sundayMonth = String(currentDate.getMonth() + 1).padStart(2, '0')
+const sundayYear = sundayDateFull.getFullYear()
+const sundayDate = `${sundayDay}/${sundayMonth}/${sundayYear}`
 
 
 const data = [
+    { label: "Sun", value: 200 },
     { label: "Mon", value: 150 },
     { label: "Tue", value: 100 },
     { label: "Wed", value: 350 },
     { label: "Thu", value: 200 },
     { label: "Fri", value: 250 },
-    { label: "Sat", value: 300 },
-    { label: "Sun", value: 200 },
-
-
+    { label: "Sat", value: 200 },
 ];
 
 const GRAPH_MARGIN = 20;
@@ -34,32 +55,107 @@ const CanvasWidth = 300;
 const graphHeight = CanvasHeight - 2 * GRAPH_MARGIN;
 const graphWidth = CanvasWidth - 2;
 
+
 export const BarChart = () => {
+    const [dataChart, setDataChart] = useState([])
+    
+    // ---------------- get data from database ----------------
+    // reduct store
+    const userStore = useSelector(userSelector);
+    const userId = userStore.userId
+    
+    const getCalsDataPerDay = async () => {
+        let sumCalsPerWeek = [] // collect sum of calories per each day in each week
+        let tempDocsOneWeek = [] // colect Meal data in this week
+
+        try {
+            const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
+            const getCalsData = await(getDocs(querySnapshot))
+
+            // change date format from string -> date
+            const parseDate = (dateString) => {
+                const parts = dateString.split("/")
+                if (parts.length == 3) {
+                    const [day, month, year] = parts
+                    return new Date(year, month - 1, day)
+                }
+                return null
+            }
+            getCalsData.forEach((doc) => {
+                const docDate = parseDate(doc.data().dateInfo.date)
+                console.log("doc filter date: ", docDate)
+                if (docDate) {
+                    const sundayDateObj = parseDate(sundayDate)
+                    const currentDateObj = parseDate(today)
+
+                    if (docDate >= sundayDateObj && docDate <= currentDateObj) {
+                        console.log("doc filter date: ", doc.data().dateInfo.date)
+                        tempDocsOneWeek.push(doc.data()) // FIXME: key: id
+                    }
+                }
+            })
+
+            let sumCalPerDay = 0
+            const dayWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            dayWeek.forEach((dayWeek) => {
+                const sumObject = { dayOfWeek: dayWeek, sumCalPerDay: 0 };
+                console.log("sum obj >> ", sumObject)
+                sumCalsPerWeek.push(sumObject)
+            })
+            
+            tempDocsOneWeek.forEach((docPerDay) => {
+                // sum cal in each doc
+                const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
+                mealTypes.forEach((mealTypes) => {
+                    if (docPerDay[mealTypes].length !== 0) {
+                        docPerDay[mealTypes].forEach((menuMeal) => {
+                            sumCalPerDay += parseFloat(menuMeal.calories)
+                        })
+                    }
+                })
+    
+                const matchingDay = sumCalsPerWeek.find((day) => day.dayOfWeek === docPerDay.dateInfo.dayOfWeek)
+                if (matchingDay) {
+                    matchingDay.sumCalPerDay = sumCalPerDay
+                }
+            })
+            setDataChart(sumCalsPerWeek)
+
+        }
+        catch (error) {
+            console.log("get cals Bar Chart >> ", error)
+        }
+    }
+    
+    console.log("sum cal >>>>>> ", dataChart)
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    // ---------------------------------------------------------------------
+
     const [success, setSuccess] = useState(true);
 
     const font = useFont(require("../../assets/font/Roboto-Bold.ttf"), 10);
     const [animationState, setAnimationState] = useState(new Animated.Value(0));
 
-    const xDomain = data.map((dataPoint) => dataPoint.label);
+    const xDomain = dataChart.map((dataPoint) => dataPoint.dayOfWeek)
     const xRange = [0, graphWidth];
     const x = d3.scalePoint().domain(xDomain).range(xRange).padding(1);
 
     const yDomain = [
         0,
-        d3.max(data, (yDataPoint) => yDataPoint.value),
+        d3.max(dataChart, (yDataPoint) => yDataPoint.sumCalPerDay),
     ];
 
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
     useEffect(() => {
+        console.log("data chart: ", dataChart)
+        getCalsDataPerDay()
         runTiming(animationState, 1, {
             duration: 1600,
             easing: Easing.inOut(Easing.exp),
         });
-    });
-
-
+    }, []);
 
     const Bar = (label, value) => {
         // console.log(label, value);
@@ -85,20 +181,20 @@ export const BarChart = () => {
     return (
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
-                {data.map((dataPoint) => (
-                    dataPoint.value > 250 ?
-                        <Path key={dataPoint.label} path={Bar(dataPoint.label, dataPoint.value)} color="#FBBB57" />
-                        : <Path key={dataPoint.label} path={Bar(dataPoint.label, dataPoint.value)} color="#EC744A" />
+                {dataChart.map((dataPoint) => (
+                    dataPoint.value > 250 ? // FIXME: change 250 to real TDEE (Goal cals)
+                        <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#FBBB57" />
+                        : <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#EC744A" />
                 ))}
 
 
-                {data.map((dataPoint) => (
+                {dataChart.map((dataPoint) => (
                     <Text
-                        key={dataPoint.label}
+                        key={dataPoint.dayOfWeek}
                         font={font}
-                        x={x(dataPoint.label) - 10}
+                        x={x(dataPoint.dayOfWeek) - 10}
                         y={CanvasHeight - 25}
-                        text={dataPoint.label}
+                        text={dataPoint.dayOfWeek.slice(0, 3)}
                     />
                 ))}
             </Canvas>

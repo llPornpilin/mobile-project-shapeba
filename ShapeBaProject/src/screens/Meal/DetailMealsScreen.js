@@ -125,7 +125,6 @@ const DetailMealsScreen = ({ navigation, route }) => {
     // --------------------------- set meal data from database ---------------------------------
     const [mealData, setMealData] = useState([])
 
-    // const selectedDate = "17/10/2023" // FIXME: >> change to real selected date
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, '0');
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
