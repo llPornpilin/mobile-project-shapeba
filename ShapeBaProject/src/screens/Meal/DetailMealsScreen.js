@@ -80,7 +80,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
             setIsOpen(true);
         }, 100);
     }
-    
+
     // ------------ delete menu handler ---------------
     const daleteMealHandler = async (deleteMenuId) => {
         console.log("Deleted Menu id: ", deleteMenuId)
@@ -97,7 +97,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
             })
             getmealData()
         }
-        catch(error) {
+        catch (error) {
             console.log("delete meal error >> ", error)
         }
     }
@@ -124,7 +124,14 @@ const DetailMealsScreen = ({ navigation, route }) => {
 
     // --------------------------- set meal data from database ---------------------------------
     const [mealData, setMealData] = useState([])
-    const selectedDate = "17/10/2023" // FIXME: >> change to real selected date
+    // const selectedDate = "17/10/2023" // FIXME: >> change to real selected date
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
+    const year = currentDate.getFullYear();
+
+    const today = `${day}/${month}/${year}`;
+
     const [sumCalories, setSumCalories] = useState(0)
 
     // check state edit menu
@@ -135,7 +142,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
         try {
             const querysnapshot = query(collection(db, "dailyMeal")
                 , where("user_id", "==", userId)
-                , where("dateInfo.date", "==", selectedDate))
+                , where("dateInfo.date", "==", today))
             const filterMealDocs = await getDocs(querysnapshot)
 
             const tempDoc = []
@@ -158,7 +165,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
         }
 
     }
-    
+
 
     useFocusEffect(
         React.useCallback(() => {

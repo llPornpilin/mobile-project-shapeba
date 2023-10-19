@@ -323,8 +323,8 @@ const ProfileScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.btnLogout}
             onPress={() => {
-              dispatch(setUserEmail('emty'))
-              dispatch(setUserId('emty'))
+              dispatch(setUserEmail(''))
+              dispatch(setUserId(''))
               dispatch(setStateSignUp(false))
               AUTH.signOut()
               console.log('logout', userStore.userId, userStore.userEmail)

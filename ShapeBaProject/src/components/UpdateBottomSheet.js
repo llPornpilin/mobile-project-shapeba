@@ -35,6 +35,9 @@ const UpdateBottomSheet = (props) => {
                 name: props.menuInfo.name,
                 calories: props.menuInfo.calories,
                 serving_size_g: props.menuInfo.serving_size_g,
+                carbohydrates_total_g: 0,
+                fat_total_g: 0,
+                protein_g: 0,
             });
             props.getMyMenuById();
             closeModal();
