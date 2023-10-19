@@ -21,23 +21,6 @@ import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from
 import { useFocusEffect } from "@react-navigation/native";
 import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
 
-const allMeals = [
-    { id: 1, name: 'meals1' },
-    { id: 2, name: 'meals2' },
-    { id: 3, name: 'meals3' },
-    { id: 4, name: 'meals4' },
-    { id: 5, name: 'meals5' },
-    { id: 6, name: 'meals6' },
-    { id: 7, name: 'meals7' },
-    { id: 8, name: 'meals8' },
-    { id: 9, name: 'meals9' },
-    { id: 10, name: 'meals10' },
-    { id: 11, name: 'meals11' },
-    { id: 12, name: 'meals12' },
-    { id: 13, name: 'meals13' },
-    { id: 14, name: 'meals14' },
-];
-
 
 // Segment เปลี่ยนหน้า
 const AddMealsSegment = (props) => {
@@ -47,66 +30,69 @@ const AddMealsSegment = (props) => {
     const allMenusStore = useSelector(addMealSelector)
     const allMenus = allMenusStore.allMenus
 
-    // search props from header
-    const search = props.search
-    // console.log("search menu: ", search)
-
-    // check if data from API
-    const [datasource, setDatasource] = useState("")
-
-    // ------------------ MyMenu from Database ------------------------
-    const setDataFromDatabase = (tempDoc) => {
-        dispatch(setMenus(tempDoc));
-    };
-    const searchMenuInDatabase = async (searchMenuName) => {
-        console.log("allMenus dispatch", allMenus)
-        try {
-            console.log("... finding menu in database")
-            const myMenusDatabase = await getDocs(collection(db, "user"))
-            const tempDoc = []
-            myMenusDatabase.forEach(menu => {
-                for (const menuItem of menu.data().myMenu) {
-                    console.log("allmenu : ", menuItem)
-                    console.log("menuItem : ", menuItem.name)
-                    console.log("search name : ", searchMenuName)
-                    if (menuItem.name === searchMenuName) {
-                        tempDoc.push({ ...menuItem, key: menu.id });
-                        // dispatch(setMenus(tempDoc))
-                        // break;
-                    }
-                }
-            });
-            console.log("searched menu from database => ", tempDoc)
-            tempDoc.length > 0 ? setDataFromDatabase(tempDoc) : dispatch(delMenu())
-        }
-        catch (error) {
-            console.error("Error occurred while searching the database:", error);
-        }
-
-    }
 
     const [u_id, setU_id] = useState(userStore.userId);
     const [myMenu, setMyMenu] = useState([]);
 
-    // Get My Menu by User ID
+    // ------------------------- Get My Menu by User ID ------------------------------------------
     const getMyMenuById = async () => { // Pass the user ID as an argument
-        try {
-            const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("user_id", "==", u_id))); // Use the user's ID passed as an argument
-            console.log("Total menu: ", querySnapshot.size);
-            const tempDoc = [];
-            querySnapshot.forEach((doc) => {
-                tempDoc.push({ ...doc.data(), key: doc.id });
-            });
-            setMyMenu(tempDoc);
-            // console.log(myMenu)
-        } catch (error) {
-            console.error("Error fetching user menu: ", error);
+        if (search) {
+            await searchMenuInDatabase()
+            return
         }
+        else if (search == false) {
+            try {
+                const querySnapshot = await getDocs(query(collection(db, "myMenu"), where("user_id", "==", u_id))); // Use the user's ID passed as an argument
+                console.log("Total menu: ", querySnapshot.size);
+                const tempDoc = [];
+                querySnapshot.forEach((doc) => {
+                    tempDoc.push({ ...doc.data(), key: doc.id });
+                });
+                setMyMenu(tempDoc);
+
+            } catch (error) {
+                console.error("Error fetching user menu: ", error);
+            }
+        }
+        
+    }
+    // ---------------------------------------------------------------------------------
+
+    // search props from header
+    const search = props.search
+
+    // check if added menu in meal
+    const [isAddedMenu, setIsAddedMenu] = useState(false)
+
+    // ----------------------- Search MyMenu from Database ----------------------------- 
+    const searchMenuInDatabase = async () => {
+        console.log("allMenus dispatch", allMenus)
+        try {
+            console.log("... finding menu in database")
+            const querySnapshot = query(collection(db, "myMenu"),
+                where("user_id", "==", userStore.userId),
+                where("name", "==", props.searchInput))
+
+            const myMenuDocs = await getDocs(querySnapshot)
+            const tempDoc = []
+
+            myMenuDocs.forEach((doc) => {
+                if (doc.data().name == props.searchInput) {
+                    tempDoc.push({ ...doc.data(), key: doc.id })
+                }
+            })
+
+            return tempDoc.length > 0 ? setMyMenu(tempDoc) : setMyMenu([])
+            // tempDoc.length > 0 ? setDataFromDatabase(tempDoc) : dispatch(delMenu())
+        }
+        catch (error) {
+            console.error("Error occurred while searching the database:", error);
+        }
+        
     }
 
-    // ----------------------- Nutrition API ------------------------
+    // ----------------------------- Search Menu From Nutrition API -----------------------------
     const apiSearch = async () => {
-        var query = '1lb brisket and fries';
         if (search != "") {
             fetch('https://api.api-ninjas.com/v1/nutrition?query=' + search, {
                 method: 'GET',
@@ -121,7 +107,6 @@ const AddMealsSegment = (props) => {
                 })
                 .catch((error) => {
                     console.log("not found menu in API !")
-                    searchMenuInDatabase(search);
                 });
         }
         else {
@@ -241,16 +226,36 @@ const AddMealsSegment = (props) => {
     }
 
 
+    const handleFocusEffectForSegment0 = () => {
+        console.log("---- in segment 0")
+        console.log("___________API Search")
+        apiSearch();
+        return () => {
+            dispatch(delMenu());
+            props.setBtnSearch(false);
+        }
+    }
+        
+    const handleFocusEffectForSegment1 = () => {
+        console.log("---- in segment 1")
+        console.log("___________Database Search")
+        getMyMenuById()
+        return () => {
+            setMyMenu([])
+        }
+    }
+
     useFocusEffect(
         React.useCallback(() => {
-            apiSearch();
-            getMyMenuById();
-            return () => {
-                // Clear the menu state when the component is unfocused
-                setMyMenu([]);
-            };
-        }, [search])
-    );
+        if (selectedIndex === 0) {
+            return handleFocusEffectForSegment0()
+        }
+        if (selectedIndex === 1) {
+            return handleFocusEffectForSegment1()
+        }
+        }, [search, selectedIndex])
+    )
+
 
     return (
         <View style={{ flex: 1, alignItems: 'center', width: '100%', marginBottom: 20, paddingTop: 30 }}>
@@ -302,7 +307,7 @@ const AddMealsSegment = (props) => {
                         </TouchableHighlight>
                     </View>
             }
-            <AddMealBottomModal isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} selectedMenu={selectedMenu} mealName={props.mealName} />
+            <AddMealBottomModal isAddedMenu={isAddedMenu} setIsAddedMenu={setIsAddedMenu} isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} selectedMenu={selectedMenu} mealName={props.mealName} />
             <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} getMyMenuById={getMyMenuById} />
             <UpdateBottomSheet isOpen={isOpenUpdate} setIsOpen={setIsOpenUpdate} bottomSheetModalRef={bottomSheetModalRefUpdate} menuInfo={menuInfo} setMenuInfo={setMenuInfo} getMyMenuById={getMyMenuById} />
         </View>

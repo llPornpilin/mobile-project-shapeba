@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable } from '
 import { Button, Header } from 'react-native-elements';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import React, {useEffect, useState} from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 // Segment
 import AddMealsSegment from '../../components/AddMealsSegment';
@@ -20,13 +21,13 @@ const AddMealsScreen = ({ navigation, route }) => {
         console.log("handle button search")
     }
 
-    useEffect(() => {
-        if (btnSearch) {
-            // const dispatch = useDispatch()
-            // dispatch(setMenus([]))
-            setBtnSearch(false);
-        }
-    }, [btnSearch]);
+    // useEffect(() => {
+    //     if (btnSearch) {
+    //         // const dispatch = useDispatch()
+    //         // dispatch(setMenus([]))
+    //         // setBtnSearch(false);
+    //     }
+    // }, [btnSearch]);
 
     return (
         <View style={styles.container}>
@@ -53,7 +54,7 @@ const AddMealsScreen = ({ navigation, route }) => {
                     </View>
                 </View>
             </Header>
-            <AddMealsSegment search={btnSearch ? searchInput : ""} mealName={route.params.mealName} />
+            <AddMealsSegment searchInput={searchInput} setBtnSearch={setBtnSearch} search={btnSearch ? searchInput : ""} mealName={route.params.mealName} />
         </View>
     )
 }

@@ -17,7 +17,6 @@ export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่
     //redux
     const dispatch = useDispatch();
     const userStore = useSelector(userSelector);
-    console.log("bottom sheet: ", userStore.userId)
 
     const snapPoints = ["60%",];
     const [name, setName] = useState("");
@@ -132,12 +131,15 @@ export const AddMealBottomModal = (props, { navigation }) => {
     const { onTouchOutside, title } = props
     //redux
     const userStore = useSelector(userSelector);
-    console.log(">>>>>> ", props.selectedMenu)
+    // console.log(">>>>>> ", props.selectedMenu)
     // Bottom Sheet
     const snapPoints = ["40%"];
     const isOpen = props.isOpen;
-    console.log("add meal bottom sheet: ", isOpen)
+    // console.log("add meal bottom sheet: ", isOpen)
     const closeModal = () => {
+        if (props.isAddedMenu) {
+            navigation.navigate('DetailMealScreen')
+        }
         bottomSheetModalRef.current?.close();
         setTimeout(() => {
             props.setIsOpen(false);
@@ -276,7 +278,7 @@ export const AddMealBottomModal = (props, { navigation }) => {
         }
         setServingSize("")
         closeModal()
-        // navigation.navigate('DetailMealsScreen')
+        props.setIsAddedMenu(true)
     }
     // *************************************************************************************************************
 
@@ -293,7 +295,11 @@ export const AddMealBottomModal = (props, { navigation }) => {
 
                 <View className="p-8">
                     <Text className="text-xl mb-8 font-semibold">
-                        {/* {props.selectedMenu.name} */}
+                        {
+                            props.selectedMenu !== undefined
+                            ? props.selectedMenu.name
+                            : ""
+                        }
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>
                         <Text className="text-base" style={{ justifyContent: 'flex-start' }}>Serving Size :</Text>
