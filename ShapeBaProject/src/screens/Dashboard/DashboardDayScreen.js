@@ -66,6 +66,14 @@ const DashboardDayScreen = ({ navigation }) => {
     const [protein, setProtein] = useState(0);
     const [cal, setCal] = useState(0);
 
+    const [breakfast, setBreakfast] = useState({});
+    const [brunch, setBrunch] = useState({});
+    const [lunch, setLunch] = useState({});
+    const [afternoonlunch, setAfternoonlunch] = useState({});
+    const [dinner, setDinner] = useState({});
+    const [afterdinner, setAfterdinner] = useState({});
+
+
 
     //for DatePicker
     const openStartDatePicker = frontEndStore.openStartDatePicker;
@@ -102,18 +110,34 @@ const DashboardDayScreen = ({ navigation }) => {
 
     // Get Daily meal by User ID
     const getDailyMenuById = async () => { // Pass the user ID as an argument
+        const currentDate = new Date();
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
+        const year = currentDate.getFullYear();
+        const today = `${day}/${month}/${year}`;
         try {
-            console.log("get daily menu", userStore.userId)
-            const querySnapshot = await getDocs(query(collection(db, "dailyMeal"), where("user_id", "==", userStore.userId))); // Use the user's ID passed as an argument
+            const userId = await userStore.userId;
+            console.log("get daily menu", userId)
+            const querySnapshot = await getDocs(query(collection(db, "dailyMeal"), where("user_id", "==", userId), where("dateInfo.date", "==", today))); // Use the user's ID passed as an argument
             console.log("Total menu: ", querySnapshot.size);
             const tempDoc = [];
             querySnapshot.forEach((doc) => {
                 tempDoc.push({ ...doc.data(), key: doc.id });
             });
             setDailyMenu(tempDoc);
+
+            setBreakfast(await extractNutrition("breakfast"))
+            setBrunch(await extractNutrition("brunch"))
+            setLunch(await extractNutrition("lunch"))
+            setAfternoonlunch(await extractNutrition("afternoonlunch"))
+            setDinner(await extractNutrition("dinner"))
+            setAfterdinner(await extractNutrition("afterdinner"))
+            console.log("Daily menu: ", dailyMenu);
+
         } catch (error) {
             console.error("Error fetching user menu: ", error);
         }
+
     }
 
 
@@ -123,33 +147,28 @@ const DashboardDayScreen = ({ navigation }) => {
         return meals.flat();
     };
 
-    //calculate total nutrition & cal
-    const totalNutrition = extractMeals("breakfast").reduce((acc, food) => {
-        // Convert the values to numbers for calculations
-        const calories = parseFloat(food.calories);
-        const fat = parseFloat(food.fat_total_g);
-        const protein = parseFloat(food.protein_g);
-        const carbohydrates = parseFloat(food.carbohydrates_total_g);
+    const extractNutrition = async (meal) => {
+        console.log("meal", meal)
+        //calculate total nutrition & calories
+        const totalNutrition = extractMeals(meal).reduce((acc, food) => {
+            if (!food) return acc;
+            // Convert the values to numbers for calculations
+            const calories = parseFloat(food.calories);
+            const fat = parseFloat(food.fat_total_g);
+            const protein = parseFloat(food.protein_g);
+            const carbohydrates = parseFloat(food.carbohydrates_total_g);
 
-        // Sum the values
-        acc.calories += calories;
-        acc.fat += fat;
-        acc.protein += protein;
-        acc.carbohydrates += carbohydrates;
+            // Sum the values
+            acc.calories += calories;
+            acc.fat += fat;
+            acc.protein += protein;
+            acc.carbohydrates += carbohydrates;
 
-        return acc;
-    }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
-
-    // setCal(totalNutrition.calories)
-    // setCarb(totalNutrition.carbohydrates)
-    // setFat(totalNutrition.fat)
-    // setProtein(totalNutrition.protein)
-    console.log("Total Calories:", totalNutrition.calories);
-    console.log("Total Fat (g):", totalNutrition.fat);
-    console.log("Total Protein (g):", totalNutrition.protein);
-    console.log("Total Carbohydrates (g):", totalNutrition.carbohydrates);
-
-
+            return acc;
+        }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
+        console.log("Total Nutrition:", totalNutrition);
+        return totalNutrition;
+    }
 
     useFocusEffect(
         React.useCallback(() => {
@@ -180,7 +199,7 @@ const DashboardDayScreen = ({ navigation }) => {
 
                     {/* Bottom sheet jaa */}
                     <Button title="Present Modal" onPress={handlePresentModal} />
-                    <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
+                    {/* <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} /> */}
                     <Text>{frontEndStore.favorite} </Text>
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
@@ -221,15 +240,17 @@ const DashboardDayScreen = ({ navigation }) => {
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
-                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", "1120", navigation)}
+                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", breakfast.calories, navigation)}
                             <View className="border-b  border-Darkgray opacity-20" />
-                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", "150", navigation)}
+                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", brunch.calories, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", "920", navigation)}
+                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", lunch.calories, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", "310", navigation)}
+                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", afternoonlunch.calories, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", "830", navigation)}
+                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", dinner.calories, navigation)}
+                            <View className="border-b border-Darkgray opacity-20 " />
+                            {listMeal(require("../../../assets/img/icons8-vegan-food-96.png"), "After Dinner", afterdinner.calories, navigation)}
                         </View>
 
 
@@ -244,19 +265,9 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-
-
-
-
                 </View>
-                {/* </Animated.View> */}
-
-
             </ScrollView>
-            {/* 
-                </BottomSheetModalProvider>
-            </GestureHandlerRootView> */}
-
+            <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} />
         </SafeAreaView>
 
     )

@@ -84,7 +84,7 @@ const MealBottomSheet = (props) => {
                         {mealMenu("Dinner")}
                         {mealMenu("After Dinner")}
                         <View className="bg-white w-full -mt-3">
-                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} onPress={closeModal}>
+                            <TouchableOpacity className="bg-Orange" style={[styles.button, { marginRight: 25 }]} >
                                 <Text className="font-bold text-white text-lg">Cancel</Text>
                             </TouchableOpacity>
                         </View>

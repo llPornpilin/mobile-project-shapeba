@@ -253,7 +253,7 @@ export default function AppNavigator() {
     }, [user])
     return (
         <NavigationContainer >
-            <Stack.Navigator initialRouteName='LogInNavigate'
+            <Stack.Navigator
                 screenOptions={{
                     headerShown: false,
                 }}>

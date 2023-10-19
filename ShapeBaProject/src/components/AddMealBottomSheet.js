@@ -297,8 +297,8 @@ export const AddMealBottomModal = (props, { navigation }) => {
                     <Text className="text-xl mb-8 font-semibold">
                         {
                             props.selectedMenu !== undefined
-                            ? props.selectedMenu.name
-                            : ""
+                                ? props.selectedMenu.name
+                                : ""
                         }
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>
