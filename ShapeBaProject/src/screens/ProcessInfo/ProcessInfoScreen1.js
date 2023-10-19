@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   Platform,
+  StatusBar,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Calendar from "../../components/Calendar";
@@ -24,7 +25,7 @@ import {
 } from "../../store/slice/processInfoSlice1";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Dropdown } from 'react-native-element-dropdown';
+import { Dropdown } from "react-native-element-dropdown";
 
 export const progressCircle = (number, color, textcolor) => {
   return (
@@ -38,13 +39,17 @@ export const progressCircle = (number, color, textcolor) => {
 
 const SignupSchema = Yup.object().shape({
   weight: Yup.number()
-    // .min(1, 'Too Short!')
-    // .max(3, 'Too Long!')
     .required("Enter Your Weight !"),
   height: Yup.number()
   .required("Enter Your Height !"),
-  birthdate: Yup.date()
-  .required("Enter Your BirthDate !"),
+  birthdate: Yup.string()
+    .nullable()
+    .required("Enter Your BirthDate !")
+    // .matches(
+    //   /^(19|20)\d\d\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/,
+    //   "Invalid date format. Use YYYY/MM/DD"
+    // )
+    ,
   selectedSex: Yup.string()
     .notOneOf(["default"], "Select Sex !")
     .required("Select Sex !"),
@@ -53,26 +58,32 @@ const SignupSchema = Yup.object().shape({
 const ProcessInfoScreen1 = ({ navigation }) => {
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
+  console.log("Firstttttttttttt >>>> ", processInfo.birthdate)
 
   const openStartDatePicker = processInfo.openStartDatePicker;
   const handleOnPressStartDate = () => {
     dispatch(setOpenStartDatePicker(!openStartDatePicker));
+    console.log("check open")
+    // console.log("check ope")
   };
 
   const sex = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'FeMale' },
-];
+    { label: "Male", value: "Male" },
+    { label: "Female", value: "FeMale" },
+  ];
 
   return (
     <Formik
       initialValues={{
-        weight: processInfo.weight,
-        height: processInfo.height,
+        weight: '',
+        height: '',
         birthdate: processInfo.birthdate,
-        selectedSex: processInfo.selectedSex,
+        selectedSex: '',
       }}
       validationSchema={SignupSchema}
+      onSubmit={(values) => {
+        // Handle submit logic here
+      }}
     >
       {({
         values,
@@ -83,23 +94,29 @@ const ProcessInfoScreen1 = ({ navigation }) => {
         isValid,
         handleSubmit,
       }) => (
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            backgroundColor: "#fff",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View style={styles.blueArea}>
-            <View>
-              <Text style={styles.Texttop}>Let’s Get Start</Text>
-            </View>
-            <View>
-              <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
-            </View>
+        
+     
+        <View style={styles.contrainer}>
+        <StatusBar
+        barStyle="dark-content"
+        animated={true}
+        backgroundColor="#025146"
+      />
+          <View style={{ marginTop: 60, marginRight: 90 }}>
+            <Text style={styles.Texttop}>Let’s Get Start</Text>
+            <Text style={styles.Textbottom}>Track Your Daily Intake</Text>
           </View>
-          <View style={styles.whiteArea}>
+          <View
+            style={{
+              marginTop: 20,
+              backgroundColor: "#fff",
+              width: "100%",
+              height: "100%",
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+              margin: 20,
+            }}
+          >
             <View style={styles.uiContainer}>
               {progressCircle(1, "#EC744A", "white")}
               <View style={styles.line}></View>
@@ -107,7 +124,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
               <View style={styles.line}></View>
               {progressCircle(3, "white", "#EC744A")}
             </View>
-            <View style={styles.Allinput}>
+            <View style={{ alignItems: "center", marginTop: 50 }}>
               <View style={styles.inputRowContainer}>
                 <View style={{ flex: 1, marginRight: 10 }}>
                   <Text
@@ -126,7 +143,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                     value={values.weight}
                     onChangeText={(text) => {
                       handleChange("weight")(text);
-                      dispatch(setWeight(text));
+                      dispatch(setWeight(Number(text)));
                     }}
                     keyboardType="number-pad"
                     maxLength={3}
@@ -149,10 +166,10 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                   </Text>
                   <TextInput
                     style={styles.input}
-                    value={processInfo.height}
+                    value={values.height}
                     onChangeText={(text) => {
                       handleChange("height")(text);
-                      dispatch(setHeight(text));
+                      dispatch(setHeight(Number(text))); // แปลงค่า text เป็น number
                     }}
                     keyboardType="number-pad"
                     maxLength={3}
@@ -178,21 +195,24 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                   <View>
                     <TouchableOpacity onPress={handleOnPressStartDate}>
                       <TextInput
+                        editable = {false}
                         style={styles.input}
                         value={values.birthdate}
-                        editable={false}
-                        placeholder=""
+                        onChangeText={(text) => {
+                          handleChange("birthdate")(text);
+                          // dispatch(setBirthdate(text)); // Dispatch setBirthdate ที่นี่
+                        }}
                       />
                     </TouchableOpacity>
                     {errors.birthdate && (
                       <Text style={styles.errorsText}>{errors.birthdate}</Text>
                     )}
-
+                  
                     <Calendar
                       openStartDatePicker={processInfo.openStartDatePicker}
                       handleOnPressStartDate={handleOnPressStartDate}
                       setSelectedStartDate={(date) =>
-                        dispatch(setBirthdate(date))
+                          dispatch(setBirthdate(date))
                       }
                     />
                   </View>
@@ -209,20 +229,22 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                     Sex
                   </Text>
                   <Dropdown
-                        style={styles.dropdownStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        data={sex}
-                        maxHeight={300}
-                        labelField="label"
-                        valueField="value"
-                        placeholder=""
-                        value={values.selectedSex}
-                        onChange={(item) => {
-                          handleChange("selectedSex")(item.value);
-                          dispatch(setSelectedSex(item.value)); // ส่งไปยัง Redux store
-                        }}
-                    />
-                     {errors.selectedSex && <Text style={styles.errorsText}>{errors.selectedSex}</Text>}
+                    style={styles.dropdownStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    data={sex}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder=""
+                    value={values.selectedSex}
+                    onChange={(item) => {
+                      handleChange("selectedSex")(item.value);
+                      dispatch(setSelectedSex(item.value)); // ส่งไปยัง Redux store
+                    }}
+                  />
+                  {errors.selectedSex && (
+                    <Text style={styles.errorsText}>{errors.selectedSex}</Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -239,56 +261,41 @@ const ProcessInfoScreen1 = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </View>
+
       )}
     </Formik>
   );
 };
 
 const styles = StyleSheet.create({
-  blueArea: {
+  contrainer: {
     flex: 1,
-    width: "100%",
     backgroundColor: "#025146",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  whiteArea: {
-    flex: 1,
-    width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -40,
-    alignItems: "center",
-    justifyContent: "center",
   },
   Texttop: {
     color: "#FFFFFF",
     fontSize: 35,
     fontWeight: "bold",
     marginTop: 5,
-    paddingRight: 115,
   },
   Textbottom: {
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-    paddingRight: 125,
     marginBottom: 30,
   },
   uiContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
-    marginTop: 10,
+    marginTop: 60,
   },
   uiItem: {
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 0,
   },
   circle: {
     width: 40,
@@ -297,6 +304,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#EC744A",
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#EC744A",
   },
   line: {
     height: 2,
@@ -316,8 +325,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     marginRight: 10,
-    width:160,
-    height:50
+    width: 160,
+    height: 50,
   },
   inputRowContainer: {
     flexDirection: "row",
@@ -327,7 +336,6 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     alignItems: "center",
-    marginTop: 40,
     marginBottom: 10,
     marginLeft: 260,
   },
@@ -338,39 +346,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderWidth: 1.5,
     borderColor: "#025146",
-    marginTop: 20,
   },
   img: {
     width: 35,
     height: 35,
   },
-  pickerContainerIOS: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 25,
-    width: "100%",
-  },
-  pickerIOS: {
-    height: 50,
-    width: "100%",
-  },
-  pickerContainerAndroid: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 25,
-    overflow: "hidden",
-    width: "100%",
-  },
-  pickerAndroid: {
-    height: 50,
-    width: "100%",
-    color: "#333",
-  },
   errorsText: {
     fontSize: 12,
     color: "#C03232",
-    marginLeft: 7,
-    marginTop: 5,
+    marginLeft:15,
+    marginTop: 5
   },
   dropdownStyle: {
     borderRadius: 25,
@@ -378,8 +363,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     height: 50,
     marginTop: 20,
-    width:160,
-},
+    width: 160,
+  },
 });
 
 export default ProcessInfoScreen1;

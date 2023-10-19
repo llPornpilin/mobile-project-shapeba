@@ -9,37 +9,37 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  StatusBar
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { progressCircle } from "./ProcessInfoScreen1";
 import {
   setGoalweight,
   setActivitylevel,
-  setAge,
-  setWeight,
 } from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  processInfoSelector,
-  calculateTDEE,
-} from "../../store/slice/processInfoSlice1";
+import { processInfoSelector } from "../../store/slice/processInfoSlice1";
 import { calculateTimeToGoal } from "../../store/slice/processInfoSlice1";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
 
 const ProcessInfoScreen3 = ({ navigation }) => {
-  const [selectedSex, setSelectedSex] = useState("male");
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
 
   // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
   const handleCalculateTDEE = () => {
-    const { goalweight, weight } = processInfo;
+    const { goalweight, weight, activitylevel } = processInfo;
 
-    if (weight - goalweight > 10) {
-      Alert.alert("คำเตือน", "น้ำหนักที่กรอกมากเกินไป กรุณากรอกใหม่");
-      dispatch(setWeight("")); // รีเซ็ตค่าน้ำหนักให้ว่าง
+    // console.log('parsedGoalweight:', parsedGoalweight);
+    // console.log('activitylevel:', activitylevel);
+    // console.log('parsedWeight:', parsedWeight);
+
+    if (!goalweight || !activitylevel || !weight) {
+      Alert.alert("warning", "Please fill in all required fields");
+    } else if (weight - goalweight > 10) {
+      Alert.alert("warning", "The entered weight is too high. Please enter a new value");
     } else {
       navigation.navigate("TapToStart");
     }
@@ -58,10 +58,12 @@ const ProcessInfoScreen3 = ({ navigation }) => {
       value: "Very intense exercise daily",
     },
   ];
-
+  const handleSubmit = () => {
+    // ทำตามการทำงานที่ต้องการทำเมื่อฟอร์มถูก submit
+    handleCalculateTDEE();
+  };
   const SignupSchema3 = Yup.object().shape({
-    goalweight: Yup.number()
-    .required("Enter Your GoalWeight !"),
+    goalweight: Yup.number().required("Enter Your GoalWeight !"),
     activitylevel: Yup.string()
       .notOneOf(["default"], "Select Activity Level !")
       .required("Select Activity Level !"),
@@ -74,6 +76,7 @@ const ProcessInfoScreen3 = ({ navigation }) => {
         activitylevel: processInfo.activitylevel,
       }}
       validationSchema={SignupSchema3}
+      onSubmit={handleSubmit}
     >
       {({
         values,
@@ -84,161 +87,150 @@ const ProcessInfoScreen3 = ({ navigation }) => {
         isValid,
         handleSubmit,
       }) => (
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.GreenArea}>
-              <Text style={styles.Letget}>Add Your Goal Weight</Text>
-              <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
+        <View style={styles.contrainer}>
+          <StatusBar
+        barStyle="dark-content"
+        animated={true}
+        backgroundColor="#025146"
+      />
+          <View style={{ marginTop: 60, marginRight: 50 }}>
+            <Text style={styles.Letget}>Add Goal Weight</Text>
+            <Text style={styles.Trackyour}>Fuel Your Body Wisely</Text>
+          </View>
+          <View
+            style={{
+              marginTop: 20,
+              backgroundColor: "#fff",
+              width: "100%",
+              height: "100%",
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+              margin: 20,
+            }}
+          >
+            <View style={styles.uiContainer}>
+              {progressCircle(1, "white", "#EC744A")}
+              <View style={styles.line}></View>
+              {progressCircle(2, "white", "#EC744A")}
+              <View style={styles.line}></View>
+              {progressCircle(3, "#EC744A", "white")}
             </View>
-            <View style={styles.whiteArea}>
-              <View style={styles.uiContainer}>
-                {progressCircle(1, "white", "#EC744A")}
-                <View style={styles.line}></View>
-                {progressCircle(2, "white", "#EC744A")}
-                <View style={styles.line}></View>
-                {progressCircle(3, "#EC744A", "white")}
-              </View>
-              <View style={styles.Allinput}>
-                <View style={styles.inputRowContainer}>
-                  <Text
-                    style={{
-                      ...styles.inputLabel,
-                      fontWeight: "bold",
-                      color: "#575757",
-                      marginTop: 30,
-                      marginLeft: 5,
-                      fontSize: 16,
-                    }}
-                  >
-                    Goal Weight
-                  </Text>
-                  <TextInput
-                    style={styles.inputGowieght}
-                    value={processInfo.goalweight} // นำค่า goalweight มาจาก Redux state
-                    onChangeText={(text) => {
-                      handleChange("goalweight")(text);
-                      dispatch(setGoalweight(text));
-                    }} // เมื่อมีการเปลี่ยนแปลงใน TextInput ให้ dispatch action setGoalweight
-                    keyboardType="number-pad"
-                    maxLength={3}
-                  />
-                  {errors.goalweight && (
-                    <Text style={styles.errorsText}>{errors.goalweight}</Text>
-                  )}
-                </View>
-                <View style={styles.inputRowContainer}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      marginLeft: 5,
-                      color: "#575757",
-                      marginTop: 10,
-                      fontSize: 16,
-                    }}
-                  >
-                    Activity Level
-                  </Text>
-                  <Dropdown
-                    style={styles.dropdownStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    data={activityLevel}
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder=""
-                    value={processInfo.activitylevel}
-                    onChange={(item) => {
-                      handleChange("activitylevel")(item.value);
-                      dispatch(setActivitylevel(item.value)); // ส่งไปยัง Redux store
-                    }}
-                  />
-                   {errors.activitylevel && <Text style={styles.errorsText}>{errors.activitylevel}</Text>}
-                </View>
-              </View>
-
-              <View style={styles.signupContainer}>
-                <TouchableOpacity
-                  style={styles.btn3}
-                  onPress={handleCalculateTDEE} // ตรวจสอบว่าเรียกใช้ handleCalculateTDEE ตรงนี้
+            <View style={{ alignItems: "center", marginTop: 30 }}>
+              <View style={styles.inputRowContainer}>
+                <Text
+                  style={{
+                    ...styles.inputLabel,
+                    fontWeight: "bold",
+                    color: "#575757",
+                    marginTop: 30,
+                    marginLeft: 5,
+                    fontSize: 16,
+                  }}
                 >
-                  <Image
-                    source={require("../../../assets/img/Arrow.jpg")}
-                    style={(styles.img, { width: 35, height: 35 })}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
+                  Goal Weight
+                </Text>
+                <TextInput
+                  style={styles.inputGowieght}
+                  value={values.goalweight.toString()} // ให้แปลงค่าเป็น string
+                  onChangeText={(text) => {
+                    handleChange("goalweight")(text);
+                    dispatch(setGoalweight(Number(text))); // ให้แปลงค่าเป็น number
+                  }}
+                  keyboardType="number-pad"
+                  maxLength={3}
+                />
+                {errors.goalweight && (
+                  <Text style={styles.errorsText}>{errors.goalweight}</Text>
+                )}
+              </View>
+              <View style={styles.inputRowContainer}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    marginLeft: 5,
+                    color: "#575757",
+                    marginTop: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Activity Level
+                </Text>
+                <Dropdown
+                  style={styles.dropdownStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  data={activityLevel}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder=""
+                  value={processInfo.activitylevel}
+                  onChange={(item) => {
+                    handleChange("activitylevel")(item.value);
+                    dispatch(setActivitylevel(item.value)); // ส่งไปยัง Redux store
+                  }}
+                />
+                {errors.activitylevel && (
+                  <Text style={styles.errorsText}>{errors.activitylevel}</Text>
+                )}
               </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+            <View style={styles.signupContainer}>
+              <TouchableOpacity
+                style={styles.btn3}
+                onPress={handleSubmit} // เปลี่ยนจาก handleCalculateTDEE เป็น handleSubmit
+              >
+                <Image
+                  source={require("../../../assets/img/Arrow.jpg")}
+                  style={(styles.img, { width: 35, height: 35 })}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       )}
     </Formik>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  contrainer: {
     flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  GreenArea: {
-    flex: 1,
-    width: "100%",
     backgroundColor: "#025146",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  whiteArea: {
-    flex: 1.7,
-    width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -40,
-    alignItems: "center",
-    justifyContent: "center",
   },
   Letget: {
     color: "#FFFFFF",
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: "bold",
     marginTop: 5,
-    paddingRight: 70,
-    paddingLeft: 30,
   },
   Trackyour: {
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-    paddingRight: 130,
     marginBottom: 30,
   },
   uiContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
-    marginTop: -20,
+    marginTop: 60,
   },
   uiItem: {
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 0,
   },
   circle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#EC744A",
     alignItems: "center",
     justifyContent: "center",
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#EC744A",
   },
   line: {
     height: 2,
@@ -246,7 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EC744A",
   },
   uiText: {
-    color: "#EC744A",
+    color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
   },
@@ -255,13 +247,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     color: "#333",
     borderRadius: 25,
-    height: 55,
+    height: 50,
     width: 330,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   inputRowContainer: {
-    marginBottom: 40,
-    width: "100%",
+    marginBottom: 30,
   },
   signupContainer: {
     alignItems: "center",
@@ -277,34 +268,12 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#025146",
   },
-  pickerContainerIOS: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 25,
-    width: "330",
-  },
-  pickerIOS: {
-    height: 50,
-    width: "330%",
-  },
-  pickerContainerAndroid: {
-    marginTop: 20,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 30,
-    overflow: "hidden",
-    width: 330,
-  },
-  pickerAndroid: {
-    height: 50,
-    width: "330",
-    color: "#333",
-  },
   dropdownStyle: {
     marginTop: 20,
     backgroundColor: "#f0f0f0",
     color: "#333",
     borderRadius: 25,
-    height: 55,
+    height: 50,
     width: 330,
     paddingHorizontal: 20,
   },

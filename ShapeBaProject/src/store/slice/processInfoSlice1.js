@@ -26,19 +26,29 @@ export const calculateTimeToGoal = (state) => {
 };
 //TDEE
 export const calculateTDEE = (state) => {
-  const { weight, height, selectedSex, activitylevel, accomplish, age, birthdate } = state;
-  // const age = calculateAge(birthdate);
+  const { weight, height, selectedSex, activitylevel, accomplish, numericAge, birthdate } = state;
+  
+  console.log("Weight:", weight, typeof weight);
+  console.log("Height:", height, typeof height);
+  console.log("Selected Sex:", selectedSex, typeof selectedSex);
+  console.log("Activity Level:", activitylevel, typeof activitylevel);
+  console.log("Accomplish:", accomplish, typeof accomplish);
+  console.log("Numeric Age:", numericAge, typeof numericAge);
+  console.log("Birthdate:", birthdate, typeof birthdate);
 
   let bmr = 0;
-  if (selectedSex === "male") {
-    bmr = (66 + (13.7 * weight) + (5 * height) - (6.8 * age)).toFixed(0);
-  } else if (selectedSex === "female") {
-    bmr = (665 + (9.6 * weight) + (1.8 * height) - (4.7 * age)).toFixed(0);
+  console.log("SelectedSex",selectedSex)
+  if (selectedSex === "Male") {
+    bmr = (66 + (13.7 * weight) + (5 * height) - (6.8 * numericAge)).toFixed(0);
+    console.log("if case", bmr)
+  } else if (selectedSex === "FeMale") {
+    bmr = (665 + (9.6 * weight) + (1.8 * height) - (4.7 * numericAge)).toFixed(0);
+    console.log("else case", bmr)
   }
 
   let tdee = 0;
   switch (activitylevel) {
-    case "Little or no exercise":
+    case "little or no exercise":
       tdee = (bmr * 1.2).toFixed(0);
       break;
     case "1-3 times/week":
@@ -56,17 +66,22 @@ export const calculateTDEE = (state) => {
     default:
       tdee = bmr;
   }
+
   tdee = parseInt(tdee);
+
   if (accomplish === "Lose weight") {
     tdee -= 500; // ลดแคลลอรีลง 500 ถ้าเป็นการลดน้ำหนัก
   } else if (accomplish === "Gain weight") {
     tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
-    console.log(typeof tdee, tdee)
   }
-  saveUserInfo(selectedSex, birthdate)
-  saveGoalInfo(state, tdee)
+
+  saveUserInfo(selectedSex, state.birthdate);
+  saveGoalInfo(state, tdee);
+
+  console.log('BMR:', bmr);
   return tdee;
 };
+
 
 //user_id here
 const getUserId = async () => {
@@ -161,10 +176,11 @@ const initialState = {
   openStartDatePicker: false,
   accomplish: "",
   goalweight: "",
-  activitylevel: null, // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
+  activitylevel: "", // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
   age: 0,
   months: "",
   userIdprocess: '',
+  numericAge: 0,
 };
 
 const processInfoSlice1 = createSlice({
@@ -178,42 +194,33 @@ const processInfoSlice1 = createSlice({
     },
     setSelectedStartDate: (state, action) => {
       state.selectedStartDate = action.payload;
-      console.log(state.selectedStartDate);
+      // console.log(state.selectedStartDate);
     },
     setSelectedSex: (state, action) => {
       state.selectedSex = action.payload;
       console.log(state.selectedSex);
+      // console.log('Type of sex:', typeof action.payload);
     },
     setWeight: (state, action) => {
       state.weight = action.payload;
       console.log(state.weight);
+      // console.log('Type of weight:', typeof action.payload);
     },
     setHeight: (state, action) => {
       state.height = action.payload;
       console.log(state.height);
+      // console.log('Type of height:', typeof action.payload);
     },
 
     setBirthdate: (state, action) => {
       state.birthdate = action.payload;
+      const part = action.payload.split("/");
+      const birthYear = parseInt(part[0]);
+      const currentYear = new Date().getFullYear();
+      state.numericAge = currentYear - birthYear;
       console.log(state.birthdate);
-      //คำนวนอายุ
-      const getCurrentDate = new Date();
-      // Calculate the difference in years
-      const part = state.birthdate.split("/");
-      let age = getCurrentDate.getFullYear() - parseInt(part[0]);
-
-      // Check if the birthday hasn't occurred this year yet
-      if (
-        getCurrentDate.getMonth() < part[1] ||
-        (getCurrentDate.getMonth() === part[1] &&
-          getCurrentDate.getDate() < part[2])
-      ) {
-        age--;
-      }
-      console.log("Age: ", age);
-      setAge(age)
-
     },
+    
     setOpenStartDatePicker: (state, action) => {
       state.openStartDatePicker = action.payload;
     },
@@ -231,7 +238,8 @@ const processInfoSlice1 = createSlice({
     },
     setAge: (state, action) => {
       state.age = parseInt(action.payload); // แปลง payload เป็นตัวเลขและอัปเดตอายุใน state
-      console.log("age", state.age)
+      state.numericAge = parseInt(action.payload);
+      console.log("Numage", state.age)
     },
     setMonths: (state, action) => {
       state.months = action.payload;

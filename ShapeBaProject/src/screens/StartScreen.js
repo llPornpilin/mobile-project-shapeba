@@ -24,13 +24,13 @@ const StartScreen = ({ navigation }) => {
         style={[styles.img, { transform: [{ scale: scaleAnimate }] }]}
         resizeMode="contain"
       />
-      <View style={{ justifyContent: 'flex-end' }}>
+      <View>
         <TouchableOpacity
           style={styles.btn1}
           onPress={() => navigation.navigate('SignInScreen')}
         >
           <Text style={{ color: "#FFFFFF", fontWeight: "bold", fontSize: 20, textAlign: 'center' }}>
-            Sign In
+            Start
           </Text>
         </TouchableOpacity>
       </View>
@@ -50,32 +50,15 @@ const styles = StyleSheet.create({
   },
   btn1: {
     height: 50,
-    width: 340,
+    width: 270,
     borderRadius: 30,
     backgroundColor: "#025146",
     justifyContent: 'center',
     elevation: 5,
-    marginTop: 160
-  },
-  btn2: {
-    marginTop: 25,
-    height: 50,
-    width: 340,
-    borderRadius: 30,
-    borderColor: "#025146",
-    backgroundColor: "#FFFFFF",
-    elevation: 5,
-    justifyContent: 'center'
+    marginTop: 280
   },
   textbtn1: {
     color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 17,
-    textAlign: "center",
-    marginTop: 10,
-  },
-  textbtn2: {
-    color: "#025146",
     fontWeight: "bold",
     fontSize: 17,
     textAlign: "center",

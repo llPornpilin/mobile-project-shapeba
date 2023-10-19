@@ -90,11 +90,11 @@ const SignInScreen = ({ navigation }) => {
           style={{ width: 200, height: 200, marginTop: 20 }}
         />
 
-        <Text style={styles.LabelUsername}>User Name</Text>
+        <Text style={styles.LabelUsername}>Email</Text>
         <TextInput
           value={email}
           style={styles.inputUsername}
-          placeholder="Enter UserName"
+          placeholder="Enter Email"
           autoCapitalize="none"
           onChangeText={(text) => setEmail(text)}
         />
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     marginBottom: 5,
-    marginRight: 245,
+    marginRight: 280,
     marginTop: 50,
   },
   inputUsername: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#EC744A",
     marginBottom: 10,
-    elevation: 5,
+    elevation: 3,
     marginTop: 60,
     justifyContent: 'center'
   },
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
-    elevation: 5,
+    elevation: 3,
     justifyContent: 'center'
 
   },

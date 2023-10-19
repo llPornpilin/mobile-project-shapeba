@@ -28,7 +28,7 @@ const Calendar = (props) => {
     today.setDate(today.getDate()),
     "YYYY/MM/DD"
   );
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [startedDate, setStartedDate] = useState(null);
   // console.log(selectedStartDate)
 
   function handleChangeStartDate(propDate) {

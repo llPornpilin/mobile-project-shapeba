@@ -1,10 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, StatusBar } from "react-native";
 import { progressCircle } from "./ProcessInfoScreen1";
 import { useDispatch, useSelector } from "react-redux";
 import { setaccomplish } from "../../store/slice/processInfoSlice1";
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
-
 
 const ProcessInfoScreen2 = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -15,16 +14,27 @@ const ProcessInfoScreen2 = ({ navigation }) => {
     navigation.navigate("ProcessInfoScreen3");
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.blueArea}>
-        <View>
-          <Text style={styles.Letget}>Set Your Goal</Text>
-        </View>
-        <View>
-          <Text style={styles.Trackyour}>Nutrition at a Glance</Text>
-        </View>
+    <View style={styles.contrainer}>
+      <StatusBar
+        barStyle="dark-content"
+        animated={true}
+        backgroundColor="#025146"
+      />
+      <View style={{ marginTop: 60, marginRight:100 }}>
+        <Text style={styles.Letget}>Set Your Goal</Text>
+        <Text style={styles.Trackyour}>Nutrition at a Glance</Text>
       </View>
-      <View style={styles.whiteArea}>
+      <View
+        style={{
+          marginTop: 20,
+          backgroundColor: "#fff",
+          width: "100%",
+          height: "100%",
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          margin: 20,
+        }}
+      >
         <View style={styles.uiContainer}>
           {progressCircle(1, "white", "#EC744A")}
           <View style={styles.line}></View>
@@ -32,24 +42,18 @@ const ProcessInfoScreen2 = ({ navigation }) => {
           <View style={styles.line}></View>
           {progressCircle(3, "white", "#EC744A")}
         </View>
-        <View>
-          <Text
-            style={{
-              ...styles.ifont,
-              fontWeight: "bold",
-              marginLeft: 5,
-              color: "#575757",
-              marginTop: 20,
-              marginBottom: 40,
-            }}
-          >
-            What do you want to accomplish?
-          </Text>
-        </View>
-
-        {/* input */}
-        <View style={{ marginLeft: 55 }}>
-          <View style={styles.inputContainer}>
+        <Text
+          style={{
+            ...styles.ifont,
+            fontWeight: "bold",
+            color: "#575757",
+            marginTop: 50,
+            textAlign: "center",
+          }}
+        >
+          What do you want to accomplish?
+        </Text>
+        <View style={{alignItems:'center', margin:20}}>
             <TouchableOpacity
               style={styles.inputbetween}
               onPress={() => handleSelectGoal("Maintain weight")}
@@ -57,9 +61,8 @@ const ProcessInfoScreen2 = ({ navigation }) => {
               <Text style={styles.inputText}>Maintain</Text>
               <Text style={styles.inputText}>weight</Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.inputRowContainer}>
-            <View style={styles.inputContainer}>
+            
+            <View style={{flexDirection:'row', margin:20}}>
               <TouchableOpacity
                 style={styles.inputL}
                 onPress={() => handleSelectGoal("Lose weight")}
@@ -67,8 +70,6 @@ const ProcessInfoScreen2 = ({ navigation }) => {
                 <Text style={styles.inputText}>Lose</Text>
                 <Text style={styles.inputText}>weight</Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.inputContainer}>
               <TouchableOpacity
                 style={styles.inputR}
                 onPress={() => handleSelectGoal("Gain weight")}
@@ -77,7 +78,6 @@ const ProcessInfoScreen2 = ({ navigation }) => {
                 <Text style={styles.inputText}>weight</Text>
               </TouchableOpacity>
             </View>
-          </View>
         </View>
       </View>
     </View>
@@ -85,23 +85,9 @@ const ProcessInfoScreen2 = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  contrainer: {
     flex: 1,
-  },
-  blueArea: {
-    flex: 1,
-    width: "100%",
     backgroundColor: "#025146",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  whiteArea: {
-    flex: 3,
-    width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -40,
     alignItems: "center",
   },
   Letget: {
@@ -109,22 +95,19 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
     marginTop: 5,
-    paddingRight: 120,
   },
   Trackyour: {
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-    paddingRight: 145,
     marginBottom: 30,
   },
   uiContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
-    marginTop: 40,
+    marginTop: 60,
   },
   uiItem: {
     alignItems: "center",
@@ -138,6 +121,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#EC744A",
     alignItems: "center",
     justifyContent: "center",
+    borderWidth:1,
+    borderColor:"#EC744A"
   },
   line: {
     height: 2,
@@ -154,19 +139,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#1AA3BA",
     color: "#333",
     borderRadius: 20,
-    height: 90,
-    width: 100,
+    height: 100,
+    width: 120,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 90,
+    // marginLeft: 90,
   },
   inputR: {
     marginTop: 30,
     backgroundColor: "#FBBB57",
     color: "#333",
     borderRadius: 20,
-    height: 90,
-    width: 100,
+    height: 100,
+    width: 120,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -175,17 +160,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#EF8055",
     color: "#333",
     borderRadius: 20,
-    height: 90,
-    width: 100,
+    height: 100,
+    width: 120,
     justifyContent: "center",
     alignItems: "center",
-  },
-  inputRowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    marginRight:70
   },
   ifont: {
     fontSize: 16,
@@ -196,17 +175,9 @@ const styles = StyleSheet.create({
   },
   inputText: {
     color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 18,
+    // fontWeight: "bold",
     textAlign: "center",
-  },
-  btn3: {
-    paddingVertical: -2,
-    paddingHorizontal: 15,
-    borderRadius: 14,
-    backgroundColor: "#FFF",
-    borderWidth: 1.5,
-    borderColor: "#025146",
   },
 });
 
