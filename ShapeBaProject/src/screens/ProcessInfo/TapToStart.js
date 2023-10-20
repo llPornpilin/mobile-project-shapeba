@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, StatusBar } from 'react-native';
 import React from 'react'
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
 import { calculateTDEE, calculateTimeToGoal } from '../../store/slice/processInfoSlice1';
@@ -19,16 +19,20 @@ const label = (img, text) => {
 
 const TapToStart = ({ navigation }) => {
     const processInfo = useSelector(processInfoSelector);
-    const tdee = calculateTDEE(processInfo);
     const { monthsToGoal } = calculateTimeToGoal(processInfo);
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar
+            barStyle="dark-content"
+            animated={true}
+            backgroundColor="#fff"
+          />
             <View style={styles.box1}>
                 <Text className="font-bold text-2xl text-Green mt-5">TARGET WEIGHT</Text>
                 <Text className="font-bold text-2xl text-Green">{processInfo.goalweight} KG</Text>
                 <Text className="font-bold text-lg text-Green">Your daily energy require</Text>
-                <Text className="font-bold text-2xl text-Orange mt-3">{tdee} Cals / Day</Text>
+                <Text className="font-bold text-2xl text-Orange mt-3">{processInfo.tdee} Cals / Day</Text>
                 <Text className="font-bold text-sm text-Green mt-3">during {monthsToGoal} month</Text>
             </View>
             <View className="mt-11">

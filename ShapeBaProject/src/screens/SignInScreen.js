@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 45,
     width: 340,
-    padding: 15,
+    padding: 15
   },
   LabelPassword: {
     color: "#575757",
@@ -181,6 +181,8 @@ const styles = StyleSheet.create({
     height: 45,
     width: 340,
     padding: 15,
+
+
   },
   btn1: {
     marginTop: 20,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#EC744A",
     marginBottom: 10,
-    elevation: 3,
+    elevation: 2,
     marginTop: 60,
     justifyContent: 'center'
   },
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderColor: "#025146",
     backgroundColor: "#FFFFFF",
-    elevation: 3,
+    elevation: 2,
     justifyContent: 'center'
 
   },

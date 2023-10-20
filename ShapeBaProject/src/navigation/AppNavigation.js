@@ -128,6 +128,7 @@ function ProfileNavigate() {
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
             <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
             <ProfileStack.Screen name="InformationScreen" component={InformationScreen} />
+            <processInfoStack.Screen name="TapToStart" component={TapToStart} />
         </ProfileStack.Navigator>
     )
 }

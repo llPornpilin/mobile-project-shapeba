@@ -195,7 +195,7 @@ const ProcessInfoScreen1 = ({ navigation }) => {
                         editable={false}
                         style={styles.input}
                         value={birthDate}
-                        placeholder="YYYY/MM/DD"
+                        placeholder=""
 
                       />
                     </TouchableOpacity>

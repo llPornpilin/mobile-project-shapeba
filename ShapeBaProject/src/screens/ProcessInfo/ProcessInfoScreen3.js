@@ -19,7 +19,7 @@ import {
 } from "../../store/slice/processInfoSlice1";
 import { useDispatch, useSelector } from "react-redux";
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
-import { calculateTimeToGoal } from "../../store/slice/processInfoSlice1";
+import { saveUserInfo, setTdee, calculateTDEE} from "../../store/slice/processInfoSlice1";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Dropdown } from "react-native-element-dropdown";
@@ -28,13 +28,9 @@ const ProcessInfoScreen3 = ({ navigation }) => {
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
 
-  // เพิ่มฟังก์ชัน handleCalculateTDEE เพื่อคำนวณ TDEE
+  // เช็ค warining 
   const handleCalculateTDEE = () => {
     const { goalweight, weight, activitylevel } = processInfo;
-
-    // console.log('parsedGoalweight:', parsedGoalweight);
-    // console.log('activitylevel:', activitylevel);
-    // console.log('parsedWeight:', parsedWeight);
 
     if (!goalweight || !activitylevel || !weight) {
       Alert.alert("warning", "Please fill in all required fields");
@@ -61,6 +57,10 @@ const ProcessInfoScreen3 = ({ navigation }) => {
   const handleSubmit = () => {
     // ทำตามการทำงานที่ต้องการทำเมื่อฟอร์มถูก submit
     handleCalculateTDEE();
+    const tdee = calculateTDEE(processInfo);
+    dispatch(setTdee(tdee))
+    //save birth date & sex
+    saveUserInfo(processInfo);
   };
   const SignupSchema3 = Yup.object().shape({
     goalweight: Yup.number().required("Enter Your GoalWeight !"),

@@ -50,6 +50,7 @@ export const calculateTDEE = (state) => {
   switch (activitylevel) {
     case "little or no exercise":
       tdee = (bmr * 1.2).toFixed(0);
+      console.log("Check", tdee)
       break;
     case "1-3 times/week":
       tdee = (bmr * 1.375).toFixed(0);
@@ -74,17 +75,16 @@ export const calculateTDEE = (state) => {
   } else if (accomplish === "Gain weight") {
     tdee += 500; // เพิ่มแคลลอรีขึ้น 500 ถ้าเป็นการเพิ่มน้ำหนัก
   }
-
-  saveUserInfo(selectedSex, state.birthdate);
   saveGoalInfo(state, tdee);
 
   console.log('BMR:', bmr);
+  console.log('TDEE',tdee)
   return tdee;
 };
 
 
 //user_id here
-const getUserId = async () => {
+export const getUserId = async () => {
   let userId = ''
   userId = await new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(AUTH, (user) => {
@@ -118,14 +118,15 @@ const getGoalById = async (userId) => { // Pass the user ID as an argument
   }
 }
 
-const saveUserInfo = async (selectedSex, birthdate) => {
+export const saveUserInfo = async (state) => {
   try {
+    console.log("save user", state.selectedSex, state.birthdate)
     const userId = await getUserId();
     console.log("User is authenticated. userId: ", userId)
     // console.log("birth", birthdate, selectedSex)
     await updateDoc(doc(db, "user", userId), {
-      birthDate: birthdate,
-      sex: selectedSex
+      birthDate: state.birthdate,
+      sex: state.selectedSex
     });
     console.log("Success")
 
@@ -177,10 +178,9 @@ const initialState = {
   accomplish: "",
   goalweight: "",
   activitylevel: "", // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
-  age: 0,
-  months: "",
   userIdprocess: '',
   numericAge: 0,
+  tdee: 0,
 };
 
 const processInfoSlice1 = createSlice({
@@ -188,10 +188,10 @@ const processInfoSlice1 = createSlice({
   initialState,
   reducers: {
 
-    setUserIdprocess(state, action) {
-      state.userId = action.payload
-      console.log("set user id: " + state.userId)
-    },
+    // setUserIdprocess(state, action) {
+    //   state.userId = action.payload
+    //   console.log("set user id: " + state.userId)
+    // },
     setSelectedStartDate: (state, action) => {
       state.selectedStartDate = action.payload;
       // console.log(state.selectedStartDate);
@@ -237,7 +237,6 @@ const processInfoSlice1 = createSlice({
       console.log(state.activitylevel);
     },
     setAge: (state, action) => {
-      state.age = parseInt(action.payload); // แปลง payload เป็นตัวเลขและอัปเดตอายุใน state
       state.numericAge = parseInt(action.payload);
       console.log("Numage", state.age)
     },
@@ -245,6 +244,11 @@ const processInfoSlice1 = createSlice({
       state.months = action.payload;
       console.log(state.months);
     },
+    setTdee: (state, action) => {
+      state.tdee = action.payload;
+      console.log(state.tdee);
+    },
+    
   },
 });
 
@@ -259,7 +263,7 @@ export const {
   setGoalweight,
   setActivitylevel,
   setAge,
-  setMonths,
+  setTdee,
   userIdprocess
 } = processInfoSlice1.actions;
 
