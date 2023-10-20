@@ -16,7 +16,7 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../../store/slice/frontEndSlice';
-import { userSelector } from '../../store/slice/userSlice'
+import { userSelector, getUserId } from '../../store/slice/userSlice'
 //firebase
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where, } from '../../../firebase-cofig';
 import { set } from 'react-hook-form';
@@ -118,29 +118,35 @@ const DashboardDayScreen = ({ navigation }) => {
 
     // Get Daily meal by User ID
     const getDailyMenuById = async () => { // Pass the user ID as an argument
-        const currentDate = new Date();
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
-        const year = currentDate.getFullYear();
-        const today = `${day}/${month}/${year}`;
         try {
-            const userId = await userStore.userId;
+            const userId = await getUserId()
+            const currentDate = new Date();
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
+            const year = currentDate.getFullYear();
+            const today = `${day}/${month}/${year}`;
             console.log("get daily menu", userId)
+
             const querySnapshot = await getDocs(query(collection(db, "dailyMeal"), where("user_id", "==", userId), where("dateInfo.date", "==", today))); // Use the user's ID passed as an argument
             console.log("Total menu: ", querySnapshot.size);
             const tempDoc = [];
             querySnapshot.forEach((doc) => {
                 tempDoc.push({ ...doc.data(), key: doc.id });
             });
-            setDailyMenu(tempDoc);
-
-            setBreakfast(await extractNutrition("breakfast"))
-            setBrunch(await extractNutrition("brunch"))
-            setLunch(await extractNutrition("lunch"))
-            setAfternoonlunch(await extractNutrition("afternoonlunch"))
-            setDinner(await extractNutrition("dinner"))
-            setAfterdinner(await extractNutrition("afterdinner"))
-            console.log("Daily menu: ", dailyMenu);
+            console.log("tempdoc ", tempDoc)
+            // Flatten the array if each category is an array of meals
+            const meals1 = tempDoc.map((day) => day["breakfast"]);
+            const meals2 = tempDoc.map((day) => day["brunch"]);
+            const meals3 = tempDoc.map((day) => day["lunch"]);
+            const meals4 = tempDoc.map((day) => day["afternoonlunch"]);
+            const meals5 = tempDoc.map((day) => day["dinner"]);
+            const meals6 = tempDoc.map((day) => day["afterdinner"]);
+            setBreakfast(await extractNutrition(meals1.flat()))
+            setBrunch(await extractNutrition(meals2.flat()))
+            setLunch(await extractNutrition(meals3.flat()))
+            setAfternoonlunch(await extractNutrition(meals4.flat()))
+            setDinner(await extractNutrition(meals5.flat()))
+            setAfterdinner(await extractNutrition(meals6.flat()))
 
         } catch (error) {
             console.error("Error fetching user menu: ", error);
@@ -148,17 +154,10 @@ const DashboardDayScreen = ({ navigation }) => {
 
     }
 
-
-    const extractMeals = (category) => {
-        const meals = dailyMenu.map((day) => day[category]);
-        // Flatten the array if each category is an array of meals
-        return meals.flat();
-    };
-
     const extractNutrition = async (meal) => {
         console.log("meal", meal)
         //calculate total nutrition & calories
-        const totalNutrition = extractMeals(meal).reduce((acc, food) => {
+        const totalNutrition = meal.reduce((acc, food) => {
             if (!food) return acc;
             // Convert the values to numbers for calculations
             const calories = parseFloat(food.calories);
@@ -181,7 +180,6 @@ const DashboardDayScreen = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             getDailyMenuById();
-            console.log(userStore.userId, "today menu", dailyMenu)
             return () => {
                 // Clear the menu state when the component is unfocused
                 setDailyMenu([]);

@@ -1,4 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../../firebase-cofig'
+import { AUTH } from "../../../firebase-cofig";
+import { onAuthStateChanged } from 'firebase/auth'
+
+//user_id here
+export const getUserId = async () => {
+    let userId = ''
+    userId = await new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(AUTH, (user) => {
+            if (user) {
+                console.log('from store', user.uid);
+                unsubscribe(); // Unsubscribe from the listener
+                resolve(user.uid);
+            } else {
+                reject(new Error("User is not authenticated."));
+            }
+        });
+    });
+    return userId;
+}
 
 const userSlice = createSlice({
     name: 'userInfo',
