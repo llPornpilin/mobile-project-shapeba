@@ -1,7 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { BarChart } from '../../components/BarChart';
-import { useState } from 'react'
+import React, { useState } from 'react'
+
+import { getGoalById } from '../../store/slice/processInfoSlice1'
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 const ListFood = ({ item }) => {
@@ -28,6 +32,24 @@ const DashboardWeekScreen = () => {
         { name: 'Chocmint55', gram: 150, cal: 780 },
     ];
     const [collectSumCalPerDay, setCollectSumCalPerDay] = useState(0) // for caculate average cal
+    const [getTDEE, setTDEE] = useState(0)
+
+    const fetchData = async () => {
+        try {
+            const getUserGoal = await getGoalById()
+            setTDEE(getUserGoal[0].TDEE) ;
+            console.log("tdee", getTDEE)
+        }
+        catch (error) {
+            console.log("ERROR FETCH DATA")
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchData()
+        }, [])
+    )
 
     return (
         <SafeAreaView >
@@ -46,18 +68,17 @@ const DashboardWeekScreen = () => {
                             <View className="ml-5">
                                 <Text className="text-Darkgray mt-6 ml-6">Goal</Text>
                                 <View className="ml-6 flex-row">
-                                    <Text className="text-lg font-bold mr-2">1650 Cals</Text>
+                                    <Text className="text-lg font-bold mr-2">{getTDEE} Cals</Text>
                                 </View>
                             </View>
                         </View>
 
                         <View className="">
-                            <Text className="text-Darkgray text-xs text-right mt-8 mr-3">Goal</Text>
-
+                            <Text className="text-Darkgray text-xs text-right mt-8 mr-3"></Text>
                         </View>
                         <View className="border-b  border-Darkgray opacity-50 " />
                         <View className="-mt-10 mr-5">
-                            <BarChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} />
+                            <BarChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} getTDEE={getTDEE} />
                         </View>
 
 

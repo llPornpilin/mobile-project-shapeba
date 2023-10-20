@@ -101,17 +101,18 @@ export const getUserId = async () => {
 }
 
 // Get goal by User ID
-const getGoalById = async (userId) => { // Pass the user ID as an argument
+export const getGoalById = async () => { // Pass the user ID as an argument
   try {
-    // const userId = await getUserId();
+    const userId = await getUserId();
     const querySnapshot = await getDocs(query(collection(db, "goal"), where("user_id", "==", userId), where("status", "==", "doing"))); // Use the user's ID passed as an argument
+    console.log("query snapshot >> ", querySnapshot)
     console.log("Total goal: ", querySnapshot.size);
     const tempDoc = [];
     querySnapshot.forEach((doc) => {
       tempDoc.push({ ...doc.data(), key: doc.id });
     });
     console.log("goal user", tempDoc);
-    return tempDoc.length == 0;
+    return tempDoc;
 
   } catch (error) {
     console.error("Error fetching user goal: ", error);
@@ -141,10 +142,10 @@ export const saveUserInfo = async (state) => {
 const saveGoalInfo = async (state, tdee) => {
   try {
     const userId = await getUserId();
-    const isGoalEmpty = await getGoalById(userId);
+    const isGoalEmpty = await getGoalById();
     console.log("byId", isGoalEmpty);
 
-    if (isGoalEmpty) {
+    if (isGoalEmpty.length == 0) {
       const docRef = await addDoc(collection(db, "goal"), {
         user_id: userId,
         TDEE: tdee,

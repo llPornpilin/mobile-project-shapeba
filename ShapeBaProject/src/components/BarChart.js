@@ -136,6 +136,12 @@ export const BarChart = (props) => {
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
+    // for horizontal line
+    const tdeeY = y(props.getTDEE);
+    const horizontalLinePath = Skia.Path.Make();
+    horizontalLinePath.moveTo(0, tdeeY);
+    horizontalLinePath.lineTo(graphWidth, tdeeY);
+
     useFocusEffect(
         React.useCallback(() => {
             getCalsDataPerDay()
@@ -170,7 +176,7 @@ export const BarChart = (props) => {
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
                 {dataChart.map((dataPoint) => (
-                    dataPoint.value > 250 ? // FIXME: change 250 to real TDEE (Goal cals)
+                    dataPoint.sumCalPerDay > props.getTDEE ? 
                         <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#FBBB57" />
                         : <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#EC744A" />
                 ))}
