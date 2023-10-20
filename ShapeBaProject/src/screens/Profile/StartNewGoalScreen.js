@@ -27,6 +27,16 @@ import {
 import { calculateTDEE } from "../../store/slice/processInfoSlice1";
 import { db, collection, getDoc, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../../firebase-cofig'
 import { getUserId} from "../../store/slice/processInfoSlice1"
+import { useFormik, Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+    weight: Yup.number().required('Weight is required'),
+    height: Yup.number().required('Height is required'),
+    accomplish: Yup.string().required('Accomplish is required'),
+    goalweight: Yup.number().required('Goal Weight is required'),
+    activitylevel: Yup.string().required('Activity Level is required')
+  });
   
 const StartNewGoalScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -78,6 +88,7 @@ const StartNewGoalScreen = ({ navigation }) => {
   ];
   const greenHeader = (navigation) => {
     return (
+       
       <Header
         backgroundColor="#025146"
         containerStyle={styles.header}
@@ -106,10 +117,30 @@ const StartNewGoalScreen = ({ navigation }) => {
   };
 
   return (
+    <Formik
+    initialValues={{
+    weight: '',
+    height: '',
+    accomplish: '',
+    goalweight: '',
+    activitylevel:''
+      
+    }}
+    validationSchema={validationSchema}
+  >
+    {({
+      values,
+      errors,
+      touched,
+      handleChange,
+      setFieldTouched,
+      isValid,
+      handleSubmit,
+    }) => (
     <View style={styles.container}>
       {greenHeader(navigation)}
       <View
-        className="mt-4"
+        className="mt-1"
         style={{ padding: 40, alignItems: "center", justifyContent: "center" }}
       >
         {/* weight and height */}
@@ -123,10 +154,17 @@ const StartNewGoalScreen = ({ navigation }) => {
             </Text>
             <TextInput
               style={[styles.textbox, { marginRight: 5, marginTop: 10 }]}
-              value={processInfo.weight}
-              onChangeText={(weight) => dispatch(setWeight(Number(weight)))}
+              value={values.weight}
+              onChangeText={(text) => {
+                handleChange("weight")(text);
+                dispatch(setWeight(Number(text)));
+              }}
               keyboardType="decimal-pad"
+              maxLength={3}
             />
+            {errors.weight && (
+                    <Text style={styles.errorsText}>{errors.weight}</Text>
+                  )}
           </View>
           <View style={{ width: "50%" }}>
             <Text
@@ -137,13 +175,20 @@ const StartNewGoalScreen = ({ navigation }) => {
             </Text>
             <TextInput
               style={[styles.textbox, { marginRight: 5, marginTop: 10 }]}
-              value={processInfo.height}
-              onChangeText={(height) => dispatch(setHeight(Number(height)))}
+              value={values.height}
+              onChangeText={(text) => {
+                handleChange("height")(text);
+                dispatch(setHeight(Number(text))); // แปลงค่า text เป็น number
+              }}
               keyboardType="decimal-pad"
+              maxLength={3}
             />
+             {errors.height && (
+                    <Text style={styles.errorsText}>{errors.height}</Text>
+                  )}
           </View>
         </View>
-        <View className="mt-8" style={{ width: "100%" }}>
+        <View className="mt-6" style={{ width: "100%" }}>
           {/* accomplish */}
           <Text className="text-[#575757] font-semibold text-base pl-3">
             Accomplish
@@ -156,14 +201,17 @@ const StartNewGoalScreen = ({ navigation }) => {
             labelField="label"
             valueField="value"
             placeholder=""
-            value={processInfo.accomplish}
-            onChange={(accomplish) => {
-                dispatch(setaccomplish(accomplish.value))
-                console.log("Accomplish test",accomplish.value)
-            }}
-          />
+            value={values.accomplish}
+            onChange={(item) => {
+                handleChange("accomplish")(item.value);
+                dispatch(setaccomplish(item.value)); // ส่งไปยัง Redux store
+              }}
+            />
+            {errors.accomplish && (
+              <Text style={styles.errorsText}>{errors.accomplish}</Text>
+            )}
           {/* goal weight */}
-          <View className="mt-10" style={{ width: "100%" }}>
+          <View className="mt-6" style={{ width: "100%" }}>
             <Text
               style={{ marginLeft: 10 }}
               className="text-[#575757] font-semibold text-base"
@@ -172,15 +220,20 @@ const StartNewGoalScreen = ({ navigation }) => {
             </Text>
             <TextInput
               style={[styles.textbox, { marginRight: 5, marginTop: 10 }]}
-              value={processInfo.goalweight}
-              onChangeText={( goalweight ) =>
-                dispatch(setGoalweight(Number(goalweight)))
-              }
+              value={values.goalweight}
+              onChangeText={(text) => {
+                handleChange("goalweight")(text);
+                dispatch(setGoalweight(Number(text))); // ให้แปลงค่าเป็น number
+              }}
               keyboardType="decimal-pad"
+              maxLength={3}
             />
+            {errors.goalweight && (
+                  <Text style={styles.errorsText}>{errors.goalweight}</Text>
+                )}
           </View>
           {/* activity level */}
-          <Text className="text-[#575757] font-semibold text-base pl-3 mt-10">
+          <Text className="text-[#575757] font-semibold text-base pl-3 mt-6">
             Activity Level
           </Text>
           <Dropdown
@@ -191,11 +244,15 @@ const StartNewGoalScreen = ({ navigation }) => {
             labelField="label"
             valueField="value"
             placeholder=""
-            value={processInfo.activitylevel}
-            onChange={(activitylevel) =>
-              dispatch(setActivitylevel(activitylevel.value))
-            } // แก้เป็น activitylevel แทน ({activitylevel})
-          />
+            value={values.activitylevel}
+            onChange={(item) => {
+                handleChange("activitylevel")(item.value);
+                dispatch(setActivitylevel(item.value)); // ส่งไปยัง Redux store
+              }}
+            />
+            {errors.activitylevel && (
+              <Text style={styles.errorsText}>{errors.activitylevel}</Text>
+            )}
         </View>
 
         <View style={{ width: "100%", alignItems: "center" }}>
@@ -213,6 +270,8 @@ const StartNewGoalScreen = ({ navigation }) => {
         </View>
       </View>
     </View>
+    )}
+    </Formik>
   );
 };
 
@@ -262,6 +321,12 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     marginTop: 70,
+  },
+  errorsText: {
+    fontSize: 12,
+    color: "#C03232",
+    marginLeft: 15,
+    marginTop: 5
   },
 });
 
