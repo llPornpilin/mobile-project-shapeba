@@ -35,17 +35,7 @@ const sundayDay = String(sundayDateFull.getDate()).padStart(2, '0')
 const sundayMonth = String(currentDate.getMonth() + 1).padStart(2, '0')
 const sundayYear = sundayDateFull.getFullYear()
 const sundayDate = `${sundayDay}/${sundayMonth}/${sundayYear}`
-
-
-const data = [
-    { label: "Sun", value: 200 },
-    { label: "Mon", value: 150 },
-    { label: "Tue", value: 100 },
-    { label: "Wed", value: 350 },
-    { label: "Thu", value: 200 },
-    { label: "Fri", value: 250 },
-    { label: "Sat", value: 200 },
-];
+// -------------------------------------------------------------
 
 const GRAPH_MARGIN = 20;
 const GRAPH_BAR_WIDTH = 14;
@@ -56,7 +46,7 @@ const graphHeight = CanvasHeight - 2 * GRAPH_MARGIN;
 const graphWidth = CanvasWidth - 2;
 
 
-export const BarChart = () => {
+export const BarChart = (props) => {
     const [dataChart, setDataChart] = useState([])
     
     // ---------------- get data from database ----------------
@@ -83,14 +73,12 @@ export const BarChart = () => {
             }
             getCalsData.forEach((doc) => {
                 const docDate = parseDate(doc.data().dateInfo.date)
-                console.log("doc filter date: ", docDate)
                 if (docDate) {
                     const sundayDateObj = parseDate(sundayDate)
                     const currentDateObj = parseDate(today)
 
                     if (docDate >= sundayDateObj && docDate <= currentDateObj) {
-                        console.log("doc filter date: ", doc.data().dateInfo.date)
-                        tempDocsOneWeek.push(doc.data()) // FIXME: key: id
+                        tempDocsOneWeek.push(doc.data())
                     }
                 }
             })
@@ -99,7 +87,7 @@ export const BarChart = () => {
             const dayWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
             dayWeek.forEach((dayWeek) => {
                 const sumObject = { dayOfWeek: dayWeek, sumCalPerDay: 0 };
-                console.log("sum obj >> ", sumObject)
+                // console.log("sum obj >> ", sumObject)
                 sumCalsPerWeek.push(sumObject)
             })
             
@@ -120,15 +108,15 @@ export const BarChart = () => {
                 }
             })
             setDataChart(sumCalsPerWeek)
+            props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay)/7)
 
         }
         catch (error) {
             console.log("get cals Bar Chart >> ", error)
         }
     }
-    
     console.log("sum cal >>>>>> ", dataChart)
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     // ---------------------------------------------------------------------
 
     const [success, setSuccess] = useState(true);
@@ -148,14 +136,14 @@ export const BarChart = () => {
     const yRange = [0, graphHeight];
     const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
-    useEffect(() => {
-        console.log("data chart: ", dataChart)
-        getCalsDataPerDay()
-        runTiming(animationState, 1, {
-            duration: 1600,
-            easing: Easing.inOut(Easing.exp),
-        });
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getCalsDataPerDay()
+            return () => {
+                props.setCollectSumCalPerDay(0)
+            };
+        }, [])
+    )
 
     const Bar = (label, value) => {
         // console.log(label, value);
