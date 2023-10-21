@@ -156,7 +156,7 @@ export const BarChart = (props) => {
     const Bar = (label, value) => {
         const newPath = Skia.Path.Make()
         const barHeight = y(value)
-        const scaledBarHeight = barHeight * (graphHeight / maxSumCalPerDay)
+        const scaledBarHeight = barHeight * (graphHeight / maxSumCalPerDay / 10)
         const rect = Skia.XYWHRect(
             x(label) - GRAPH_BAR_WIDTH / 2,
             graphHeight - scaledBarHeight, // Position the bars within the max height
