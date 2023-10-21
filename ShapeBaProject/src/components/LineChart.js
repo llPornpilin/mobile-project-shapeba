@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
     Canvas,
@@ -13,11 +13,57 @@ import {
 } from "@shopify/react-native-skia";
 
 // import { animatedData, DataPoint, originalData } from "./Data";
-import { curveBasis, line, scaleLinear, scaleTime } from "d3";
+import { curveBasis, line, scaleLinear, scaleTime, scalePoint } from "d3";
 import { Easing, View, Pressable, Text, StyleSheet } from "react-native";
+// firebase
+import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
+import { useFocusEffect } from "@react-navigation/native";
+
+// ---------------- get current date --------------------------
+const currentDate = new Date();
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+const year = currentDate.getFullYear();
+const dayOfWeek = currentDate.getDay()
+const today = `${day}/${month}/${year}` // String type
+
+const firstDateMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+const firstDay = String(firstDateMonth.getDate()).padStart(2, '0')
+const firstMonth = String(firstDateMonth.getMonth() + 1).padStart(2, '0')
+const firstYear = firstDateMonth.getFullYear();
+const firstDateOfMonth = `${firstDay}/${firstMonth}/${firstYear}`
+
+const lastDateMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0)
+const lastDay = String(lastDateMonth.getDate()).padStart(2, '0')
+const lastMonth = String(lastDateMonth.getMonth() + 1).padStart(2, '0')
+const lastYear = lastDateMonth.getFullYear();
+const lastDateOfMonth = `${lastDay}/${lastMonth}/${lastYear}`
+const numberOfDaysInMonth = lastDateMonth.getDate()
+
+// -------------------------------------------------------------
 
 //example data
 const originalData = [
+    { "date": "2000-02-01T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-02T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-03T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-04T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-05T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-06T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-07T05:00:00.000Z", "value": 1000.47 },
+    { "date": "2000-02-08T05:00:00.000Z", "value": 200.47 },
+    { "date": "2000-02-09T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-10T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-11T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-12T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-13T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-14T05:00:00.000Z", "value": 0 },
+    { "date": "2000-02-15T05:00:00.000Z", "value": 0 },
+];
+const animatedData = [
     { date: "2000-02-01T05:00:00.000Z", value: 250 },
     { date: "2000-02-02T05:00:00.000Z", value: 300.35 },
     { date: "2000-02-03T05:00:00.000Z", value: 150.84 },
@@ -34,26 +80,94 @@ const originalData = [
     { date: "2000-02-14T05:00:00.000Z", value: 500.47 },
     { date: "2000-02-15T05:00:00.000Z", value: 800.47 },
 ];
-const animatedData = [
-    { date: "2000-02-01T05:00:00.000Z", value: 500 },
-    { date: "2000-02-02T05:00:00.000Z", value: 400.0 },
-    { date: "2000-02-03T05:00:00.000Z", value: 300.0 },
-    { date: "2000-02-04T05:00:00.000Z", value: 400.0 },
-    { date: "2000-02-05T05:00:00.000Z", value: 500.0 },
-    { date: "2000-02-06T05:00:00.000Z", value: 1000.98 },
-    { date: "2000-02-07T05:00:00.000Z", value: 500.0 },
-    { date: "2000-02-08T05:00:00.000Z", value: 200.0 },
-    { date: "2000-02-09T05:00:00.000Z", value: 1300.75 },
-    { date: "2000-02-10T05:00:00.000Z", value: 400.0 },
-    { date: "2000-02-11T05:00:00.000Z", value: 500.0 },
-    { date: "2000-02-12T05:00:00.000Z", value: 900.98 },
-    { date: "2000-02-13T05:00:00.000Z", value: 600.0 },
-    { date: "2000-02-14T05:00:00.000Z", value: 250.0 },
-    { date: "2000-02-15T05:00:00.000Z", value: 330.67 },
-];
 
 
-export const LineChart = () => {
+export const LineChart = (props) => {
+    const [dataChart, setDataChart] = useState([])
+    
+    // ---------------- get data from database ----------------
+    // reduct store
+    const userStore = useSelector(userSelector);
+    const userId = userStore.userId
+    
+    // const getCalsDataPerDay = async () => {
+    //     let sumCalsPerMonth = [] // collect sum of calories per each day in each week
+    //     let tempDocsOneMonth = [] // colect Meal data in this week
+
+    //     try {
+    //         const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
+    //         const getCalsData = await(getDocs(querySnapshot))
+
+    //         // change date format from string -> date
+    //         const parseDate = (dateString) => {
+    //             const parts = dateString.split("/")
+    //             if (parts.length == 3) {
+    //                 const [day, month, year] = parts
+    //                 return new Date(year, month - 1, day)
+    //             }
+    //             return null
+    //         }
+
+    //         getCalsData.forEach((doc) => {
+    //             const docDate = parseDate(doc.data().dateInfo.date)
+    //             if (docDate) {
+    //                 const currentDateObj = parseDate(today) // Date format
+    //                 const firstDateOfMonthObj = parseDate(firstDateOfMonth) // Date format
+
+    //                 if (docDate >= firstDateOfMonthObj && docDate <= currentDateObj) {
+    //                     tempDocsOneMonth.push(doc.data())
+    //                 }
+    //             }
+    //         })
+
+    //         let sumCalPerDay = 0
+    //         let currentYear = currentDate.getFullYear();
+    //         let currentMonth = currentDate.getMonth();
+    //         console.log("MONTH ... ", currentMonth)
+
+    //         for (let dayy = 2; dayy <= numberOfDaysInMonth + 2; dayy++) { // FIXME: month 31 days must plus 2 ??
+    //             if (currentMonth < 0) {
+    //                 currentMonth = 11; // 0-based, so December is 11
+    //                 currentYear--;
+    //             }
+
+    //             const dailyDate = new Date(currentYear, currentMonth, dayy);
+    //             const formatDate = dailyDate.toISOString();
+    //             const sumObject = { date: formatDate, value: 0 };
+    //             // console.log("test Date format >>>> ", sumObject);
+    //             sumCalsPerMonth.push(sumObject);
+    //         }
+            
+    //         console.log("TEMP .. ", tempDocsOneMonth)
+    //         tempDocsOneMonth.forEach((docPerDay) => {
+    //             console.log("IMNNN")
+    //             // sum cal in each doc
+    //             const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
+    //             mealTypes.forEach((mealTypes) => {
+    //                 if (docPerDay[mealTypes].length !== 0) {
+    //                     docPerDay[mealTypes].forEach((menuMeal) => {
+    //                         sumCalPerDay += parseFloat(menuMeal.calories)
+    //                     })
+    //                 }
+    //             })
+    
+    //             const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
+    //             // console.log("MATCHING >>> ", matchingDay)
+    //             if (matchingDay) {
+    //                 matchingDay.value = sumCalPerDay
+    //             }
+    //         })
+    //         setDataChart(sumCalsPerMonth)
+    //         props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay) / 30)
+
+    //     }
+    //     catch (error) {
+    //         console.log("get cals Bar Chart >> ", error)
+    //     }
+    // }
+    // console.log("REAL DATA ... ", dataChart)
+    // -----------------------------------------------------------------------------------
+
     const transition = useValue(1);
     const state = useValue({
         current: 0,
@@ -63,15 +177,25 @@ export const LineChart = () => {
     const GRAPH_HEIGHT = 300;
     const GRAPH_WIDTH = 320;
 
+    useFocusEffect(
+        React.useCallback(() => {
+            getCalsDataPerDay() // FIXME:
+            return () => {
+                props.setCollectSumCalPerDay(0)
+            };
+        }, [userId])
+    )
+
     const makeGraph = (data) => {
         const max = Math.max(...data.map((val) => val.value));
         const min = Math.min(...data.map((val) => val.value));
         const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 35]);
 
+        // const xDomain = animatedData.map((dataPoint) => dataPoint.date)
         const x = scaleTime()
-            .domain([new Date(2000, 1, 1), new Date(2000, 1, 15)])
-            .range([10, GRAPH_WIDTH - 10]);
-
+        .domain([new Date(2023, 9, 1), new Date(2023, 9, 30)]) // FIXME: ดึงวันที่จริงจากบนสุดมาใช้
+        .range([10, GRAPH_WIDTH - 10]);
+        
         const curvedLine = line()
             .x((d) => x(new Date(d.date)))
             .y((d) => y(d.value))
@@ -100,7 +224,7 @@ export const LineChart = () => {
         });
     };
 
-    const graphData = [makeGraph(originalData), makeGraph(animatedData)];
+    const graphData = [makeGraph(originalData), makeGraph(originalData)]; // FIXME: เปลี่ยนเป็น Array ที่เก็บข้อมูลจริง
 
     const path = useComputedValue(() => {
         const start = graphData[state.current.current].curve;
@@ -120,20 +244,6 @@ export const LineChart = () => {
 
                 <Path style="stroke" path={path} strokeWidth={4} color="#EC744A" />
             </Canvas>
-            {/* <View style={styles.buttonContainer}>
-                <Pressable
-                    onPress={() => transitionStart(0)}
-                    style={styles.buttonStyle}
-                >
-                    <Text style={styles.textStyle}>Graph 1</Text>
-                </Pressable>
-                <Pressable
-                    onPress={() => transitionStart(1)}
-                    style={styles.buttonStyle}
-                >
-                    <Text style={styles.textStyle}>Graph 2</Text>
-                </Pressable>
-            </View> */}
         </View>
     );
 };

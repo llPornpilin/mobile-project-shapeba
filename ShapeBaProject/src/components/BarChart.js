@@ -24,10 +24,10 @@ import { useFocusEffect } from "@react-navigation/native";
 // ---------------- get current date --------------------------
 const currentDate = new Date();
 const day = String(currentDate.getDate()).padStart(2, '0');
-const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based, so we add 1 to get the correct month.
+const month = String(currentDate.getMonth() + 1).padStart(2, '0')
 const year = currentDate.getFullYear();
 const dayOfWeek = currentDate.getDay()
-const today = `${day}/${month}/${year}`; // String type
+const today = `${day}/${month}/${year}` // String type
 
 const sundayDateFull = new Date(currentDate)
 sundayDateFull.setDate(currentDate.getDate() - dayOfWeek)
@@ -155,7 +155,7 @@ export const BarChart = (props) => {
     const Bar = (label, value) => {
         const newPath = Skia.Path.Make()
         const barHeight = y(value)
-        const scaledBarHeight = barHeight * (maxSumCalPerDay / 1500)
+        const scaledBarHeight = barHeight * (maxSumCalPerDay / 2000)
         const rect = Skia.XYWHRect(
             x(label) - GRAPH_BAR_WIDTH / 2,
             graphHeight - scaledBarHeight, // Position the bars within the max height

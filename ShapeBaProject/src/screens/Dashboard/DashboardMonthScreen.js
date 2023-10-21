@@ -5,32 +5,29 @@ import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from "@react-navigation/native";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from '../../../firebase-cofig';
 
+import { getGoalById } from '../../store/slice/processInfoSlice1'
+
 
 const DashboardMonthScreen = () => {
-    const [allStudent, setAllStudent] = useState([])
-    // console.log("Student List: ", allStudent);
+    const [collectSumCalPerDay, setCollectSumCalPerDay] = useState(0) // for caculate average cal
+    const [getTDEE, setTDEE] = useState(0)
 
-    //get all students from firebase
-    const getStudents = async () => {
-        const querySnapshot = await getDocs(collection(db, "user"));
-        console.log("Total user: ", querySnapshot.size);
-        const tempDoc = [];
-        querySnapshot.forEach((doc) => {
-            tempDoc.push({ ...doc.data(), key: doc.id });
-        });
-        setAllStudent(tempDoc);
+    const fetchData = async () => {
+        try {
+            const getUserGoal = await getGoalById()
+            setTDEE(getUserGoal[0].TDEE) ;
+            console.log("tdee", getTDEE)
+        }
+        catch (error) {
+            console.log("ERROR FETCH DATA")
+        }
     }
-    console.log(allStudent)
 
     useFocusEffect(
         React.useCallback(() => {
-            getStudents();
-            return () => {
-                // Clear the students state when the component is unfocused
-                setAllStudent([]);
-            };
+            fetchData()
         }, [])
-    );
+    )
 
     return (
         <SafeAreaView >
@@ -61,7 +58,7 @@ const DashboardMonthScreen = () => {
                         <View className="border-b  border-Darkgray opacity-50 " />
 
                         <View className="mr-5" style={styles.chart}>
-                            <LineChart />
+                            <LineChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} />
                         </View>
 
 

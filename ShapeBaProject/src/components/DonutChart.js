@@ -25,7 +25,7 @@ const DonutChart = ({
 }) => {
     const innerRadius = radius - strokeWidth / 2;
     const targetText = `${targetPercentage * 100}`;
-    console.log("targetPercentage", targetPercentage)
+    // console.log("targetPercentage", targetPercentage)
 
     const path = Skia.Path.Make();
     path.addCircle(radius, radius, innerRadius);
