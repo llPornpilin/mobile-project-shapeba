@@ -5,7 +5,7 @@ import { Button } from 'react-native-elements';
 import { useFocusEffect } from "@react-navigation/native";
 //component
 import DonutChart from "../../components/DonutChart";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
 import BottomSheet from '../../components/MealBottomSheet';
@@ -17,6 +17,7 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../../store/slice/frontEndSlice';
 import { userSelector, getUserId } from '../../store/slice/userSlice'
+import { processInfoSelector, getGoalById } from '../../store/slice/processInfoSlice1';
 //firebase
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where, } from '../../../firebase-cofig';
 import { set } from 'react-hook-form';
@@ -49,7 +50,8 @@ const STROKE_WIDTH = 6;
 
 //main
 const DashboardDayScreen = ({ navigation }) => {
-    const targetPercentage = 85 / 100;
+    // const targetPercentage = 50 / 100;
+    const [targetPercentage, setTargetPercentage] = useState(0)
     const animationState = useValue(0);
     //for BottomSheet
     const [isOpen, setIsOpen] = useState(false);
@@ -58,8 +60,8 @@ const DashboardDayScreen = ({ navigation }) => {
     //get data from redux
     const dispatch = useDispatch();
     const frontEndStore = useSelector(frontEndSelector);
-    const userStore = useSelector(userSelector);
-    const [dailyMenu, setDailyMenu] = useState([]);
+
+    const [renderItem, setRenderItem] = useState(false)
 
     const [carb, setCarb] = useState(0);
     const [fat, setFat] = useState(0);
@@ -72,6 +74,8 @@ const DashboardDayScreen = ({ navigation }) => {
     const [afternoonlunch, setAfternoonlunch] = useState({});
     const [dinner, setDinner] = useState({});
     const [afterdinner, setAfterdinner] = useState({});
+
+    const mealsName = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
 
 
 
@@ -147,6 +151,9 @@ const DashboardDayScreen = ({ navigation }) => {
             setAfternoonlunch(await extractNutrition(meals4.flat()))
             setDinner(await extractNutrition(meals5.flat()))
             setAfterdinner(await extractNutrition(meals6.flat()))
+            //trigger re-render
+            setRenderItem(true)
+
 
         } catch (error) {
             console.error("Error fetching user menu: ", error);
@@ -154,8 +161,22 @@ const DashboardDayScreen = ({ navigation }) => {
 
     }
 
+    const chartInfo = () => {
+        //for chart
+        setCal(Number(breakfast.calories + brunch.calories + lunch.calories + afternoonlunch.calories + dinner.calories + afterdinner.calories).toFixed(0))
+        setCarb(Number(breakfast.carbohydrates + brunch.carbohydrates + lunch.carbohydrates + afternoonlunch.carbohydrates + dinner.carbohydrates + afterdinner.carbohydrates).toFixed(1))
+        setFat(Number(breakfast.fat + brunch.fat + lunch.fat + afternoonlunch.fat + dinner.fat + afterdinner.fat).toFixed(1))
+        setProtein(Number(breakfast.protein + brunch.protein + lunch.protein + afternoonlunch.protein + dinner.protein + afterdinner.protein).toFixed(1))
+        console.log("carb", carb, typeof carb)
+        console.log("breakfase", breakfast, typeof breakfast.carbohydrates)
+        //for donut chart
+        const calChart = cal / (tdee / 100)
+        setTargetPercentage(calChart / 100)
+        console.log("--------total cal", cal)
+        // setRenderItem(true)
+    }
+
     const extractNutrition = async (meal) => {
-        console.log("meal", meal)
         //calculate total nutrition & calories
         const totalNutrition = meal.reduce((acc, food) => {
             if (!food) return acc;
@@ -173,18 +194,38 @@ const DashboardDayScreen = ({ navigation }) => {
 
             return acc;
         }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
-        console.log("Total Nutrition:", totalNutrition);
+        // console.log("Total Nutrition:", totalNutrition);
         return totalNutrition;
     }
 
+    const [tdee, setTdee] = useState(0)
+
+    const fetchData = async () => {
+        try {
+            const getUserGoal = await getGoalById()
+            setTdee(getUserGoal[0].TDEE);
+            console.log("tdee", tdee)
+        }
+        catch (error) {
+            console.log("ERROR FETCH DATA")
+        }
+    }
+
+
+
     useFocusEffect(
         React.useCallback(() => {
+            fetchData()
             getDailyMenuById();
-            return () => {
-                // Clear the menu state when the component is unfocused
-                setDailyMenu([]);
-            };
-        }, [])
+            if (breakfast.carbohydrates) {
+                console.log("Carb:", carb);
+                chartInfo();
+            }
+            // return () => {
+            //     // Clear the menu state when the component is unfocused
+            //     setDailyMenu([]);
+            // };
+        }, [renderItem])
     );
 
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
@@ -217,26 +258,27 @@ const DashboardDayScreen = ({ navigation }) => {
                                 targetPercentage={targetPercentage}
                                 font={font}
                                 smallerFont={smallerFont}
+                                tdee={tdee}
+                                calories={cal}
                             />
                         </View>
 
                         <View style={styles.progress}>
                             <View>
-                                <Text className="text-white text-[10px] pb-1" >168 g</Text>
-                                <ProgressBar progress={0.9} color={"#EC744A"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pb-1" >{carb} g</Text>
+                                <ProgressBar progress={carb / 200} color={"#EC744A"} className="h-1 rounded" />
                                 <Text className="text-white text-[10px] pt-1" >Carb</Text>
                             </View>
                             <View>
-                                <Text className="text-white text-[10px] pb-1" >84 g</Text>
-                                <ProgressBar progress={0.5} color={"#FBBB57"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pb-1" >{fat} g</Text>
+                                <ProgressBar progress={fat / 200} color={"#FBBB57"} className="h-1 rounded" />
                                 <Text className="text-white text-[10px] pt-1" >Fat</Text>
                             </View>
                             <View>
-                                <Text className="text-white text-[10px] pb-1" >152 g</Text>
-                                <ProgressBar progress={0.7} color={"#57DB54"} className="h-1 rounded" />
+                                <Text className="text-white text-[10px] pb-1" >{protein} g</Text>
+                                <ProgressBar progress={protein / 200} color={"#57DB54"} className="h-1 rounded" />
                                 <Text className="text-white text-[10px] pt-1" >Protien</Text>
                             </View>
-
 
                         </View>
                     </View>

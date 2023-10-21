@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Canvas,
     Path,
@@ -8,6 +8,9 @@ import {
     // Text,
 } from "@shopify/react-native-skia";
 import { StyleSheet, View, Text } from "react-native";
+import { useSelector } from "react-redux";
+import { processInfoSelector, getGoalById } from "../store/slice/processInfoSlice1";
+import { useFocusEffect } from '@react-navigation/native';
 
 const DonutChart = ({
     strokeWidth,
@@ -16,16 +19,22 @@ const DonutChart = ({
     font,
     smallerFont,
     targetPercentage,
+    tdee,
+    calories,
 
 }) => {
     const innerRadius = radius - strokeWidth / 2;
     const targetText = `${targetPercentage * 100}`;
+    console.log("targetPercentage", targetPercentage)
 
     const path = Skia.Path.Make();
     path.addCircle(radius, radius, innerRadius);
 
     const width = font.getTextWidth(targetText);
     const titleWidth = smallerFont.getTextWidth("Power");
+    //redux
+    const processInfo = useSelector(processInfoSelector);
+   
 
     return (
         <View style={styles.container}>
@@ -41,27 +50,9 @@ const DonutChart = ({
                     end={percentageComplete}
                 />
 
-                {/* percent graph */}
-                {/* <Text
-                    x={innerRadius - width / 2}
-                    y={radius + strokeWidth - 10}
-                    text={"650/1650"}
-                    font={font}
-                    opacity={percentageComplete}
-                    color="white"
-                /> */}
-                {/* <Text
-                    x={(innerRadius - titleWidth / 2 + 8)}
-                    y={radius + 20}
-                    text={"Cals"}
-                    font={smallerFont}
-                    opacity={percentageComplete}
-                    color="white"
-                /> */}
-
             </Canvas>
             <View style={styles.innerCircle}>
-                <Text className="text-xl font-bold text-white text-center">860/1650</Text>
+                <Text className="text-xl font-bold text-white text-center">{calories} /{tdee} </Text>
                 <Text className="text-sm font-medium text-white text-center">calories</Text>
             </View>
 

@@ -54,7 +54,7 @@ const AddMealsSegment = (props) => {
                 console.error("Error fetching user menu: ", error);
             }
         }
-        
+
     }
     // ---------------------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ const AddMealsSegment = (props) => {
         catch (error) {
             console.error("Error occurred while searching the database:", error);
         }
-        
+
     }
 
     // ----------------------------- Search Menu From Nutrition API -----------------------------
@@ -218,10 +218,10 @@ const AddMealsSegment = (props) => {
             console.log("delete done: ", menuInfo.key)
             await deleteDoc(doc(db, "myMenu", menuInfo.key));
             getMyMenuById();
-            Alert.alert("Success", "Menu deleted successfully");
+            console.log("Success", "Menu deleted successfully");
 
         } catch (e) {
-            Alert.alert("Error", "Error deleting document: " + e.message);
+            console.log("Error", "Error deleting document: " + e.message);
         }
     }
 
@@ -235,7 +235,7 @@ const AddMealsSegment = (props) => {
             props.setBtnSearch(false);
         }
     }
-        
+
     const handleFocusEffectForSegment1 = () => {
         console.log("---- in segment 1")
         console.log("___________Database Search")
@@ -247,12 +247,12 @@ const AddMealsSegment = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-        if (selectedIndex === 0) {
-            return handleFocusEffectForSegment0()
-        }
-        if (selectedIndex === 1) {
-            return handleFocusEffectForSegment1()
-        }
+            if (selectedIndex === 0) {
+                return handleFocusEffectForSegment0()
+            }
+            if (selectedIndex === 1) {
+                return handleFocusEffectForSegment1()
+            }
         }, [search, selectedIndex])
     )
 

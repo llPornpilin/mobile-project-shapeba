@@ -8,7 +8,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice'
+import { getUserId, setUserEmail, userSelector } from '../store/slice/userSlice'
 
 // ---------------------- Create Own Menu ---------------------------------
 export const CreateMealBottomModal = (props) => { // TODO: เพิ่มช่องกรอกข้อมูล สารอาหาร
@@ -168,8 +168,10 @@ export const AddMealBottomModal = (props, { navigation }) => {
 
         try {
             // const userId = "05"; // FIXME: change "01" to real user id
+            const userId = await getUserId()
+            console.log("add menu", userId)
             const mealName = (props.mealName.split(" ").join("")).toLowerCase();
-            const dailyMealRef = query(collection(db, "dailyMeal"), where("user_id", "==", userStore.userId));
+            const dailyMealRef = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
 
             const getDailyMealsDoc = await getDocs(dailyMealRef) // get doc where userId == ...
 
