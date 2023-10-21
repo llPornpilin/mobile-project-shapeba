@@ -136,9 +136,8 @@ export const BarChart = (props) => {
     const maxSumCalPerDay = d3.max(dataChart, (yDataPoint) => yDataPoint.sumCalPerDay)
     const yRange = [0, graphHeight]
     const y = d3.scaleLinear().domain([0, maxSumCalPerDay]).range(yRange)
-    // const y = d3.scaleLinear().domain([0, maxSumCalPerDay]).range(yRange)
 
-    // for horizontal line
+    // for horizontal line // TODO: horizontal
     const tdeeY = y(props.getTDEE);
     const horizontalLinePath = Skia.Path.Make();
     horizontalLinePath.moveTo(0, tdeeY);
@@ -156,7 +155,7 @@ export const BarChart = (props) => {
     const Bar = (label, value) => {
         const newPath = Skia.Path.Make()
         const barHeight = y(value)
-        const scaledBarHeight = barHeight * (graphHeight / maxSumCalPerDay / 10)
+        const scaledBarHeight = barHeight * (maxSumCalPerDay / 1500)
         const rect = Skia.XYWHRect(
             x(label) - GRAPH_BAR_WIDTH / 2,
             graphHeight - scaledBarHeight, // Position the bars within the max height
