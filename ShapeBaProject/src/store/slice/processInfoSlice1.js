@@ -19,13 +19,16 @@ export const calculateTimeToGoal = (state) => {
   const timeUnit = accomplish === "Gain weight" ? "month" : "week";
 
   return {
+
     weeksToGoal: Math.floor(weeksToGoal),
     monthsToGoal: Math.floor(monthsToGoal),
     timeUnit,
+    
   };
 };
 //TDEE
 export const calculateTDEE = (state) => {
+  
   const { weight, height, selectedSex, activitylevel, accomplish, numericAge, birthdate } = state;
   
   console.log("Weight:", weight, typeof weight);
@@ -182,6 +185,7 @@ const initialState = {
   userIdprocess: '',
   numericAge: 0,
   tdee: 0,
+  currentweight: ''
 };
 
 const processInfoSlice1 = createSlice({
@@ -206,6 +210,10 @@ const processInfoSlice1 = createSlice({
       state.weight = action.payload;
       console.log(state.weight);
       // console.log('Type of weight:', typeof action.payload);
+    },
+    setCurrentWeight: (state, action) => {
+      state.currentweight = action.payload;
+      console.log(state.currentweight);
     },
     setHeight: (state, action) => {
       state.height = action.payload;
@@ -265,7 +273,8 @@ export const {
   setActivitylevel,
   setAge,
   setTdee,
-  userIdprocess
+  userIdprocess,
+  setCurrentWeight
 } = processInfoSlice1.actions;
 
 export const processInfoSelector = (state) => state.processInfo;

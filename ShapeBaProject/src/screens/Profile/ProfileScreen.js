@@ -22,11 +22,26 @@ import { userSelector, setUserId, setUserEmail } from "../../store/slice/userSli
 import { setStateSignUp } from "../../store/slice/frontEndSlice";
 // Firebase
 import { AUTH } from "../../../firebase-cofig";
+import { processInfoSelector } from "../../store/slice/processInfoSlice1";
+import PushNotification from 'react-native-push-notification';
+
+// const scheduleNotification = () => {
+//   PushNotification.localNotificationSchedule({
+//     message: "Remember to update your weight!", // ข้อความที่จะแสดงในการแจ้งเตือน
+//     date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // แจ้งเตือนทุก 30 วัน
+//   });
+// }
 
 const ProfileScreen = ({ navigation }) => {
   // CurrentweightPopup
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
+  
+  const processInfo = useSelector(processInfoSelector);
+  console.log("CURRENT WEIGHT > ", processInfo.currentweight)
+  console.log("Start WEIGHT > ", processInfo.weight)
+  console.log("PROCESS > ", ((Math.abs(processInfo.currentweight - processInfo.weight) / processInfo.goalweight) * 100).toFixed(1))
+  
 
   // progressPopup
   const [progressWeight, setProgressWeight] = React.useState(false);
@@ -42,6 +57,7 @@ const ProfileScreen = ({ navigation }) => {
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
   };
+  
 
   return (
     <ScrollView>
@@ -85,18 +101,17 @@ const ProfileScreen = ({ navigation }) => {
             onPress={showProgressWeight}
           >
             <View
-              style={
-                (styles.progressbar,
+              style={(styles.progressbar,
                   { flexDirection: "row", alignItems: "center" })
               }
             >
               <View style={{ marginRight: 10 }}>
                 <Text style={{ color: "#fff" }}>Start</Text>
-                <Text style={{ color: "#fff" }}>59 Kg</Text>
+                <Text style={{ color: "#fff" }}>{processInfo.weight} Kg</Text>
               </View>
               <View>
                 <ProgressBar
-                  progress={0.4}
+                  progress={(Math.abs(processInfo.currentweight - processInfo.weight) / processInfo.goalweight) * 100}
                   color={"#EC744A"}
                   className="h-1 rounded"
                   style={{
@@ -108,14 +123,14 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={{ marginLeft: 10 }}>
                 <Text style={{ color: "#fff" }}>Goal</Text>
-                <Text style={{ color: "#fff" }}>50 Kg</Text>
+                <Text style={{ color: "#fff" }}>{processInfo.goalweight} Kg</Text>
               </View>
             </View>
           </TouchableOpacity>
           {/* Information */}
           <TouchableOpacity
             style={{
-              backgroundColor: "#D9D9D9",
+              backgroundColor: "#fff",
               height: 30,
               width: 30,
               borderRadius: 20,
@@ -143,7 +158,7 @@ const ProfileScreen = ({ navigation }) => {
                 TDEE
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                2074 cals
+                {processInfo.tdee} cals
               </Text>
             </View>
             <View
@@ -159,7 +174,7 @@ const ProfileScreen = ({ navigation }) => {
                 Start Weight
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                58 kg
+                {processInfo.weight} kg
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -172,7 +187,7 @@ const ProfileScreen = ({ navigation }) => {
                 Goal Weight
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                50 kg
+                {processInfo.goalweight} kg
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -185,7 +200,7 @@ const ProfileScreen = ({ navigation }) => {
                 Height
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                170 cm
+                {processInfo.height} cm
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -194,11 +209,11 @@ const ProfileScreen = ({ navigation }) => {
                 style={{ width: 25, height: 35, marginTop: 15 }}
                 resizeMode="contain"
               />
-              <Text className="mb-5 mt-5 mr-[30px]" style={styles.textStyle}>
+              <Text className="mb-5 mt-5 mr-14" style={styles.textStyle}>
                 Activity Level
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                Little or no exercise
+                {processInfo.activitylevel}
               </Text>
             </View>
             <View
@@ -214,7 +229,7 @@ const ProfileScreen = ({ navigation }) => {
                 Age
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                21 yr
+                {processInfo.numericAge} yr
               </Text>
             </View>
           </View>
@@ -247,7 +262,7 @@ const ProfileScreen = ({ navigation }) => {
                 marginLeft: 5,
               }}
             >
-              Current Weight
+              Update Weight
             </Text>
           </TouchableOpacity>
 
@@ -314,7 +329,7 @@ const ProfileScreen = ({ navigation }) => {
               trackColor={{ false: "#D9D9D9", true: "#31A82E" }}
               thumbColor={isEnabled ? "#FFFFFF" : "#FFFFFF"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
+              // onValueChange={toggleSwitch}
               value={isEnabled}
             />
           </View>
