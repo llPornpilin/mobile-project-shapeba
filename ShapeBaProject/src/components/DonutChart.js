@@ -34,7 +34,6 @@ const DonutChart = ({
     const titleWidth = smallerFont.getTextWidth("Power");
     //redux
     const processInfo = useSelector(processInfoSelector);
-   
 
     return (
         <View style={styles.container}>

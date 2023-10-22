@@ -29,6 +29,7 @@ import ProcessInfoScreen1 from '../screens/ProcessInfo/ProcessInfoScreen1';
 import ProcessInfoScreen2 from '../screens/ProcessInfo/ProcessInfoScreen2';
 import ProcessInfoScreen3 from '../screens/ProcessInfo/ProcessInfoScreen3';
 import StartScreen from '../screens/StartScreen';
+import SummaryScreen from '../screens/Dashboard/Summary';
 //component
 import BottomSheet from "../components/MealBottomSheet";
 import { Button } from '@rneui/themed';
@@ -60,6 +61,7 @@ function ProcessInfoNavigate() {
             <processInfoStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <processInfoStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <processInfoStack.Screen name="RecommendScreen" component={RecommendScreen} />
+            <processInfoStack.Screen name="SummaryScreen" component={SummaryScreen} />
 
         </processInfoStack.Navigator>
     )
@@ -73,7 +75,7 @@ function HomeNavigate() {
             <homeStack.Screen name="DetailMealsScreen" component={DetailMealsScreen} />
             <homeStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <homeStack.Screen name="RecommendScreen" component={RecommendScreen} />
-
+            <homeStack.Screen name="SummaryScreen" component={SummaryScreen} />
         </homeStack.Navigator>
     )
 
@@ -165,13 +167,6 @@ const headerLeft = () => {
     );
 }
 
-const btnPlus = () => {
-    return (
-        <View className="-mt-3" >
-            <AntDesign name="pluscircle" size={45} color="#025146" />
-        </View>
-    );
-}
 
 function BottomNavigate() {
     //for DatePicker

@@ -10,7 +10,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ProgressBar, MD3Colors } from 'react-native-paper';
 import TapToStart from '../ProcessInfo/TapToStart';
 import BottomSheet from '../../components/MealBottomSheet';
-import Calendar from '../../components/Calendar';
+import SumCalendar from '../../components/SumCalendar';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from "react-native-modern-datepicker";
 
@@ -82,8 +82,9 @@ const DashboardDayScreen = ({ navigation }) => {
 
     //for DatePicker
     const openStartDatePicker = frontEndStore.openStartDatePicker;
-    const handleOnPressStartDate = () => {
+    const handleOnPressStartDate = (date) => {
         dispatch(setOpenStartDatePicker(!openStartDatePicker));
+        navigation.navigate('SummaryScreen', { selectDate: date })
     };
 
 
@@ -222,10 +223,6 @@ const DashboardDayScreen = ({ navigation }) => {
                 console.log("Carb:", carb);
                 chartInfo();
             }
-            // return () => {
-            //     // Clear the menu state when the component is unfocused
-            //     setDailyMenu([]);
-            // };
         }, [renderItem])
     );
 
@@ -243,7 +240,7 @@ const DashboardDayScreen = ({ navigation }) => {
                 <View style={
                     styles.container}>
                     <View style={openStartDatePicker ? styles.blur : null}></View>
-                    <Calendar openStartDatePicker={openStartDatePicker} handleOnPressStartDate={handleOnPressStartDate} />
+                    <SumCalendar openStartDatePicker={openStartDatePicker} handleOnPressStartDate={handleOnPressStartDate} />
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
