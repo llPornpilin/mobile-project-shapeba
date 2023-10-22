@@ -24,10 +24,10 @@ const TapToStart = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar
-            barStyle="dark-content"
-            animated={true}
-            backgroundColor="#fff"
-          />
+                barStyle="dark-content"
+                animated={true}
+                backgroundColor="#fff"
+            />
             <View style={styles.box1}>
                 <Text className="font-bold text-2xl text-Green mt-5">TARGET WEIGHT</Text>
                 <Text className="font-bold text-2xl text-Green">{processInfo.goalweight} KG</Text>
