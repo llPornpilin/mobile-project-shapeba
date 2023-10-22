@@ -40,7 +40,7 @@ const SignInScreen = ({ navigation }) => {
     }
     catch (error) {
       console.log(error)
-      alert('Sign In is failed: ' + error.message)
+      alert('Email or password is incorrect')
     }
     finally {
       setLoading(false)
@@ -53,7 +53,7 @@ const SignInScreen = ({ navigation }) => {
       dispatch(setStateSignUp(true))
       console.log("response uid: ", response.user.uid);
       console.log("response email: ", response.user.email);
-      alert('check your email')
+      alert('Sign up success')
 
       dispatch(setUserId(response.user.uid))
       dispatch(setUserEmail(response.user.email))
@@ -68,7 +68,7 @@ const SignInScreen = ({ navigation }) => {
     }
     catch (error) {
       console.log(error)
-      alert('Sign up is failed: ' + error.message)
+      alert('Your email is already in use')
     }
     finally {
       setLoading(false)

@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { Easing, runTiming, useFont, useValue } from "@shopify/react-native-skia";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, Pressable } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PixelRatio, TouchableHighlight } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useFocusEffect } from "@react-navigation/native";
+import { FontAwesome5 } from '@expo/vector-icons';
 //component
 import DonutChart from "../../components/DonutChart";
 import React, { useState, useRef, useEffect } from 'react';
@@ -244,10 +245,6 @@ const DashboardDayScreen = ({ navigation }) => {
                     <View style={openStartDatePicker ? styles.blur : null}></View>
                     <Calendar openStartDatePicker={openStartDatePicker} handleOnPressStartDate={handleOnPressStartDate} />
 
-                    {/* Bottom sheet jaa */}
-                    <Button title="Present Modal" onPress={handlePresentModal} />
-                    {/* <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} setTitleMeal={setTitleMeal} /> */}
-                    <Text>{frontEndStore.favorite} </Text>
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
                             <DonutChart
@@ -313,8 +310,20 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
+
                 </View>
             </ScrollView>
+            {/* bottom sheet jaa */}
+            <View className="">
+                <TouchableHighlight
+                    className="absolute bottom-5 right-3 bg-Green w-14 h-14 rounded-full justify-center items-center elevation-3 "
+                    style={{ elevation: 3 }}
+                    underlayColor="#EF8E6D"
+                    onPress={handlePresentModal}
+                >
+                    <FontAwesome5 name="plus" size={20} color="white" />
+                </TouchableHighlight>
+            </View>
             <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} closeModal={closeModal} setTitleMeal={setTitleMeal} />
         </SafeAreaView>
 
@@ -326,6 +335,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F7F7FB',
         alignItems: 'center',
+        position: 'relative',
 
     },
     content: {

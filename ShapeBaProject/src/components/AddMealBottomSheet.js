@@ -137,9 +137,9 @@ export const AddMealBottomModal = (props, { navigation }) => {
     const isOpen = props.isOpen;
     // console.log("add meal bottom sheet: ", isOpen)
     const closeModal = () => {
-        if (props.isAddedMenu) {
-            navigation.navigate('DetailMealScreen')
-        }
+        // if (props.isAddedMenu) {
+        //     navigation.navigate('DetailMealScreen')
+        // }
         bottomSheetModalRef.current?.close();
         setTimeout(() => {
             props.setIsOpen(false);
