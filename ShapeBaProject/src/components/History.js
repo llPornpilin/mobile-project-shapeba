@@ -26,7 +26,6 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 
 const History = (props) => {
-
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
   const isvisible = props.isVisible;
@@ -71,12 +70,31 @@ const History = (props) => {
       <View style={{}}>
         <View className="flex-row items-center ">
           <View className="rounded-full bg-[#EC744A] w-3 h-3 absolute left-[1px]"></View>
-          <Text style={{color: "#025146", marginLeft: 30, fontWeight: "bold", fontSize: 16}}>{item.weight} Kg</Text>
+          <Text
+            style={{
+              color: "#025146",
+              marginLeft: 30,
+              fontWeight: "bold",
+              fontSize: 16,
+            }}
+          >
+            {item.weight} Kg
+          </Text>
         </View>
-        <Text style={{color: "#4B4B4B", marginLeft: 30, fontWeight: "bold", fontSize: 16, marginBottom:7}}>{item.date}</Text>
+        <Text
+          style={{
+            color: "#4B4B4B",
+            marginLeft: 30,
+            fontWeight: "bold",
+            fontSize: 16,
+            marginBottom: 7,
+          }}
+        >
+          {item.date}
+        </Text>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <Portal>
@@ -89,7 +107,10 @@ const History = (props) => {
           <Text style={{ color: "#025146", fontSize: 18, fontWeight: "bold" }}>
             Progress Weight
           </Text>
-          <View className="items-center" style={{ flexDirection: "row", marginTop: 10, marginLeft: 10, }}>
+          <View
+            className="items-center"
+            style={{ flexDirection: "row", marginTop: 10, marginLeft: 10 }}
+          >
             <Text
               style={{
                 marginLeft: 4,
@@ -106,7 +127,7 @@ const History = (props) => {
                 color: "#025146",
                 fontSize: 17,
                 fontWeight: "bold",
-                marginTop:4
+                marginTop: 4,
               }}
             >
               {processInfo.weight} Kg
@@ -119,12 +140,11 @@ const History = (props) => {
                 width: 15,
                 height: 15,
                 marginLeft: 20,
-
               }}
             />
             <View
               style={{
-                height: '100%',
+                height: "100%",
                 width: 2,
                 backgroundColor: "#025146", // เปลี่ยนสีเป็นสีส้ม
                 marginTop: 5,
@@ -132,18 +152,36 @@ const History = (props) => {
                 zIndex: 0, // ให้เส้นสีเขียวอยู่ด้านล่าง
               }}
             />
-            <FlatList
-              style={{
-                marginLeft: 20,
-                fontSize: 17,
-                marginTop: 10,
-                // backgroundColor: 'green',
-                left: -40,
-                paddingLeft: 12
-              }}
-              data={showProcess}
-              renderItem={renderData}
-            />
+            <View>
+              {showProcess.map((item, index) => (
+                <View key={index} style={{}}>
+                  <View className="flex-row items-center mt-3">
+                    <View className="rounded-full bg-[#EC744A] w-3 h-3 absolute left-[-7px]"></View>
+                    <Text
+                      style={{
+                        color: "#025146",
+                        marginLeft: 30,
+                        fontWeight: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      {item.weight} Kg
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: "#4B4B4B",
+                      marginLeft: 30,
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      marginBottom: 7,
+                    }}
+                  >
+                    {item.date}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
 
           <View style={{ flexDirection: "row", marginTop: 5, marginLeft: 10 }}>
