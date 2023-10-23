@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     Canvas,
@@ -44,128 +44,88 @@ const lastDateOfMonth = `${lastDay}/${lastMonth}/${lastYear}`
 const numberOfDaysInMonth = lastDateMonth.getDate()
 
 // -------------------------------------------------------------
-
-//example data
-const originalData = [
-    { "date": "2000-02-01T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-02T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-03T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-04T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-05T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-06T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-07T05:00:00.000Z", "value": 1000.47 },
-    { "date": "2000-02-08T05:00:00.000Z", "value": 200.47 },
-    { "date": "2000-02-09T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-10T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-11T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-12T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-13T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-14T05:00:00.000Z", "value": 0 },
-    { "date": "2000-02-15T05:00:00.000Z", "value": 0 },
-];
-const animatedData = [
-    { date: "2000-02-01T05:00:00.000Z", value: 250 },
-    { date: "2000-02-02T05:00:00.000Z", value: 300.35 },
-    { date: "2000-02-03T05:00:00.000Z", value: 150.84 },
-    { date: "2000-02-04T05:00:00.000Z", value: 500.92 },
-    { date: "2000-02-05T05:00:00.000Z", value: 200.8 },
-    { date: "2000-02-06T05:00:00.000Z", value: 150.47 },
-    { date: "2000-02-07T05:00:00.000Z", value: 1000.47 },
-    { date: "2000-02-08T05:00:00.000Z", value: 200.47 },
-    { date: "2000-02-09T05:00:00.000Z", value: 1500.47 },
-    { date: "2000-02-10T05:00:00.000Z", value: 83.8 },
-    { date: "2000-02-11T05:00:00.000Z", value: 100.47 },
-    { date: "2000-02-12T05:00:00.000Z", value: 1000.47 },
-    { date: "2000-02-13T05:00:00.000Z", value: 200.47 },
-    { date: "2000-02-14T05:00:00.000Z", value: 500.47 },
-    { date: "2000-02-15T05:00:00.000Z", value: 800.47 },
-];
-
-
 export const LineChart = (props) => {
     const [dataChart, setDataChart] = useState([])
+    const [pathGraph, setPathGraph] = useState(null)
     
     // ---------------- get data from database ----------------
     // reduct store
     const userStore = useSelector(userSelector);
     const userId = userStore.userId
     
-    // const getCalsDataPerDay = async () => {
-    //     let sumCalsPerMonth = [] // collect sum of calories per each day in each week
-    //     let tempDocsOneMonth = [] // colect Meal data in this week
+    const getCalsDataPerDay = async () => {
+        let sumCalsPerMonth = [] // collect sum of calories per each day in each week
+        let tempDocsOneMonth = [] // colect Meal data in this week
 
-    //     try {
-    //         const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
-    //         const getCalsData = await(getDocs(querySnapshot))
+        try {
+            const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
+            const getCalsData = await(getDocs(querySnapshot))
 
-    //         // change date format from string -> date
-    //         const parseDate = (dateString) => {
-    //             const parts = dateString.split("/")
-    //             if (parts.length == 3) {
-    //                 const [day, month, year] = parts
-    //                 return new Date(year, month - 1, day)
-    //             }
-    //             return null
-    //         }
+            // change date format from string -> date
+            const parseDate = (dateString) => {
+                const parts = dateString.split("/")
+                if (parts.length == 3) {
+                    const [day, month, year] = parts
+                    return new Date(year, month - 1, day)
+                }
+                return null
+            }
 
-    //         getCalsData.forEach((doc) => {
-    //             const docDate = parseDate(doc.data().dateInfo.date)
-    //             if (docDate) {
-    //                 const currentDateObj = parseDate(today) // Date format
-    //                 const firstDateOfMonthObj = parseDate(firstDateOfMonth) // Date format
+            getCalsData.forEach((doc) => {
+                const docDate = parseDate(doc.data().dateInfo.date)
+                if (docDate) {
+                    const currentDateObj = parseDate(today) // Date format
+                    const firstDateOfMonthObj = parseDate(firstDateOfMonth) // Date format
 
-    //                 if (docDate >= firstDateOfMonthObj && docDate <= currentDateObj) {
-    //                     tempDocsOneMonth.push(doc.data())
-    //                 }
-    //             }
-    //         })
+                    if (docDate >= firstDateOfMonthObj && docDate <= currentDateObj) {
+                        tempDocsOneMonth.push(doc.data())
+                    }
+                }
+            })
 
-    //         let sumCalPerDay = 0
-    //         let currentYear = currentDate.getFullYear();
-    //         let currentMonth = currentDate.getMonth();
-    //         console.log("MONTH ... ", currentMonth)
+            let sumCalPerDay = 0
+            let currentYear = currentDate.getFullYear();
+            let currentMonth = currentDate.getMonth();
+            console.log("MONTH ... ", currentMonth)
 
-    //         for (let dayy = 2; dayy <= numberOfDaysInMonth + 2; dayy++) { // FIXME: month 31 days must plus 2 ??
-    //             if (currentMonth < 0) {
-    //                 currentMonth = 11; // 0-based, so December is 11
-    //                 currentYear--;
-    //             }
+            for (let dayy = 2; dayy <= numberOfDaysInMonth + 2; dayy++) { // FIXME: month 31 days must plus 2 ??
+                if (currentMonth < 0) {
+                    currentMonth = 11; // 0-based, so December is 11
+                    currentYear--;
+                }
 
-    //             const dailyDate = new Date(currentYear, currentMonth, dayy);
-    //             const formatDate = dailyDate.toISOString();
-    //             const sumObject = { date: formatDate, value: 0 };
-    //             // console.log("test Date format >>>> ", sumObject);
-    //             sumCalsPerMonth.push(sumObject);
-    //         }
+                const dailyDate = new Date(currentYear, currentMonth, dayy);
+                const formatDate = dailyDate.toISOString();
+                const sumObject = { date: formatDate, value: 0 };
+                sumCalsPerMonth.push(sumObject);
+            }
             
-    //         console.log("TEMP .. ", tempDocsOneMonth)
-    //         tempDocsOneMonth.forEach((docPerDay) => {
-    //             console.log("IMNNN")
-    //             // sum cal in each doc
-    //             const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
-    //             mealTypes.forEach((mealTypes) => {
-    //                 if (docPerDay[mealTypes].length !== 0) {
-    //                     docPerDay[mealTypes].forEach((menuMeal) => {
-    //                         sumCalPerDay += parseFloat(menuMeal.calories)
-    //                     })
-    //                 }
-    //             })
+            tempDocsOneMonth.forEach((docPerDay) => {
+                console.log("IMNNN")
+                // sum cal in each doc
+                const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
+                mealTypes.forEach((mealTypes) => {
+                    if (docPerDay[mealTypes].length !== 0) {
+                        docPerDay[mealTypes].forEach((menuMeal) => {
+                            sumCalPerDay += parseFloat(menuMeal.calories)
+                        })
+                    }
+                })
     
-    //             const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
-    //             // console.log("MATCHING >>> ", matchingDay)
-    //             if (matchingDay) {
-    //                 matchingDay.value = sumCalPerDay
-    //             }
-    //         })
-    //         setDataChart(sumCalsPerMonth)
-    //         props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay) / 30)
+                const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
+                if (matchingDay) {
+                    matchingDay.value = sumCalPerDay
+                }
+            })
+            setDataChart(sumCalsPerMonth)
+            props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay) / 30)
 
-    //     }
-    //     catch (error) {
-    //         console.log("get cals Bar Chart >> ", error)
-    //     }
-    // }
-    // console.log("REAL DATA ... ", dataChart)
+        }
+        catch (error) {
+            console.log("get cals Bar Chart >> ", error)
+        }
+    }
+    console.log("DATA MONTH >>>>> ", dataChart)
     // -----------------------------------------------------------------------------------
 
     const transition = useValue(1);
@@ -176,15 +136,6 @@ export const LineChart = (props) => {
 
     const GRAPH_HEIGHT = 300;
     const GRAPH_WIDTH = 320;
-
-    useFocusEffect(
-        React.useCallback(() => {
-            getCalsDataPerDay() // FIXME:
-            return () => {
-                props.setCollectSumCalPerDay(0)
-            };
-        }, [userId])
-    )
 
     const makeGraph = (data) => {
         const max = Math.max(...data.map((val) => val.value));
@@ -224,14 +175,21 @@ export const LineChart = (props) => {
         });
     };
 
-    const graphData = [makeGraph(originalData), makeGraph(originalData)]; // FIXME: เปลี่ยนเป็น Array ที่เก็บข้อมูลจริง
-
-    const path = useComputedValue(() => {
-        const start = graphData[state.current.current].curve;
-        const end = graphData[state.current.next].curve;
-        const result = start.interpolate(end, transition.current);
-        return result?.toSVGString() ?? "0";
-    }, [state, transition]);
+        console.log(".......................................")
+        useEffect(() => {
+            console.log("INNNNNN")
+            if (dataChart.length !== 0) {
+                const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
+                const start = graphData[state.current.current].curve;
+                const end = graphData[state.current.next].curve;
+                const result = start.interpolate(end, transition.current);
+                const svgString = result?.toSVGString() ?? "0";
+                setPathGraph(svgString)
+            }
+            else {
+                getCalsDataPerDay()
+            }
+        }, [dataChart, state, transition])
 
     return (
         <View style={styles.container}>
@@ -241,8 +199,10 @@ export const LineChart = (props) => {
                     height: GRAPH_HEIGHT,
                 }}
             >
-
-                <Path style="stroke" path={path} strokeWidth={4} color="#EC744A" />
+                { pathGraph !== null ?
+                    <Path style="stroke" path={pathGraph} strokeWidth={4} color="#EC744A" /> :
+                    null
+                }
             </Canvas>
         </View>
     );
