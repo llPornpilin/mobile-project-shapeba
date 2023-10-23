@@ -23,14 +23,14 @@ export const calculateTimeToGoal = (state) => {
     weeksToGoal: Math.floor(weeksToGoal),
     monthsToGoal: Math.floor(monthsToGoal),
     timeUnit,
-    
+
   };
 };
 //TDEE
 export const calculateTDEE = (state) => {
-  
+
   const { weight, height, selectedSex, activitylevel, accomplish, numericAge, birthdate } = state;
-  
+
   console.log("Weight:", weight, typeof weight);
   console.log("Height:", height, typeof height);
   console.log("Selected Sex:", selectedSex, typeof selectedSex);
@@ -40,7 +40,7 @@ export const calculateTDEE = (state) => {
   console.log("Birthdate:", birthdate, typeof birthdate);
 
   let bmr = 0;
-  console.log("SelectedSex",selectedSex)
+  console.log("SelectedSex", selectedSex)
   if (selectedSex === "Male") {
     bmr = (66 + (13.7 * weight) + (5 * height) - (6.8 * numericAge)).toFixed(0);
     console.log("if case", bmr)
@@ -81,7 +81,7 @@ export const calculateTDEE = (state) => {
   saveGoalInfo(state, tdee);
 
   console.log('BMR:', bmr);
-  console.log('TDEE',tdee)
+  console.log('TDEE', tdee)
   return tdee;
 };
 
@@ -175,17 +175,17 @@ const saveGoalInfo = async (state, tdee) => {
 const initialState = {
   // selectedStartDate: '',
   selectedSex: "", // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
-  weight: "",
-  height: "",
+  weight: 0,
+  height: 0,
   birthdate: "",
   openStartDatePicker: false,
   accomplish: "",
-  goalweight: "",
+  goalweight: 0,
   activitylevel: "", // กำหนดค่าเริ่มต้นให้เป็น null หรือค่าที่เหมาะสม
   userIdprocess: '',
   numericAge: 0,
   tdee: 0,
-  currentweight: ''
+  currentweight: 0
 };
 
 const processInfoSlice1 = createSlice({
@@ -229,7 +229,7 @@ const processInfoSlice1 = createSlice({
       state.numericAge = currentYear - birthYear;
       console.log(state.birthdate);
     },
-    
+
     setOpenStartDatePicker: (state, action) => {
       state.openStartDatePicker = action.payload;
     },
@@ -257,7 +257,7 @@ const processInfoSlice1 = createSlice({
       state.tdee = action.payload;
       console.log(state.tdee);
     },
-    
+
   },
 });
 

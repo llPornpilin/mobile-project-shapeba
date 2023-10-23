@@ -37,26 +37,31 @@ const ProfileScreen = ({ navigation }) => {
   // CurrentweightPopup
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
-  
+
   const processInfo = useSelector(processInfoSelector);
 
-  console.log("CURRENT WEIGHT > ", processInfo.currentweight)
-  console.log("Start WEIGHT > ", processInfo.weight)
-  console.log("PROCESS > ", Math.max(((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)) * 1, 0).toFixed(1));
- 
+  // console.log("Start WEIGHT > ", processInfo.weight)
+  // console.log("PROCESS > ", Math.max(((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)) * 1, 0).toFixed(1));
+
   const [result, setResult] = useState(0); // ประกาศ state result
 
 
   useEffect(() => {
     // ทำการคำนวณ progress ตามต้องการ
-    const calculatedProgress = Math.max(
-      Math.min(
-        ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
-        1
-      ),
-      0
-    ).toFixed(1);
-    setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
+    console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
+    if (processInfo.goalweight - processInfo.weight !== 0) {
+      const calculatedProgress = parseFloat(Math.max(
+        Math.min(
+          ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
+          1
+        ),
+        0
+      ).toFixed(1))
+      console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
+      setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
+    }
+
+
   }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight]);
 
   console.log("Result: ", typeof result);
@@ -75,7 +80,7 @@ const ProfileScreen = ({ navigation }) => {
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
   };
-  
+
 
   return (
     <ScrollView>
@@ -120,17 +125,17 @@ const ProfileScreen = ({ navigation }) => {
           >
             <View
               style={(styles.progressbar,
-                  { flexDirection: "row", alignItems: "center" })
+                { flexDirection: "row", alignItems: "center" })
               }
             >
               <View style={{ marginRight: 10 }}>
                 <Text style={{ color: "#fff" }}>Start</Text>
                 <Text style={{ color: "#fff" }}>{processInfo.weight} Kg</Text>
               </View>
-              
+
               <View>
                 <ProgressBar
-                  progress={parseFloat(result)}
+                  progress={result}
                   color={"#EC744A"}
                   className="h-1 rounded"
                   style={{
