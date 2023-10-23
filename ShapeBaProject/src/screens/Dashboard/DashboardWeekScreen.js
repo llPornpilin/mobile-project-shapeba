@@ -8,14 +8,14 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 
-const ListFood = ({ item }) => {
+const ListFood = ({ item, index }) => {
     return (
         <>
             <View className="flex-row justify-between p-4">
                 <View className="flex-row gap-6 pl-3 items-center">
-                    <Text className="font-medium text-base text-Darkgray">{item.name} </Text>
+                    <Text className="font-medium text-base text-Darkgray">{index+1} {item.name}</Text>
                 </View>
-                <Text className="font-medium text-base text-Darkgray mr-3">{item.gram} g {item.cal} cals</Text>
+                <Text className="font-medium text-base text-Darkgray mr-3">{item.calories} cals</Text>
             </View>
             <View className="border-b  border-Darkgray opacity-20" />
         </>
@@ -33,6 +33,7 @@ const DashboardWeekScreen = () => {
     ];
     const [collectSumCalPerDay, setCollectSumCalPerDay] = useState(0) // for caculate average cal
     const [getTDEE, setTDEE] = useState(0)
+    const [usedData, setUsedData] = useState([])
 
     const fetchData = async () => {
         try {
@@ -78,7 +79,7 @@ const DashboardWeekScreen = () => {
                         </View>
                         <View className="border-b  border-Darkgray opacity-50 " />
                         <View className="-mt-10 mr-5">
-                            <BarChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} getTDEE={getTDEE} />
+                            <BarChart setUsedData={setUsedData} setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} getTDEE={getTDEE} />
                         </View>
 
 
@@ -87,7 +88,7 @@ const DashboardWeekScreen = () => {
                         <Text className="text-white text-base font-bold p-2 pl-4" >Highest Food calories</Text>
                         <View style={[styles.content, styles.c3]}>
                             {
-                                data.map((item, index) => <ListFood item={item} key={index} />)
+                                usedData.map((item, index) => <ListFood item={item} key={index} index={index} />)
                             }
                         </View>
                     </View>

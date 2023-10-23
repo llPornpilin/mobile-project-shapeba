@@ -48,6 +48,7 @@ const graphWidth = CanvasWidth - 2;
 
 export const BarChart = (props) => {
     const [dataChart, setDataChart] = useState([])
+    let collectMenuInWeek = []
     
     // ---------------- get data from database ----------------
     // reduct store
@@ -55,8 +56,10 @@ export const BarChart = (props) => {
     const userId = userStore.userId
     
     const getCalsDataPerDay = async () => {
+        console.log("BEGINNNNNN ......... ", collectMenuInWeek)
         let sumCalsPerWeek = [] // collect sum of calories per each day in each week
         let tempDocsOneWeek = [] // colect Meal data in this week
+        // let mealsInDay = []
 
         try {
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
@@ -86,11 +89,11 @@ export const BarChart = (props) => {
             const dayWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
             dayWeek.forEach((dayWeek) => {
                 const sumObject = { dayOfWeek: dayWeek, sumCalPerDay: 0 };
-                // console.log("sum obj >> ", sumObject)
                 sumCalsPerWeek.push(sumObject)
             })
             
             let sum = 0
+            let mealsInDay = []
             tempDocsOneWeek.forEach((docPerDay) => {
                 let sumCalPerDay = 0
                 // sum cal in each doc
@@ -99,6 +102,7 @@ export const BarChart = (props) => {
                     if (docPerDay[mealTypes].length !== 0) {
                         docPerDay[mealTypes].forEach((menuMeal) => {
                             sumCalPerDay += parseFloat(menuMeal.calories)
+                            mealsInDay.push({name: menuMeal.name, calories: menuMeal.calories})
                         })
                     }
                 })
@@ -108,18 +112,25 @@ export const BarChart = (props) => {
                     matchingDay.sumCalPerDay = sumCalPerDay
                 }
                 sum += sumCalPerDay
+
             })
-            console.log(">>>>>>>>> ", sum)
+
+            // sort calories rank 5
+            mealsInDay.sort((a, b) => parseFloat(b.calories) - parseFloat(a.calories))
+            mealsInDay = mealsInDay.slice(0, 5)
+
+            collectMenuInWeek.push(...mealsInDay)
+            props.setUsedData(collectMenuInWeek)
+            // console.log("USE COLLECTION __________ ", usedData)
+
             props.setCollectSumCalPerDay(sum / 7)
             setDataChart(sumCalsPerWeek)
 
         }
         catch (error) {
-            console.log("get cals Bar Chart >> ", error)
+            console.log("get cals Bar Chart >>> ", error)
         }
     }
-    // console.log("sum cal >>>>>> ", dataChart)
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     // ---------------------------------------------------------------------
 
     const [success, setSuccess] = useState(true);
@@ -148,12 +159,14 @@ export const BarChart = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            getCalsDataPerDay()
+            collectMenuInWeek = []
+            console.log("/////////// ", collectMenuInWeek)
+            getCalsDataPerDay();
             return () => {
-                props.setCollectSumCalPerDay(0)
+                props.setCollectSumCalPerDay(0);
             };
         }, [userId])
-    )
+    );
 
     const Bar = (label, value) => {
         const newPath = Skia.Path.Make()

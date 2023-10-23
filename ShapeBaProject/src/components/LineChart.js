@@ -102,7 +102,7 @@ export const LineChart = (props) => {
             
             let sum = 0
             tempDocsOneMonth.forEach((docPerDay) => {
-                console.log("IMNNN")
+                console.log("IMNNNN")
                 // sum cal in each doc
                 const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
                 mealTypes.forEach((mealTypes) => {
@@ -120,7 +120,7 @@ export const LineChart = (props) => {
                 sum += sumCalPerDay
             })
             console.log(">>>>>>>> ", sum)
-            props.setCollectSumCalPerDay(sum / numberOfDaysInMonth)
+            props.setCollectSumCalPerDay(sum / 30)
             setDataChart(sumCalsPerMonth)
 
         }
@@ -143,11 +143,11 @@ export const LineChart = (props) => {
     const makeGraph = (data) => {
         const max = Math.max(...data.map((val) => val.value));
         const min = Math.min(...data.map((val) => val.value));
-        const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 35]);
+        const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 100]); // FIXME: range 35
 
         // const xDomain = animatedData.map((dataPoint) => dataPoint.date)
         const x = scaleTime()
-        .domain([new Date(2023, 9, 1), new Date(2023, 9, 30)]) // FIXME: ดึงวันที่จริงจากบนสุดมาใช้
+        .domain([new Date(year, month-1, 1), new Date(year, month-1, numberOfDaysInMonth)]) // FIXME: ดึงวันที่จริงจากบนสุดมาใช้
         .range([10, GRAPH_WIDTH - 10]);
         
         const curvedLine = line()
