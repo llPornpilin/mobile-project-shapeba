@@ -55,54 +55,34 @@ const ProfileScreen = ({ navigation }) => {
   const [userGoal, setUserGoal] = useState([]);
 
 
-  const getUserInfo  = async () => { 
+  const getUserInfo = async () => {
 
-    setUserGoal(await getGoalById())
-    userGoal.forEach((goal) =>
-    { setGoalTDEE(goal.TDEE)
-      setStartWeight(goal.historyWeight[0].weight)
-      setGoalweightDB(goal.goalWeight)
-      setheightDB(goal.height)
-      setActivitylevelDB(goal.activityLevel)
-      console.log("User eiei GoallllllllllllllPPPPPPPP", goal.activityLevel)
-    })
+    const goal = await getGoalById()
+    setGoalTDEE(goal[0].TDEE)
+    setStartWeight(goal[0].historyWeight[0].weight)
+    setGoalweightDB(goal[0].goalWeight)
+    setheightDB(goal[0].height)
+    setActivitylevelDB(goal[0].activityLevel)
   }
+
   useFocusEffect(
     React.useCallback(() => {
       getUserInfo();
       console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
-    if (processInfo.goalweight - processInfo.weight !== 0) {
-      const calculatedProgress = parseFloat(Math.max(
-        Math.min(
-          ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
-          1
-        ),
-        0
-      ).toFixed(1))
-      console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
-      setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
-    }
-    },[processInfo.currentweight, processInfo.weight, processInfo.goalweight, goalTDEE, startWeight])
+      if (processInfo.goalweight - processInfo.weight !== 0) {
+        const calculatedProgress = parseFloat(Math.max(
+          Math.min(
+            ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
+            1
+          ),
+          0
+        ).toFixed(1))
+        console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
+        setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
+      }
+    }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight, goalTDEE, startWeight])
   );
 
-  // useEffect(() => {
-  //   getUserInfo();
-  //   // ทำการคำนวณ progress ตามต้องการ
-  //   console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
-  //   if (processInfo.goalweight - processInfo.weight !== 0) {
-  //     const calculatedProgress = parseFloat(Math.max(
-  //       Math.min(
-  //         ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
-  //         1
-  //       ),
-  //       0
-  //     ).toFixed(1))
-  //     console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
-  //     setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
-  //   }
-
-
-  // }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight]);
 
   console.log("Result: ", typeof result);
 
@@ -293,7 +273,7 @@ const ProfileScreen = ({ navigation }) => {
                 Age
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                {processInfo.numericAge} yr
+                {processInfo.numericAge} year
               </Text>
             </View>
           </View>
