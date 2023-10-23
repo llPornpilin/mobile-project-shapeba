@@ -179,20 +179,35 @@ export const LineChart = (props) => {
     };
 
         console.log(".......................................")
-        useEffect(() => {
-            console.log("INNNNNN")
-            if (dataChart.length !== 0) {
-                const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
-                const start = graphData[state.current.current].curve;
-                const end = graphData[state.current.next].curve;
-                const result = start.interpolate(end, transition.current);
-                const svgString = result?.toSVGString() ?? "0";
-                setPathGraph(svgString)
-            }
-            else {
-                getCalsDataPerDay()
-            }
-        }, [dataChart, state, transition])
+        // useEffect(() => {
+        //     console.log("INNNNNN")
+        //     if (dataChart.length !== 0) {
+        //         const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
+        //         const start = graphData[state.current.current].curve;
+        //         const end = graphData[state.current.next].curve;
+        //         const result = start.interpolate(end, transition.current);
+        //         const svgString = result?.toSVGString() ?? "0";
+        //         setPathGraph(svgString)
+        //     }
+        //     else {
+        //         getCalsDataPerDay()
+        //     }
+        // }, [dataChart, state, transition])
+        useFocusEffect(
+            React.useCallback(() => {
+                if (dataChart.length !== 0) {
+                    const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
+                    const start = graphData[state.current.current].curve;
+                    const end = graphData[state.current.next].curve;
+                    const result = start.interpolate(end, transition.current);
+                    const svgString = result?.toSVGString() ?? "0";
+                    setPathGraph(svgString)
+                }
+                else {
+                    getCalsDataPerDay()
+                }
+            }, [dataChart, state, transition])
+        )
 
     return (
         <View style={styles.container}>
