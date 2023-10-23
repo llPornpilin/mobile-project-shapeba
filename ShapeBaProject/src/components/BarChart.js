@@ -83,7 +83,6 @@ export const BarChart = (props) => {
                 }
             })
 
-            let sumCalPerDay = 0
             const dayWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
             dayWeek.forEach((dayWeek) => {
                 const sumObject = { dayOfWeek: dayWeek, sumCalPerDay: 0 };
@@ -92,6 +91,7 @@ export const BarChart = (props) => {
             })
             
             tempDocsOneWeek.forEach((docPerDay) => {
+                let sumCalPerDay = 0
                 // sum cal in each doc
                 const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
                 mealTypes.forEach((mealTypes) => {
@@ -101,7 +101,7 @@ export const BarChart = (props) => {
                         })
                     }
                 })
-    
+
                 const matchingDay = sumCalsPerWeek.find((day) => day.dayOfWeek === docPerDay.dateInfo.dayOfWeek)
                 if (matchingDay) {
                     matchingDay.sumCalPerDay = sumCalPerDay
@@ -115,8 +115,8 @@ export const BarChart = (props) => {
             console.log("get cals Bar Chart >> ", error)
         }
     }
-    console.log("sum cal >>>>>> ", dataChart)
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    // console.log("sum cal >>>>>> ", dataChart)
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     // ---------------------------------------------------------------------
 
     const [success, setSuccess] = useState(true);
@@ -155,7 +155,7 @@ export const BarChart = (props) => {
     const Bar = (label, value) => {
         const newPath = Skia.Path.Make()
         const barHeight = y(value)
-        const scaledBarHeight = barHeight * (maxSumCalPerDay / 2000)
+        const scaledBarHeight = barHeight * (maxSumCalPerDay / 3000)
         const rect = Skia.XYWHRect(
             x(label) - GRAPH_BAR_WIDTH / 2,
             graphHeight - scaledBarHeight, // Position the bars within the max height
@@ -175,6 +175,7 @@ export const BarChart = (props) => {
     if (!font) {
         return <View />;
     }
+    console.log("CHART WEEK >>>> ", dataChart)
 
     // const path = Bar();
     return (

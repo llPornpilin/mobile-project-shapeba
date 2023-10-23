@@ -167,7 +167,6 @@ export const AddMealBottomModal = (props, { navigation }) => {
         // ------------------------------------------------------------------
 
         try {
-            // const userId = "05"; // FIXME: change "01" to real user id
             const userId = await getUserId()
             console.log("add menu", userId)
             const mealName = (props.mealName.split(" ").join("")).toLowerCase();
@@ -208,7 +207,7 @@ export const AddMealBottomModal = (props, { navigation }) => {
             async function addMealDoc() {
                 const mealsName = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
                 const newMealDoc = {
-                    user_id: userStore.userId, // FIXME: change to real user id
+                    user_id: userId , // FIXME: change to real user id
                     dateInfo: {
                         date: currentDate,
                         dayOfWeek: dayName
