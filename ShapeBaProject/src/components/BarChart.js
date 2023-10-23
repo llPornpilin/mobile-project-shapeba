@@ -116,8 +116,12 @@ export const BarChart = (props) => {
             })
 
             // sort calories rank 5
-            mealsInDay.sort((a, b) => parseFloat(b.calories) - parseFloat(a.calories))
-            mealsInDay = mealsInDay.slice(0, 5)
+            mealsInDay.sort((a, b) => parseFloat(b.calories) - parseFloat(a.calories));
+            if (mealsInDay.length < 5) {
+                mealsInDay = [...mealsInDay];
+            } else {
+                mealsInDay = mealsInDay.slice(0, 5);
+            }
 
             collectMenuInWeek.push(...mealsInDay)
             props.setUsedData(collectMenuInWeek)
