@@ -39,6 +39,9 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { frontEndSelector, setOpenStartDatePicker } from '../store/slice/frontEndSlice';
 import { userSelector, setUserId, setUserEmail } from '../store/slice/userSlice';
+import { Foundation } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 const MainStack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -179,11 +182,13 @@ function BottomNavigate() {
                 headerTitle: () => headerLeft(),
                 headerRight: () => (
                     <TouchableOpacity className="mr-3" onPress={() => dispatch(setOpenStartDatePicker(!openStartDatePicker))}>
-                        <AntDesign name="calendar" size={24} color="black" />
+                        <Feather name="calendar" size={29} color="black" />
                     </TouchableOpacity>
                 ),
                 headerStyle: {
                     height: 80,
+                    // borderBottomLeftRadius:20,
+                    // borderBottomRightRadius:20,
                 },
                 headerTintColor: 'black',
                 headerTitleStyle: {
@@ -204,7 +209,7 @@ function BottomNavigate() {
                     })(route),
                     title: "Home",
                     tabBarIcon: ({ color, size }) => {
-                        return <Ionicons name="ios-home" size={size} color={color} />
+                        return <Octicons name="home" size={29} color="#025146" />
                     },
                 })}
             />
@@ -226,7 +231,7 @@ function BottomNavigate() {
                         return
                     })(route),
                     tabBarIcon: ({ color, size }) => {
-                        return <Ionicons name="person-outline" size={size} color={color} />
+                        return <Octicons name="person" size={29} color="#025146" />
                     },
                     headerShown: false,
                 })}
