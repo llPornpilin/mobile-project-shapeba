@@ -90,6 +90,7 @@ export const BarChart = (props) => {
                 sumCalsPerWeek.push(sumObject)
             })
             
+            let sum = 0
             tempDocsOneWeek.forEach((docPerDay) => {
                 let sumCalPerDay = 0
                 // sum cal in each doc
@@ -106,9 +107,11 @@ export const BarChart = (props) => {
                 if (matchingDay) {
                     matchingDay.sumCalPerDay = sumCalPerDay
                 }
+                sum += sumCalPerDay
             })
+            console.log(">>>>>>>>> ", sum)
+            props.setCollectSumCalPerDay(sum / 7)
             setDataChart(sumCalsPerWeek)
-            props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay)/7)
 
         }
         catch (error) {
@@ -175,7 +178,7 @@ export const BarChart = (props) => {
     if (!font) {
         return <View />;
     }
-    console.log("CHART WEEK >>>> ", dataChart)
+    console.log("CHART WEEK >>>>> ", dataChart)
 
     // const path = Bar();
     return (

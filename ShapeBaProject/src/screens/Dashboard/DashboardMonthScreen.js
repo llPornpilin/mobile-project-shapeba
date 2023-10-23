@@ -38,7 +38,7 @@ const DashboardMonthScreen = () => {
                             <View>
                                 <Text className="text-Darkgray mt-6 ml-6">Average</Text>
                                 <View className="ml-6 flex-row">
-                                    <Text className="text-lg font-bold mr-2">1721 Cals</Text>
+                                    <Text className="text-lg font-bold mr-2">{collectSumCalPerDay.toFixed(2)} Cals</Text>
                                     <Image source={require('../../../assets/img/icons8-fire.png')}
                                         style={{ width: 20, height: 20, marginTop: 2 }} />
                                 </View>
@@ -46,7 +46,7 @@ const DashboardMonthScreen = () => {
                             <View className="ml-5">
                                 <Text className="text-Darkgray mt-6 ml-6">Goal</Text>
                                 <View className="ml-6 flex-row">
-                                    <Text className="text-lg font-bold mr-2">1650 Cals</Text>
+                                    <Text className="text-lg font-bold mr-2">{getTDEE} Cals</Text>
                                 </View>
                             </View>
                         </View>

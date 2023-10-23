@@ -100,6 +100,7 @@ export const LineChart = (props) => {
                 sumCalsPerMonth.push(sumObject);
             }
             
+            let sum = 0
             tempDocsOneMonth.forEach((docPerDay) => {
                 console.log("IMNNN")
                 // sum cal in each doc
@@ -116,9 +117,11 @@ export const LineChart = (props) => {
                 if (matchingDay) {
                     matchingDay.value = sumCalPerDay
                 }
+                sum += sumCalPerDay
             })
+            console.log(">>>>>>>> ", sum)
+            props.setCollectSumCalPerDay(sum / numberOfDaysInMonth)
             setDataChart(sumCalsPerMonth)
-            props.setCollectSumCalPerDay((props.collectSumCalPerDay + sumCalPerDay) / 30)
 
         }
         catch (error) {
