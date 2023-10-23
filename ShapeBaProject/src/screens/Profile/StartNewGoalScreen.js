@@ -31,14 +31,21 @@ import { useFormik, Formik } from 'formik';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
-  weight: Yup.number().required('Weight is required'),
-  height: Yup.number().required('Height is required'),
-  accomplish: Yup.string().required('Accomplish is required'),
-  goalweight: Yup.number().required('Goal Weight is required'),
-  activitylevel: Yup.string().required('Activity Level is required')
+  weight: Yup.number()
+  .required('Weight is required'),
+  height: Yup.number()
+  .required('Height is required'),
+  accomplish: Yup.string()
+  .required('Accomplish is required'),
+  goalweight: Yup.number()
+  .required('Goal Weight is required'),
+  activitylevel: Yup.string()
+  .required('Activity Level is required')
 });
 
+
 const StartNewGoalScreen = ({ navigation }) => {
+
   const dispatch = useDispatch();
   const processInfo = useSelector(processInfoSelector);
 
@@ -58,8 +65,12 @@ const StartNewGoalScreen = ({ navigation }) => {
     }
   }
 
-  const handleFinishButton = async () => {
+  const handleFinishButton = async (e1, e2, e3, e4, e5) => {
     try {
+      if (e1 || e2 || e3 || e4 || e5) {
+        console.log("checkfalse >>")
+        return 
+      }
       await updateGoalStatus()
       const userId = await getUserId(); // ดึง user ID
       const userDocRef = doc(db, 'user', userId); // ใช้ user ID ที่ได้จาก Redux state
@@ -269,7 +280,7 @@ const StartNewGoalScreen = ({ navigation }) => {
             <View style={{ width: "100%", alignItems: "center" }}>
               <TouchableOpacity
                 style={styles.btnFinish}
-                onPress={handleFinishButton}
+                onPress={ () => handleFinishButton(errors.height, errors.weight, errors.goalweight, errors.accomplish, errors.activitylevel)}
               >
                 <Text
                   className="font-bold text-white test-base"

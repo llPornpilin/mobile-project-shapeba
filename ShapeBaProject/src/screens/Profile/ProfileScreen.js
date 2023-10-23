@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CurrentWeightPopup from "../../components/CurrentWeight";
 import History from "../../components/History";
 import { ProgressBar, MD3Colors } from "react-native-paper";
@@ -33,15 +33,33 @@ import PushNotification from 'react-native-push-notification';
 // }
 
 const ProfileScreen = ({ navigation }) => {
+
   // CurrentweightPopup
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
   
   const processInfo = useSelector(processInfoSelector);
+
   console.log("CURRENT WEIGHT > ", processInfo.currentweight)
   console.log("Start WEIGHT > ", processInfo.weight)
-  console.log("PROCESS > ", ((Math.abs(processInfo.currentweight - processInfo.weight) / processInfo.goalweight) * 100).toFixed(1))
-  
+  console.log("PROCESS > ", Math.max(((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)) * 1, 0).toFixed(1));
+ 
+  const [result, setResult] = useState(0); // ประกาศ state result
+
+
+  useEffect(() => {
+    // ทำการคำนวณ progress ตามต้องการ
+    const calculatedProgress = Math.max(
+      Math.min(
+        ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
+        1
+      ),
+      0
+    ).toFixed(1);
+    setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
+  }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight]);
+
+  console.log("Result: ", typeof result);
 
   // progressPopup
   const [progressWeight, setProgressWeight] = React.useState(false);
@@ -109,9 +127,10 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={{ color: "#fff" }}>Start</Text>
                 <Text style={{ color: "#fff" }}>{processInfo.weight} Kg</Text>
               </View>
+              
               <View>
                 <ProgressBar
-                  progress={0.4}
+                  progress={parseFloat(result)}
                   color={"#EC744A"}
                   className="h-1 rounded"
                   style={{
