@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { userSelector, getUserId } from '../../store/slice/userSlice'
 import { useFocusEffect } from "@react-navigation/native";
@@ -21,7 +21,6 @@ const listMeal = (icon, meal, cal) => {
 
 const Summary = ({ route, navigation }) => {
     const date = route.params.selectDate
-    console.log("summary date: ", date)
     const [carb, setCarb] = useState(0);
     const [fat, setFat] = useState(0);
     const [protein, setProtein] = useState(0);
@@ -33,6 +32,7 @@ const Summary = ({ route, navigation }) => {
     const [afternoonlunch, setAfternoonlunch] = useState({});
     const [dinner, setDinner] = useState({});
     const [afterdinner, setAfterdinner] = useState({});
+    const [rerender, setRerender] = useState(false)
 
     //Get Daily meal by User ID
     const getDailyMenuById = async () => { // Pass the user ID as an argument
@@ -64,6 +64,8 @@ const Summary = ({ route, navigation }) => {
             setAfternoonlunch(await extractNutrition(meals4.flat()))
             setDinner(await extractNutrition(meals5.flat()))
             setAfterdinner(await extractNutrition(meals6.flat()))
+            //rerender
+            setRerender(true)
 
         } catch (error) {
             console.error("Error fetching user menu: ", error);
@@ -72,7 +74,7 @@ const Summary = ({ route, navigation }) => {
     }
     const chartInfo = () => {
         //for chart
-        setCal(Number(breakfast.calories + brunch.calories + lunch.calories + afternoonlunch.calories + dinner.calories + afterdinner.calories).toFixed(0))
+        setCal(Number((breakfast.calories + brunch.calories + lunch.calories + afternoonlunch.calories + dinner.calories + afterdinner.calories).toFixed(0)))
         setCarb(Number(breakfast.carbohydrates + brunch.carbohydrates + lunch.carbohydrates + afternoonlunch.carbohydrates + dinner.carbohydrates + afterdinner.carbohydrates).toFixed(1))
         setFat(Number(breakfast.fat + brunch.fat + lunch.fat + afternoonlunch.fat + dinner.fat + afterdinner.fat).toFixed(1))
         setProtein(Number(breakfast.protein + brunch.protein + lunch.protein + afternoonlunch.protein + dinner.protein + afterdinner.protein).toFixed(1))
@@ -100,19 +102,18 @@ const Summary = ({ route, navigation }) => {
 
             return acc;
         }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
-        console.log("Total Nutrition:", totalNutrition);
+        // console.log("Total Nutrition:", totalNutrition);
         return totalNutrition;
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getDailyMenuById();
-            if (breakfast.carbohydrates) {
-                console.log("Carb:", carb);
-                chartInfo();
-            }
-        }, [])
-    );
+    useEffect(() => {
+        getDailyMenuById();
+        if (isNaN(breakfast.calories) === false) {
+            console.log("Carb:", carb);
+            chartInfo();
+        }
+    }, [rerender])
+
     return (
         <View style={styles.container}>
             {/* header */}

@@ -30,11 +30,15 @@ const Calendar = (props, { navigation }) => {
     );
     const [startedDate, setStartedDate] = useState(null);
     const [selectedDate, setselectedDate] = useState('')
-    console.log(selectedDate)
+    const dispatch = useDispatch();
 
     function handleChangeStartDate(propDate) {
         setStartedDate(propDate);
     }
+    const handleOnPressStartDate = () => {
+        console.log("handleOnPressStartDate", !openStartDatePicker);
+        dispatch(setOpenStartDatePicker(!openStartDatePicker));
+    };
 
     return (
         <View style={styles.container}>
@@ -52,7 +56,7 @@ const Calendar = (props, { navigation }) => {
                             maximumDate={startDate}
                             selected={startedDate}
                             onDateChanged={handleChangeStartDate}
-                            onSelectedChange={(date) => { 
+                            onSelectedChange={(date) => {
                                 setselectedDate(date);
                                 props.handleOnPressStartDate(date)
                             }} // เปลี่ยนชื่อฟังก์ชันนี้
@@ -67,7 +71,7 @@ const Calendar = (props, { navigation }) => {
                             }}
                         />
 
-                        <TouchableOpacity onPress={props.handleOnPressStartDate}>
+                        <TouchableOpacity onPress={handleOnPressStartDate}>
                             <Text style={{ color: "#EC744A" }}>Close</Text>
                         </TouchableOpacity>
                     </View>

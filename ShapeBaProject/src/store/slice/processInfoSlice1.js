@@ -108,7 +108,7 @@ export const getGoalById = async () => { // Pass the user ID as an argument
   try {
     const userId = await getUserId();
     const querySnapshot = await getDocs(query(collection(db, "goal"), where("user_id", "==", userId), where("status", "==", "doing"))); // Use the user's ID passed as an argument
-    console.log("query snapshot >> ", querySnapshot)
+    // console.log("query snapshot >> ", querySnapshot)
     console.log("Total goal: ", querySnapshot.size);
     const tempDoc = [];
     querySnapshot.forEach((doc) => {
