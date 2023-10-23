@@ -57,6 +57,7 @@ const History = (props) => {
       getHistory();
       return () => {
         setShowProcess([]);
+        
       };
     }, [isvisible])
   );
@@ -155,6 +156,8 @@ const History = (props) => {
             <View>
               {showProcess.map((item, index) => (
                 <View key={index} style={{}}>
+                   {(index === 0) ? null : (
+                  <View>
                   <View className="flex-row items-center mt-3">
                     <View className="rounded-full bg-[#EC744A] w-3 h-3 absolute left-[-7px]"></View>
                     <Text
@@ -167,6 +170,7 @@ const History = (props) => {
                     >
                       {item.weight} Kg
                     </Text>
+                    
                   </View>
                   <Text
                     style={{
@@ -179,6 +183,8 @@ const History = (props) => {
                   >
                     {item.date}
                   </Text>
+                  </View>
+                )}
                 </View>
               ))}
             </View>

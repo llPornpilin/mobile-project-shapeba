@@ -24,6 +24,9 @@ import { setStateSignUp } from "../../store/slice/frontEndSlice";
 import { AUTH } from "../../../firebase-cofig";
 import { processInfoSelector } from "../../store/slice/processInfoSlice1";
 import PushNotification from 'react-native-push-notification';
+import { getGoalById } from "../../store/slice/processInfoSlice1";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 // const scheduleNotification = () => {
 //   PushNotification.localNotificationSchedule({
@@ -44,11 +47,30 @@ const ProfileScreen = ({ navigation }) => {
   // console.log("PROCESS > ", Math.max(((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)) * 1, 0).toFixed(1));
 
   const [result, setResult] = useState(0); // ประกาศ state result
+  const [goalTDEE, setGoalTDEE] = useState(0);
+  const [startWeight, setStartWeight] = useState(0);
+  const [goalweightDB, setGoalweightDB] = useState(0);
+  const [heightDB, setheightDB] = useState(0);
+  const [activitylevalDB, setActivitylevelDB] = useState(0);
+  const [userGoal, setUserGoal] = useState([]);
 
 
-  useEffect(() => {
-    // ทำการคำนวณ progress ตามต้องการ
-    console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
+  const getUserInfo  = async () => { 
+
+    setUserGoal(await getGoalById())
+    userGoal.forEach((goal) =>
+    { setGoalTDEE(goal.TDEE)
+      setStartWeight(goal.historyWeight[0].weight)
+      setGoalweightDB(goal.goalWeight)
+      setheightDB(goal.height)
+      setActivitylevelDB(goal.activityLevel)
+      console.log("User eiei GoallllllllllllllPPPPPPPP", goal.activityLevel)
+    })
+  }
+  useFocusEffect(
+    React.useCallback(() => {
+      getUserInfo();
+      console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
     if (processInfo.goalweight - processInfo.weight !== 0) {
       const calculatedProgress = parseFloat(Math.max(
         Math.min(
@@ -60,9 +82,27 @@ const ProfileScreen = ({ navigation }) => {
       console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
       setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
     }
+    },[processInfo.currentweight, processInfo.weight, processInfo.goalweight, goalTDEE, startWeight])
+  );
+
+  // useEffect(() => {
+  //   getUserInfo();
+  //   // ทำการคำนวณ progress ตามต้องการ
+  //   console.log(">>> > ", processInfo.goalweight, typeof processInfo.goalweight)
+  //   if (processInfo.goalweight - processInfo.weight !== 0) {
+  //     const calculatedProgress = parseFloat(Math.max(
+  //       Math.min(
+  //         ((processInfo.currentweight - processInfo.weight) / (processInfo.goalweight - processInfo.weight)),
+  //         1
+  //       ),
+  //       0
+  //     ).toFixed(1))
+  //     console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
+  //     setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
+  //   }
 
 
-  }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight]);
+  // }, [processInfo.currentweight, processInfo.weight, processInfo.goalweight]);
 
   console.log("Result: ", typeof result);
 
@@ -130,7 +170,7 @@ const ProfileScreen = ({ navigation }) => {
             >
               <View style={{ marginRight: 10 }}>
                 <Text style={{ color: "#fff" }}>Start</Text>
-                <Text style={{ color: "#fff" }}>{processInfo.weight} Kg</Text>
+                <Text style={{ color: "#fff" }}>{startWeight} Kg</Text>
               </View>
 
               <View>
@@ -147,7 +187,7 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={{ marginLeft: 10 }}>
                 <Text style={{ color: "#fff" }}>Goal</Text>
-                <Text style={{ color: "#fff" }}>{processInfo.goalweight} Kg</Text>
+                <Text style={{ color: "#fff" }}>{goalweightDB} Kg</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -182,7 +222,7 @@ const ProfileScreen = ({ navigation }) => {
                 TDEE
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                {processInfo.tdee} cals
+                {goalTDEE} cal
               </Text>
             </View>
             <View
@@ -198,7 +238,7 @@ const ProfileScreen = ({ navigation }) => {
                 Start Weight
               </Text>
               <Text className="mb-5" style={styles.textProgress}>
-                {processInfo.weight} kg
+                {startWeight} kg
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -211,7 +251,7 @@ const ProfileScreen = ({ navigation }) => {
                 Goal Weight
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                {processInfo.goalweight} kg
+                {goalweightDB} kg
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -224,7 +264,7 @@ const ProfileScreen = ({ navigation }) => {
                 Height
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                {processInfo.height} cm
+                {heightDB} cm
               </Text>
             </View>
             <View className="flex-row justify-between" style={styles.boxStyle}>
@@ -237,7 +277,7 @@ const ProfileScreen = ({ navigation }) => {
                 Activity Level
               </Text>
               <Text className="mb-5 mt-5" style={styles.textProgress}>
-                {processInfo.activitylevel}
+                {activitylevalDB}
               </Text>
             </View>
             <View
