@@ -67,8 +67,8 @@ const StartNewGoalScreen = ({ navigation }) => {
       const userInfo = userDocSnap.data()
       console.log(userInfo.birthDate, userInfo.sex)
 
-      dispatch(setSelectedSex(userInfo.sex))
-      dispatch(setBirthdate(userInfo.birthDate))
+      dispatch(setSelectedSex(userDocSnap.data().sex))
+      dispatch(setBirthdate(userDocSnap.data().birthDate))
       console.log("new goal", processInfo)
       //set new goal
       const tdee = calculateTDEE(processInfo);

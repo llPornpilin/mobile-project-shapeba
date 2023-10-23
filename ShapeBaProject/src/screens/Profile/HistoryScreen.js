@@ -1,10 +1,14 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, TouchableHighlight, } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Header } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
-
+import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where, } from '../../../firebase-cofig';
 // icon
 import { Ionicons } from '@expo/vector-icons';
+//redux
+import { useSelector, useDispatch } from 'react-redux';
+import { getUserId } from '../../store/slice/userSlice';
+import { useFocusEffect } from "@react-navigation/native";
 
 const greenHeader = (navigation) => {
     return (
@@ -23,23 +27,62 @@ const greenHeader = (navigation) => {
 }
 
 const goalHistory = [
-    {id: 1, goalWeight: 45 , startWeight: 50, startGoalDate: '26-01-2023', endWeight: 45, endGoalDate: '26-03-2023', history: [{weight: 45, date: '26-01-2023'}, {weight: 43, date: '01-02-2023'}]},
-    {id: 2, goalWeight: 40, startWeight: 53, startGoalDate: '26-01-2023', endWeight: 40, endGoalDate: '26-03-2023', history: [{weight: 49, date: '26-01-2023'}, {weight: 46, date: '01-02-2023'}]},
-    {id: 3, goalWeight: 50, startWeight: 49, startGoalDate: '26-01-2023', endWeight: 50, endGoalDate: '26-03-2023', history: [{weight: 45, date: '26-01-2023'}, {weight: 43, date: '01-02-2023'}]},
-    {id: 4, goalWeight: 55, startWeight: 60, startGoalDate: '26-01-2023', endWeight: 57, endGoalDate: '26-03-2023', history: [{weight: 45, date: '26-01-2023'}, {weight: 43, date: '01-02-2023'}]},
-    {id: 5, goalWeight: 55, startWeight: 60, startGoalDate: '26-01-2023', endWeight: 57, endGoalDate: '26-03-2023', history: [{weight: 45, date: '26-01-2023'}, {weight: 43, date: '01-02-2023'}]},
+    { id: 1, goalWeight: 45, startWeight: 50, startGoalDate: '26-01-2023', endWeight: 45, endGoalDate: '26-03-2023', history: [{ weight: 45, date: '26-01-2023' }, { weight: 43, date: '01-02-2023' }] },
+    { id: 2, goalWeight: 40, startWeight: 53, startGoalDate: '26-01-2023', endWeight: 40, endGoalDate: '26-03-2023', history: [{ weight: 49, date: '26-01-2023' }, { weight: 46, date: '01-02-2023' }] },
+    { id: 3, goalWeight: 50, startWeight: 49, startGoalDate: '26-01-2023', endWeight: 50, endGoalDate: '26-03-2023', history: [{ weight: 45, date: '26-01-2023' }, { weight: 43, date: '01-02-2023' }] },
+    { id: 4, goalWeight: 55, startWeight: 60, startGoalDate: '26-01-2023', endWeight: 57, endGoalDate: '26-03-2023', history: [{ weight: 45, date: '26-01-2023' }, { weight: 43, date: '01-02-2023' }] },
+    { id: 5, goalWeight: 55, startWeight: 60, startGoalDate: '26-01-2023', endWeight: 57, endGoalDate: '26-03-2023', history: [{ weight: 45, date: '26-01-2023' }, { weight: 43, date: '01-02-2023' }] },
 ];
 
 
-const HistoryScreen = ({navigation}) => {
+
+
+const HistoryScreen = ({ navigation }) => {
+
+    const [allGoal, setAllGoal] = useState([])
+    // Get history goal by User ID
+    const getAllGoal = async () => { // Pass the user ID as an argument
+        try {
+            const userId = await getUserId();
+            console.log("history goal: ", userId)
+            const querySnapshot = await getDocs(query(collection(db, "goal"), where("user_id", "==", userId), where("status", "==", "done"))); // Use the user's ID passed as an argument
+            console.log("Total goal: ", querySnapshot.size);
+            const tempDoc = [];
+            querySnapshot.forEach((doc) => {
+                tempDoc.push({ ...doc.data(), key: doc.id });
+            });
+            console.log("goal user", tempDoc);
+            setAllGoal(tempDoc)
+
+        } catch (error) {
+            console.error("Error fetching user goal: ", error);
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getAllGoal();
+            console.log("all goal: ", allGoal)
+        }, [])
+    );
     // Expand View
-    const ExpandableView = ({ expanded = false , item}) => {
+    const ExpandableView = ({ expanded = false, item }) => {
         return (
-            <View className="mt-2" style={{ height: 'auto'}}>
-                {item.history.map((history, index) => (
-                    <View className='flex-row pl-14 pr-16' key={index} style={{justifyContent: 'space-between'}}>
-                        <Text className="text-base mb-3">{history.weight} kg</Text>
-                        <Text className="text-base text-Darkgray">{history.date}</Text>
+            <View className="mt-2" style={{ height: 'auto' }}>
+                {item.historyWeight.map((history, index) => (
+                    <View key={index}>
+                        {(index === 0) || (index === item.historyWeight.length - 1) ? null : (
+                            <View className='flex-row pl-4 pr-16 justify-between'>
+                                <Text style={{ fontSize: 16, marginBottom: 3 }} className="pl-10">
+                                    {history.weight} kg
+                                </Text>
+                                <Text style={{ fontSize: 16, color: 'darkgray' }}>
+                                    {history.date}
+                                </Text>
+
+                            </View>
+                        )}
+
                     </View>
                 ))}
             </View>
@@ -47,7 +90,8 @@ const HistoryScreen = ({navigation}) => {
     };
 
     const [expandedItemIndex, setExpandedItemIndex] = useState(null);
-    const historyListPattern = ({item, index}) => {
+    //one history list
+    const historyListPattern = ({ item, index }) => {
         const isExpanded = expandedItemIndex === index
         // console.log("index: " + index + ", expand: ", isExpanded)
         const toggleExpand = (index) => {
@@ -56,25 +100,28 @@ const HistoryScreen = ({navigation}) => {
         return (
             <View className="pl-4 pr-4 mt-3 mb-3 flex-row items-center">
                 {
-                    item.endWeight == item.goalWeight ?
-                    <Image source={require('../../../assets/img/smile.png')} />:
-                    <Image source={require('../../../assets/img/sad.png')} />
+                    item.historyWeight[item.historyWeight.length - 1].weight == item.goalWeight ?
+                        <Image source={require('../../../assets/img/smile.png')} /> :
+                        <Image source={require('../../../assets/img/sad.png')} />
                 }
-                
-                <View style={{flex: 1}}>
+
+                <View style={{ flex: 1 }}>
                     <Text className="text-base ml-4">Goal: {item.goalWeight} kg</Text>
                     {/* Start Goal */}
                     <TouchableHighlight onPress={() => toggleExpand(index)} style={styles.toggle} underlayColor="#F7F7FB">
-                        <View className="flex-row pl-1 pr-5" style={{justifyContent: 'space-between'}}>
-                            <View className="flex-row pr-6" style={{justifyContent: 'space-between', flex: 1}}>
-                                <Text className="text-base ml-3">Start: {item.startWeight} kg</Text>
-                                <Text className="text-base text-Darkgray">{item.startGoalDate}</Text>
+                        <View className="flex-row pl-1 pr-5" style={{ justifyContent: 'space-between' }}>
+                            <View className="flex-row pr-6" style={{ justifyContent: 'space-between', flex: 1 }}>
+                                <Text className="text-base ml-3">Start: {item.historyWeight[0].weight} kg</Text>
+                                <Text style={{ color: 'darkgray' }} className="text-base">
+                                    {item.historyWeight[0].date}
+                                </Text>
+                                {/* <Text className="text-base text-Darkgray">{item.startGoalDate}</Text> */}
                             </View>
                             <View>
                                 {
-                                    isExpanded ? 
-                                    <Ionicons name="md-chevron-up-outline" size={20} color="black" /> : 
-                                    <Ionicons name="md-chevron-down-outline" size={20} color="black" />
+                                    isExpanded ?
+                                        <Ionicons name="md-chevron-up-outline" size={20} color="black" /> :
+                                        <Ionicons name="md-chevron-down-outline" size={20} color="black" />
                                 }
                             </View>
                         </View>
@@ -84,9 +131,11 @@ const HistoryScreen = ({navigation}) => {
                         <ExpandableView expanded={isExpanded} item={item} />
                     )}
                     {/* End Goal */}
-                    <View className="flex-row pl-1 pr-16" style={{justifyContent: 'space-between'}}>
-                        <Text className="text-base ml-3" style={{color: item.endWeight == item.goalWeight ? '#025146' : '#EC744A'}}>End:   {item.endWeight} kg</Text>
-                        <Text className="text-base text-Darkgray">{item.endGoalDate}</Text>
+                    <View className="flex-row pl-1 pr-16" style={{ justifyContent: 'space-between' }}>
+                        <Text className="text-base ml-3" style={{ color: item.historyWeight[item.historyWeight.length - 1].weight == item.goalWeight ? '#025146' : '#EC744A' }}>End:  {item.historyWeight[item.historyWeight.length - 1].weight} kg</Text>
+                        <Text style={{ color: 'darkgray' }} className="text-base">
+                            {item.historyWeight[item.historyWeight.length - 1].date}
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -97,14 +146,15 @@ const HistoryScreen = ({navigation}) => {
         return <View style={{ backgroundColor: '#A4A4A4', height: 1 }} />
     }
 
+    //main screen
     return (
         <View style={styles.container}>
             {greenHeader(navigation)}
             <FlatList
-                data={goalHistory}
+                data={allGoal}
                 renderItem={historyListPattern}
                 ItemSeparatorComponent={historySeparator}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.key}
                 className="mt-4"
             />
             <View style={{ width: '100%', alignItems: 'center', marginBottom: 0, }}>
