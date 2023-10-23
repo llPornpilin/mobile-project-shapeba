@@ -111,7 +111,7 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View>
                 <ProgressBar
-                  progress={(Math.abs(processInfo.currentweight - processInfo.weight) / processInfo.goalweight) * 100}
+                  progress={0.4}
                   color={"#EC744A"}
                   className="h-1 rounded"
                   style={{
