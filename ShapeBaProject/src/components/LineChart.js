@@ -47,6 +47,7 @@ const numberOfDaysInMonth = lastDateMonth.getDate()
 export const LineChart = (props) => {
     const [dataChart, setDataChart] = useState([])
     const [pathGraph, setPathGraph] = useState(null)
+    const [successDay, setSuccessDay] = useState(0)
     
     // ---------------- get data from database ----------------
     // reduct store
@@ -101,6 +102,7 @@ export const LineChart = (props) => {
             }
             
             let sum = 0
+            let success = 0
             tempDocsOneMonth.forEach((docPerDay) => {
                 console.log("IMNNNN")
                 // sum cal in each doc
@@ -112,7 +114,12 @@ export const LineChart = (props) => {
                         })
                     }
                 })
-    
+                if (sumCalPerDay === 1975) {
+                    success += 1
+                }
+                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ", success)
+                setSuccessDay(success)
+                console.log("MMMMMMMMMMMMMMMMMM")
                 const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
                 if (matchingDay) {
                     matchingDay.value = sumCalPerDay
@@ -128,7 +135,7 @@ export const LineChart = (props) => {
             console.log("get cals Bar Chart >> ", error)
         }
     }
-    console.log("DATA MONTH >>>>> ", dataChart)
+    // console.log("DATA MONTH >>>> ", dataChart)
     // -----------------------------------------------------------------------------------
 
     const transition = useValue(1);
@@ -143,12 +150,11 @@ export const LineChart = (props) => {
     const makeGraph = (data) => {
         const max = Math.max(...data.map((val) => val.value));
         const min = Math.min(...data.map((val) => val.value));
-        const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 100]); // FIXME: range 35
-
+        const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 100]);
         // const xDomain = animatedData.map((dataPoint) => dataPoint.date)
         const x = scaleTime()
-        .domain([new Date(year, month-1, 1), new Date(year, month-1, numberOfDaysInMonth)]) // FIXME: ดึงวันที่จริงจากบนสุดมาใช้
-        .range([10, GRAPH_WIDTH - 10]);
+        .domain([new Date(year, month - 1, 1), new Date(year, month - 1, numberOfDaysInMonth)])
+        .range([10, GRAPH_WIDTH - 10]); 
         
         const curvedLine = line()
             .x((d) => x(new Date(d.date)))
@@ -178,10 +184,11 @@ export const LineChart = (props) => {
         });
     };
 
-        console.log(".......................................")
+        console.log(".....................................")
         // useEffect(() => {
         //     console.log("INNNNNN")
         //     if (dataChart.length !== 0) {
+        //         // getCalsDataPerDay()
         //         const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
         //         const start = graphData[state.current.current].curve;
         //         const end = graphData[state.current.next].curve;
@@ -192,10 +199,13 @@ export const LineChart = (props) => {
         //     else {
         //         getCalsDataPerDay()
         //     }
-        // }, [dataChart, state, transition])
+        // }, [dataChart, state, transition, props.collectSumCalPerDay])
+
         useFocusEffect(
             React.useCallback(() => {
                 if (dataChart.length !== 0) {
+                    // getCalsDataPerDay()
+                    console.log("OOOOOOOO  ", successDay)
                     const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
                     const start = graphData[state.current.current].curve;
                     const end = graphData[state.current.next].curve;
@@ -206,7 +216,7 @@ export const LineChart = (props) => {
                 else {
                     getCalsDataPerDay()
                 }
-            }, [dataChart, state, transition])
+            }, [dataChart, state, transition, props.collectSumCalPerDay])
         )
 
     return (

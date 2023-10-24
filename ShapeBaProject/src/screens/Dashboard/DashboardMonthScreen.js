@@ -52,10 +52,10 @@ const DashboardMonthScreen = () => {
                         </View>
 
                         <View className="">
-                            <Text className="text-Darkgray text-xs text-right mt-8 mr-3">Goal</Text>
+                            <Text className="text-Darkgray text-xs text-right mt-8 mr-3"></Text>
 
                         </View>
-                        <View className="border-b  border-Darkgray opacity-50 " />
+                        {/* <View className="border-b  border-Darkgray opacity-50 " /> */}
 
                         <View className="mr-5" style={styles.chart}>
                             <LineChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} />
@@ -71,7 +71,7 @@ const DashboardMonthScreen = () => {
                         </View>
                         <View style={[styles.content, styles.c3]}>
                             <Text className="text-Green text-base font-bold text-center">Reach Goal</Text>
-                            <Text className="text-Green text-xl font-bold text-center mt-4">25/31</Text>
+                            <Text className="text-Green text-xl font-bold text-center mt-4">0/31</Text>
                             <Text className="text-Green text-xl font-bold text-center">Days</Text>
                         </View>
                     </View>

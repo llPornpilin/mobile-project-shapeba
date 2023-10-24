@@ -77,7 +77,7 @@ const DashboardWeekScreen = () => {
                         <View className="">
                             <Text className="text-Darkgray text-xs text-right mt-8 mr-3"></Text>
                         </View>
-                        <View className="border-b  border-Darkgray opacity-50 " />
+                        {/* <View className="border-b  border-Darkgray opacity-50 " /> */}
                         <View className="-mt-10 mr-5">
                             <BarChart setUsedData={setUsedData} setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} getTDEE={getTDEE} />
                         </View>
