@@ -42,6 +42,7 @@ import { userSelector, setUserId, setUserEmail } from '../store/slice/userSlice'
 import { Foundation } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import Backtoprofile from '../screens/Profile/Backtoprofile';
 
 const MainStack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -65,6 +66,7 @@ function ProcessInfoNavigate() {
             <processInfoStack.Screen name="AddMealsScreen" component={AddMealsScreen} />
             <processInfoStack.Screen name="RecommendScreen" component={RecommendScreen} />
             <processInfoStack.Screen name="SummaryScreen" component={SummaryScreen} />
+        
 
         </processInfoStack.Navigator>
     )
@@ -133,7 +135,7 @@ function ProfileNavigate() {
             <ProfileStack.Screen name="StartNewGoalScreen" component={StartNewGoalScreen} />
             <ProfileStack.Screen name="HistoryScreen" component={HistoryScreen} />
             <ProfileStack.Screen name="InformationScreen" component={InformationScreen} />
-            <processInfoStack.Screen name="TapToStart" component={TapToStart} />
+            <ProfileStack.Screen name="Backtoprofile" component={Backtoprofile} />
         </ProfileStack.Navigator>
     )
 }
@@ -182,7 +184,7 @@ function BottomNavigate() {
                 headerTitle: () => headerLeft(),
                 headerRight: () => (
                     <TouchableOpacity className="mr-3" onPress={() => dispatch(setOpenStartDatePicker(!openStartDatePicker))}>
-                        <AntDesign name="calendar" size={24} color="black" />
+                        <AntDesign name="calendar" size={24} color="#025146" />
                     </TouchableOpacity>
                 ),
                 headerStyle: {
@@ -194,6 +196,8 @@ function BottomNavigate() {
                 headerTitleStyle: {
                     fontWeight: 'bold',
                 },
+                activeTintColor: 'red', // สีของ Tab ที่ถูกเลือก
+                inactiveTintColor: 'gray',
 
             }}
         >
@@ -211,7 +215,7 @@ function BottomNavigate() {
                     tabBarIcon: ({ color, size }) => {
                         return (
                             <View >
-                                <Octicons name="home" size={25} color="black" />
+                                <Octicons name="home" size={25} color="#025146" />
                             </View>
                         )
                     },
@@ -227,7 +231,7 @@ function BottomNavigate() {
                         return
                     })(route),
                     tabBarIcon: ({ color, size }) => {
-                        return <Octicons name="person" size={25} color="black" />
+                        return <Octicons name="person" size={25} color="#025146" />
                     },
                     headerShown: false,
                 })}

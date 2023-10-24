@@ -88,7 +88,7 @@ const StartNewGoalScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Error get user: ", error);
     }
-    navigation.navigate("TapToStart");
+    navigation.navigate("Backtoprofile");
   }
   const accomplishData = [
     { label: "lose weight", value: "Lose weight" },
