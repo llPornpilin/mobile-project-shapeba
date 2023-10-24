@@ -18,7 +18,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import InformationScreen from "./src/screens/Profile/InformationScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
-
+import Backtoprofile from "./src/screens/Profile/Backtoprofile";
 
 
 export default function App() {
@@ -37,7 +37,7 @@ export default function App() {
     </Provider>
   )
   // return (
-  //   <SignInScreen/>
+  //   <Backtoprofile/>
   // )
 
 }
