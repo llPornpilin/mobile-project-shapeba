@@ -162,10 +162,13 @@ function MyTopTabs() {
     );
 }
 const headerLeft = () => {
+    const userStore = useSelector(userSelector);
+    const name = userStore.userEmail.split('@')[0]
     return (
         <View className="h-10 bg-pink">
-            <Text className="text-xl font-bold ml-3">Chiffon!</Text>
-            <Text className="text-sm font-bold ml-3 text-Darkgray">Friday, March 24</Text>
+            {userStore.userEmail ? <Text className="text-xl font-bold ml-3">{name}</Text> : <Text className="text-xl font-bold ml-3">ShapeBa </Text>}
+
+            <Text className="text-sm font-bold ml-3 text-Darkgray opacity-60">Let's track daily cals</Text>
         </View>
     );
 }
@@ -187,8 +190,6 @@ function BottomNavigate() {
                 ),
                 headerStyle: {
                     height: 80,
-                    // borderBottomLeftRadius:20,
-                    // borderBottomRightRadius:20,
                 },
                 headerTintColor: 'black',
                 headerTitleStyle: {

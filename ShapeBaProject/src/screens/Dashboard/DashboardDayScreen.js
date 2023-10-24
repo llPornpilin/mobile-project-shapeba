@@ -166,8 +166,9 @@ const DashboardDayScreen = ({ navigation }) => {
 
     }
 
-    const chartInfo = () => {
+    const chartInfo = async () => {
         //for chart
+        if (!breakfast.carbohydrates) return;
         setCal(Number(breakfast.calories + brunch.calories + lunch.calories + afternoonlunch.calories + dinner.calories + afterdinner.calories).toFixed(0))
         setCarb(Number(breakfast.carbohydrates + brunch.carbohydrates + lunch.carbohydrates + afternoonlunch.carbohydrates + dinner.carbohydrates + afterdinner.carbohydrates).toFixed(1))
         setFat(Number(breakfast.fat + brunch.fat + lunch.fat + afternoonlunch.fat + dinner.fat + afterdinner.fat).toFixed(1))
@@ -225,15 +226,17 @@ const DashboardDayScreen = ({ navigation }) => {
         easing: Easing.inOut(Easing.cubic),
     });
 
+
+
     useFocusEffect(
         React.useCallback(() => {
             fetchData()
             getDailyMenuById();
-            if (breakfast.carbohydrates) {
-                console.log("Carb:", carb);
-                chartInfo();
-            }
-        }, [renderItem, cal])
+            // if (breakfast.carbohydrates) {
+            console.log("--------breakfast:", breakfast.carbohydrates);
+            chartInfo();
+            // }
+        }, [renderItem, cal, carb, fat, protein])
     );
 
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
@@ -255,6 +258,7 @@ const DashboardDayScreen = ({ navigation }) => {
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
                             {/* donut chart */}
+                            {/* {breakfast.carbohydrates ? ( */}
                             <Canvas style={styles.container1}>
                                 <Path
                                     path={path}
@@ -268,6 +272,8 @@ const DashboardDayScreen = ({ navigation }) => {
                                 />
 
                             </Canvas>
+                            {/* ) : null} */}
+
                             <View style={styles.innerCircle}>
                                 <Text className="text-xl font-bold text-white text-center">{cal} /{tdee} </Text>
                                 <Text className="text-sm font-medium text-white text-center">calories</Text>
