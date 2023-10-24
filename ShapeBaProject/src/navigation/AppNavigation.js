@@ -182,7 +182,7 @@ function BottomNavigate() {
                 headerTitle: () => headerLeft(),
                 headerRight: () => (
                     <TouchableOpacity className="mr-3" onPress={() => dispatch(setOpenStartDatePicker(!openStartDatePicker))}>
-                        <Feather name="calendar" size={29} color="black" />
+                        <AntDesign name="calendar" size={24} color="black" />
                     </TouchableOpacity>
                 ),
                 headerStyle: {
@@ -209,18 +209,14 @@ function BottomNavigate() {
                     })(route),
                     title: "Home",
                     tabBarIcon: ({ color, size }) => {
-                        return <Octicons name="home" size={29} color="#025146" />
+                        return (
+                            <View >
+                                <Octicons name="home" size={25} color="black" />
+                            </View>
+                        )
                     },
                 })}
             />
-            {/* <BottomTab.Screen name="DetailMealsScreen" component={DetailMealsScreen}
-                options={{
-                    tabBarIcon: () => btnPlus(),
-                    presentation: "Modal",
-                    headerShown: false,
-                    title: ""
-                }}
-            /> */}
             <BottomTab.Screen name="Profile" component={ProfileNavigate}
                 options={({ route }) => ({
                     tabBarStyle: ((route) => {
@@ -231,7 +227,7 @@ function BottomNavigate() {
                         return
                     })(route),
                     tabBarIcon: ({ color, size }) => {
-                        return <Octicons name="person" size={29} color="#025146" />
+                        return <Octicons name="person" size={25} color="black" />
                     },
                     headerShown: false,
                 })}

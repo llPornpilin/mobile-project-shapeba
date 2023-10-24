@@ -4,6 +4,14 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Ima
 import { Button } from 'react-native-elements';
 import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesome5 } from '@expo/vector-icons';
+import {
+    Canvas,
+    Path,
+    SkFont,
+    Skia,
+    SkiaMutableValue,
+    // Text,
+} from "@shopify/react-native-skia";
 //component
 import DonutChart from "../../components/DonutChart";
 import React, { useState, useRef, useEffect } from 'react';
@@ -76,7 +84,11 @@ const DashboardDayScreen = ({ navigation }) => {
     const [dinner, setDinner] = useState({});
     const [afterdinner, setAfterdinner] = useState({});
 
-    const mealsName = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
+
+    //for donut chart
+    const innerRadius = radius - STROKE_WIDTH / 2;
+    const targetText = `${targetPercentage * 100}`;
+    // console.log("targetPercentage", targetPercentage)
 
 
 
@@ -87,16 +99,14 @@ const DashboardDayScreen = ({ navigation }) => {
         navigation.navigate('SummaryScreen', { selectDate: date })
     };
 
-
     if (titleMeal != "") {
-        // console.log(titleMeal)
-        navigation.navigate('DetailMealsScreen', { header: titleMeal })
-        setTitleMeal("")
         //close modal
         bottomSheetModalRef.current?.close();
         setTimeout(() => {
             setIsOpen(false);
         }, 200);
+        setTitleMeal("")
+        navigation.navigate('DetailMealsScreen', { header: titleMeal })
     }
 
     //open modal
@@ -114,13 +124,6 @@ const DashboardDayScreen = ({ navigation }) => {
         }, 200);
     }
 
-
-
-    animationState.current = 0;
-    runTiming(animationState, targetPercentage, {
-        duration: 1250,
-        easing: Easing.inOut(Easing.cubic),
-    });
 
     // Get Daily meal by User ID
     const getDailyMenuById = async () => { // Pass the user ID as an argument
@@ -213,7 +216,14 @@ const DashboardDayScreen = ({ navigation }) => {
         }
     }
 
+    const path = Skia.Path.Make();
+    path.addCircle(radius, radius, innerRadius);
 
+    animationState.current = 0;
+    runTiming(animationState, targetPercentage, {
+        duration: 1250,
+        easing: Easing.inOut(Easing.cubic),
+    });
 
     useFocusEffect(
         React.useCallback(() => {
@@ -223,7 +233,7 @@ const DashboardDayScreen = ({ navigation }) => {
                 console.log("Carb:", carb);
                 chartInfo();
             }
-        }, [renderItem])
+        }, [renderItem, cal])
     );
 
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
@@ -244,17 +254,25 @@ const DashboardDayScreen = ({ navigation }) => {
 
                     <View style={[styles.content, styles.c1]}>
                         <View style={styles.ringChartContainer}>
-                            <DonutChart
-                                backgroundColor="white"
-                                radius={radius}
-                                strokeWidth={STROKE_WIDTH}
-                                percentageComplete={animationState}
-                                targetPercentage={targetPercentage}
-                                font={font}
-                                smallerFont={smallerFont}
-                                tdee={tdee}
-                                calories={cal}
-                            />
+                            {/* donut chart */}
+                            <Canvas style={styles.container1}>
+                                <Path
+                                    path={path}
+                                    color="#EC744A"
+                                    style="stroke"
+                                    strokeJoin="round"
+                                    strokeWidth={STROKE_WIDTH}
+                                    strokeCap="round"
+                                    start={0}
+                                    end={animationState}
+                                />
+
+                            </Canvas>
+                            <View style={styles.innerCircle}>
+                                <Text className="text-xl font-bold text-white text-center">{cal} /{tdee} </Text>
+                                <Text className="text-sm font-medium text-white text-center">calories</Text>
+                            </View>
+
                         </View>
 
                         <View style={styles.progress}>
@@ -335,6 +353,12 @@ const styles = StyleSheet.create({
         position: 'relative',
 
     },
+    container1: {
+        flex: 1,
+        alignItems: 'center',
+        position: 'relative',
+
+    },
     content: {
         width: 320,
         paddingBottom: 20,
@@ -382,6 +406,14 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         zIndex: 1,
+    },
+    innerCircle: {
+        position: 'absolute',
+        justifyContent: 'center',
+        marginTop: 30,
+        marginLeft: 20,
+        width: 120,
+        height: 100,
     }
 });
 

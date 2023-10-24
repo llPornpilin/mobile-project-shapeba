@@ -35,6 +35,13 @@ const DonutChart = ({
     //redux
     const processInfo = useSelector(processInfoSelector);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("----------DonutChart", calories)
+            
+        }, [tdee, calories])
+    );
+
     return (
         <View style={styles.container}>
             <Canvas style={styles.container}>
