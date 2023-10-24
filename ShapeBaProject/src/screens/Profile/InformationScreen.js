@@ -13,7 +13,9 @@ import { rotate } from "@shopify/react-native-skia";
 
 const InformationScreen = ({ navigation }) => {
   return (
+    
     <View style={styles.contrainer}>
+      
       <View style={styles.header}>
         <View
           style={{

@@ -114,27 +114,34 @@ const ProfileScreen = ({ navigation }) => {
 
 
   return (
+    <PaperProvider >
+      <View className="bg-white">
+
+      
+      <History
+              isVisible={progressWeight}
+              setVisible={setProgressWeight}
+            />
+      <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
+      </View>
     <ScrollView>
       <StatusBar
         barStyle="dark-content"
         animated={true}
         backgroundColor="#fff"
       />
-      <PaperProvider>
+      
         <SafeAreaView
           style={{
-            backgroundColor: "#F7F7FB",
+            backgroundColor: "#FFFFFF", // เปลี่ยนเป็นสีขาว
             alignItems: "center",
             flex: 1,
             paddingBottom: 20,
           }}
         >
           <View style={styles.header}>
-            <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
-            <History
-              isVisible={progressWeight}
-              setVisible={setProgressWeight}
-            />
+            
+            
             <Image
               source={require("../../../assets/img/Icon.jpg")}
               style={styles.img}
@@ -412,8 +419,9 @@ const ProfileScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </SafeAreaView>
-      </PaperProvider>
+      
     </ScrollView>
+    </PaperProvider>
   );
 };
 
