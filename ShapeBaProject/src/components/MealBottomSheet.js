@@ -63,7 +63,7 @@ const MealBottomSheet = (props) => {
                 index={1}
                 snapPoints={snapPoints}
                 backgroundStyle={{ borderRadius: 30, backgroundColor: "#025146" }}
-            // onDismiss={() => props.setIsOpen(false)}
+                onDismiss={() => props.setIsOpen(false)}
             >
                 <View style={styles.contentContainer}>
                     <Text style={[styles.title, { marginBottom: 10, marginLeft: 20 }]}>

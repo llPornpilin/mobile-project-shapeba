@@ -227,7 +227,7 @@ const processInfoSlice1 = createSlice({
       const birthYear = parseInt(part[0]);
       const currentYear = new Date().getFullYear();
       state.numericAge = currentYear - birthYear;
-      console.log(state.birthdate);
+      console.log("----------fetch age", state.numericAge);
     },
 
     setOpenStartDatePicker: (state, action) => {
