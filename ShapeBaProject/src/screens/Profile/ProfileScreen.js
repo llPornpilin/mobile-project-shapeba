@@ -28,12 +28,6 @@ import { getGoalById } from "../../store/slice/processInfoSlice1";
 import { useFocusEffect } from "@react-navigation/native";
 
 
-// const scheduleNotification = () => {
-//   PushNotification.localNotificationSchedule({
-//     message: "Remember to update your weight!", // ข้อความที่จะแสดงในการแจ้งเตือน
-//     date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // แจ้งเตือนทุก 30 วัน
-//   });
-// }
 
 const ProfileScreen = ({ navigation }) => {
 
@@ -54,11 +48,11 @@ const ProfileScreen = ({ navigation }) => {
   const [activitylevalDB, setActivitylevelDB] = useState(0);
   const [userGoal, setUserGoal] = useState([]);
   const [rerender, setRerender] = useState(false);
-  const [currentweightDB, setCurrentweightDB] = useState (0);
+  const [currentweightDB, setCurrentweightDB] = useState(0);
 
 
   const getUserInfo = async () => {
-    
+
 
     const goal = await getGoalById()
     // const index = goal[0].historyWeight.length-1
@@ -68,22 +62,22 @@ const ProfileScreen = ({ navigation }) => {
     setheightDB(goal[0].height)
     setActivitylevelDB(goal[0].activityLevel)
     // setCurrentweightDB(goal[0].historyWeight[4].weight)
-    
+
   }
 
   useFocusEffect(
     React.useCallback(() => {
       getUserInfo();
-      console.log(">>>>>>>>>>>>>>>PPPPfchsdjffp", goalweightDB, typeof goalweightDB )
+      console.log(">>>>>>>>>>>>>>>PPPPfchsdjffp", goalweightDB, typeof goalweightDB)
       if (goalweightDB == 0) {
-    
+
 
       }
       if (goalweightDB - startWeight !== 0) {
         const calculatedProgress = parseFloat(Math.max(
           Math.min(
             ((processInfo.currentweight - startWeight) / (goalweightDB - startWeight
-              )),
+            )),
             1
           ),
           0
@@ -117,20 +111,20 @@ const ProfileScreen = ({ navigation }) => {
     <PaperProvider >
       <View className="bg-white">
 
-      
-      <History
-              isVisible={progressWeight}
-              setVisible={setProgressWeight}
-            />
-      <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
+
+        <History
+          isVisible={progressWeight}
+          setVisible={setProgressWeight}
+        />
+        <CurrentWeightPopup isVisible={visible} setVisible={setVisible} />
       </View>
-    <ScrollView>
-      <StatusBar
-        barStyle="dark-content"
-        animated={true}
-        backgroundColor="#fff"
-      />
-      
+      <ScrollView>
+        <StatusBar
+          barStyle="dark-content"
+          animated={true}
+          backgroundColor="#fff"
+        />
+
         <SafeAreaView
           style={{
             backgroundColor: "#FFFFFF", // เปลี่ยนเป็นสีขาว
@@ -140,21 +134,13 @@ const ProfileScreen = ({ navigation }) => {
           }}
         >
           <View style={styles.header}>
-            
-            
+
+
             <Image
               source={require("../../../assets/img/Icon.jpg")}
               style={styles.img}
               resizeMode="contain"
             />
-            <Text
-              style={[
-                styles.name,
-                { fontWeight: "bold", fontSize: 23, color: "#025146" },
-              ]}
-            >
-              chiffon m
-            </Text>
           </View>
           {/* ปุ่มแสดงprogress */}
           <TouchableOpacity
@@ -278,22 +264,6 @@ const ProfileScreen = ({ navigation }) => {
                 {activitylevalDB}
               </Text>
             </View>
-            <View
-              className="flex-row justify-between mt-4"
-              style={styles.boxStyle}
-            >
-              <Image
-                source={require("../../../assets/img/icons8-age-100.png")}
-                style={{ width: 25, height: 35, marginTop: -5 }}
-                resizeMode="contain"
-              />
-              <Text className="mb-5 mr-[205px]" style={styles.textStyle}>
-                Age
-              </Text>
-              <Text className="mb-5" style={styles.textProgress}>
-                {processInfo.numericAge} year
-              </Text>
-            </View>
           </View>
           <TouchableOpacity
             onPress={showDialog}
@@ -376,25 +346,6 @@ const ProfileScreen = ({ navigation }) => {
               History
             </Text>
           </TouchableOpacity>
-          <View style={styles.switchFrame}>
-            <Image
-              source={require("../../../assets/img/notification.jpg")}
-              style={styles.icon}
-              resizeMode="contain"
-            />
-            <Text style={styles.switchText}>Notification</Text>
-            <Switch
-              style={{
-                transform: [{ scaleX: 1.4 }, { scaleY: 1.4 }],
-                marginLeft: 140,
-              }}
-              trackColor={{ false: "#D9D9D9", true: "#31A82E" }}
-              thumbColor={isEnabled ? "#FFFFFF" : "#FFFFFF"}
-              ios_backgroundColor="#3e3e3e"
-              // onValueChange={toggleSwitch}
-              value={isEnabled}
-            />
-          </View>
 
           {/* logout button */}
           <TouchableOpacity
@@ -419,8 +370,8 @@ const ProfileScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </SafeAreaView>
-      
-    </ScrollView>
+
+      </ScrollView>
     </PaperProvider>
   );
 };
@@ -433,8 +384,8 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    width: 110,
-    height: 110,
+    width: 140,
+    height: 140,
     // marginTop: 0,
   },
   icon: {
@@ -449,6 +400,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 30,
     width: "100%",
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "white",
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
@@ -469,7 +421,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 30,
     width: 350,
-    height: 380,
+    height: 320,
     marginTop: 15,
     padding: 20,
     elevation: 5,

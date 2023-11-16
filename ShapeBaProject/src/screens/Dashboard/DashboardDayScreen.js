@@ -44,15 +44,6 @@ const listMeal = (icon, meal, cal, navigation) => {
         </TouchableOpacity>
     )
 }
-const btnRecom = (icon, text, navigation) => {
-    return (
-        <TouchableOpacity className="items-center" onPress={() => navigation.navigate('RecommendScreen')}>
-            <Image source={icon}
-                style={{ width: 55, height: 55 }} />
-            <Text className="mt-2 font-medium text-Darkgray">{text}</Text>
-        </TouchableOpacity>
-    );
-}
 //for Donut Chart
 const radius = PixelRatio.roundToNearestPixel(80);
 const STROKE_WIDTH = 6;
@@ -107,21 +98,6 @@ const DashboardDayScreen = ({ navigation }) => {
         }, 200);
         setTitleMeal("")
         navigation.navigate('DetailMealsScreen', { header: titleMeal })
-    }
-
-    //open modal
-    const handlePresentModal = () => {
-        bottomSheetModalRef.current?.present();
-        setTimeout(() => {
-            setIsOpen(true);
-        }, 100);
-    }
-    //close modal
-    const closeModal = () => {
-        bottomSheetModalRef.current?.close();
-        setTimeout(() => {
-            setIsOpen(false);
-        }, 200);
     }
 
 
@@ -300,7 +276,6 @@ const DashboardDayScreen = ({ navigation }) => {
 
                         </View>
                     </View>
-                    {/* <Button title={"TabToStart Page"} onPress={() => navigation.navigate('TapToStart')}></Button> */}
 
                     <View style={[styles.content, styles.c2]}>
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
@@ -321,31 +296,10 @@ const DashboardDayScreen = ({ navigation }) => {
 
 
                     </View>
-                    <View style={[styles.content, styles.c2]}>
-                        <Text className="font-bold pt-5 pl-5 text-lg text-Orange " >RECOMMEND</Text>
-                        <View className="flex-row gap-4 p-5 ">
-                            {btnRecom(require('../../../assets/img/drink.png'), "Drink", navigation)}
-                            {btnRecom(require('../../../assets/img/dessert.png'), "Dessert", navigation)}
-                            {btnRecom(require('../../../assets/img/main.png'), "Main Dish", navigation)}
-                            {btnRecom(require('../../../assets/img/fruit.png'), "Fruit", navigation)}
-
-                        </View>
-                    </View>
 
                 </View>
             </ScrollView>
-            {/* bottom sheet jaa */}
-            <View className="">
-                <TouchableHighlight
-                    className="absolute bottom-5 right-3 bg-Green w-14 h-14 rounded-full justify-center items-center elevation-3 "
-                    style={{ elevation: 3 }}
-                    underlayColor="#EF8E6D"
-                    onPress={handlePresentModal}
-                >
-                    <FontAwesome5 name="plus" size={20} color="white" />
-                </TouchableHighlight>
-            </View>
-            <BottomSheet bottomSheetModalRef={bottomSheetModalRef} isOpen={isOpen} setIsOpen={setIsOpen} closeModal={closeModal} setTitleMeal={setTitleMeal} />
+
         </SafeAreaView>
 
     )
