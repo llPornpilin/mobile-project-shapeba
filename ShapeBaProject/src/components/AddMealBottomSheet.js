@@ -163,7 +163,10 @@ export const AddMealBottomModal = (props, { navigation }) => {
         const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         const dayName = daysOfWeek[dayOfWeek] // get name of week
 
-        const currentDate = `${day}/${month}/${year}`
+        const formattedDay = day < 10 ? `0${day}` : day;
+        const formattedMonth = month < 10 ? `0${month}` : month;
+
+        const currentDate = `${formattedDay}/${formattedMonth}/${year}`;
         // ------------------------------------------------------------------
 
         try {
