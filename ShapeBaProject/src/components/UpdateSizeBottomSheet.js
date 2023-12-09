@@ -5,16 +5,12 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, arrayUnion, query, where } from '../../firebase-cofig'
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice'
+import { setUserId, setUserEmail, userSelector, getUserId } from '../store/slice/userSlice'
 
 
 const UpdateSizeBottomModal = (props) => {
     // props
     const bottomSheetModalRef = props.bottomSheetModalRef;
-
-    //redux
-    const userStore = useSelector(userSelector);
-    const userId = userStore.userId
 
     // Bottom Sheet
     const snapPoints = ["40%"];
@@ -35,6 +31,7 @@ const UpdateSizeBottomModal = (props) => {
         const mealName = props.mealName
         console.log("Edit Menu id: ", props.editMenuInfo.name)
         try {
+            const userId = await getUserId()
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
             const dailyMealRef = await getDocs(querySnapshot)
 
@@ -42,7 +39,7 @@ const UpdateSizeBottomModal = (props) => {
                 const currentMealData = doc.data()[mealName]
                 const updateMealData = currentMealData.map((menu) => {
                     if (menu.id == props.editMenuInfo.id) {
-                        return {...menu, serving_size_g: updateServingSize, calories: (menu.calories / menu.serving_size_g * updateServingSize).toFixed(2)}
+                        return { ...menu, serving_size_g: updateServingSize, calories: (menu.calories / menu.serving_size_g * updateServingSize).toFixed(2) }
                     }
                     return menu
                 })
@@ -57,7 +54,7 @@ const UpdateSizeBottomModal = (props) => {
                 setUpdateServingSize(" ")
             })
         }
-        catch(error) {
+        catch (error) {
             console.log("delete meal error >> ", error)
         }
     }
@@ -77,8 +74,8 @@ const UpdateSizeBottomModal = (props) => {
                     <Text className="text-xl mb-8 font-semibold">
                         {
                             props.editMenuInfo !== undefined
-                            ? props.editMenuInfo.name
-                            : ""
+                                ? props.editMenuInfo.name
+                                : ""
                         }
                     </Text>
                     <View className="bg-white p-3" style={styles.textInput}>

@@ -51,8 +51,8 @@ const SignInScreen = ({ navigation }) => {
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
       dispatch(setStateSignUp(true))
-      console.log("response uid: ", response.user.uid);
-      console.log("response email: ", response.user.email);
+      // console.log("response uid: ", response.user.uid);
+      // console.log("response email: ", response.user.email);
       alert('Sign up success')
 
       dispatch(setUserId(response.user.uid))

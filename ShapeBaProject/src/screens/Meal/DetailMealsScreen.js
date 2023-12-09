@@ -13,7 +13,7 @@ import UpdateSizeBottomModal from '../../components/UpdateSizeBottomSheet';
 // Firebase
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../../firebase-cofig'
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../../store/slice/userSlice';
+import { setUserId, setUserEmail, userSelector, getUserId } from '../../store/slice/userSlice';
 
 
 const greenHeader = (navigation, mealName, sumCalories) => {
@@ -29,7 +29,7 @@ const greenHeader = (navigation, mealName, sumCalories) => {
             }
             // centerComponent={{icon: 'menu', color: '#fff', iconStyle: {color: 'white', paddingLeft: 90, marginTop: 5}}}
             rightComponent={
-                <View style={{ flexDirection: 'row', marginLeft: -15}}>
+                <View style={{ flexDirection: 'row', marginLeft: -15 }}>
                     <View style={{ marginRight: 3, marginTop: 3 }}>
                         <Entypo name="flash" size={22} color="white" />
                     </View>
@@ -62,11 +62,6 @@ export function renderItemSeparator() {
 const DetailMealsScreen = ({ navigation, route }) => {
     // selected meal
     const mealName = (route.params.header.split(" ").join("")).toLowerCase()
-
-    // reduct store
-    const userStore = useSelector(userSelector);
-    const userId = userStore.userId
-
     // ------ edit serving size meal bottom sheet -------
     const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef(null);
@@ -85,6 +80,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
     const daleteMealHandler = async (deleteMenuId) => {
         console.log("Deleted Menu id: ", deleteMenuId)
         try {
+            const userId = await getUserId()
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId));
             const dailyMealRef = await getDocs(querySnapshot)
 
@@ -141,6 +137,7 @@ const DetailMealsScreen = ({ navigation, route }) => {
     const getmealData = async () => {
         let plusCal = 0
         try {
+            const userId = await getUserId()
             const querysnapshot = query(collection(db, "dailyMeal")
                 , where("user_id", "==", userId)
                 , where("dateInfo.date", "==", today))

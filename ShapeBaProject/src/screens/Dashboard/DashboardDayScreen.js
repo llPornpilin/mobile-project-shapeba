@@ -75,6 +75,12 @@ const DashboardDayScreen = ({ navigation }) => {
     const [dinner, setDinner] = useState({});
     const [afterdinner, setAfterdinner] = useState({});
 
+    // const [totalsChart, setTotalsChart] = useState({
+    //     calories: 0,
+    //     fat: 0,
+    //     protein: 0,
+    //     carbohydrates: 0,
+    // });
 
     //for donut chart
     const innerRadius = radius - STROKE_WIDTH / 2;
@@ -119,6 +125,8 @@ const DashboardDayScreen = ({ navigation }) => {
                 tempDoc.push({ ...doc.data(), key: doc.id });
             });
             console.log("tempdoc ", tempDoc)
+
+            const mealsName = ["breakfast", "brunch", "lunch", "afternoonlunch", "dinner", "afterdinner"];
             // Flatten the array if each category is an array of meals
             const meals1 = tempDoc.map((day) => day["breakfast"]);
             const meals2 = tempDoc.map((day) => day["brunch"]);
@@ -134,28 +142,41 @@ const DashboardDayScreen = ({ navigation }) => {
             setAfterdinner(await extractNutrition(meals6.flat()))
             //trigger re-render
             setRenderItem(true)
+            //for chart
+            // Loop through each meal category
+            let totalCalories = 0;
+            let totalFat = 0;
+            let totalProtein = 0;
+            let totalCarbohydrates = 0;
+            // Loop through each meal category
 
-
+            for (const i in mealsName) {
+                // console.log(">>>>>" + mealsName[i], tempDoc[0][mealsName[i]]);
+                const meal = tempDoc[0][mealsName[i]];
+                if (meal.length > 0) {
+                    console.log(">>>>>calll", meal[0].calories);
+                    for (const j in meal) {
+                        totalCalories += Number(meal[j].calories) || 0;
+                        totalFat += Number(meal[j].fat_total_g) || 0;
+                        totalProtein += Number(meal[j].protein_g) || 0;
+                        totalCarbohydrates += Number(meal[j].carbohydrates_total_g) || 0;
+                    }
+                }
+            }
+            // Update totals state
+            setCal(totalCalories.toFixed(0))
+            console.log("totalCalories", totalCalories, typeof totalCalories)
+            setCarb(totalCarbohydrates.toFixed(1))
+            setFat(totalFat.toFixed(1))
+            setProtein(totalProtein.toFixed(1))
+            const calChart = totalCalories / (tdee / 100)
+            setTargetPercentage(calChart / 100)
+            console.log("--------total cal", totalCalories)
+            // console.log("totalCalories", totalCalories)
         } catch (error) {
             console.error("Error fetching user menu: ", error);
         }
 
-    }
-
-    const chartInfo = async () => {
-        //for chart
-        if (!breakfast.carbohydrates) return;
-        setCal(Number(breakfast.calories + brunch.calories + lunch.calories + afternoonlunch.calories + dinner.calories + afterdinner.calories).toFixed(0))
-        setCarb(Number(breakfast.carbohydrates + brunch.carbohydrates + lunch.carbohydrates + afternoonlunch.carbohydrates + dinner.carbohydrates + afterdinner.carbohydrates).toFixed(1))
-        setFat(Number(breakfast.fat + brunch.fat + lunch.fat + afternoonlunch.fat + dinner.fat + afterdinner.fat).toFixed(1))
-        setProtein(Number(breakfast.protein + brunch.protein + lunch.protein + afternoonlunch.protein + dinner.protein + afterdinner.protein).toFixed(1))
-        console.log("carb", carb, typeof carb)
-        console.log("breakfase", breakfast, typeof breakfast.carbohydrates)
-        //for donut chart
-        const calChart = cal / (tdee / 100)
-        setTargetPercentage(calChart / 100)
-        console.log("--------total cal", cal)
-        // setRenderItem(true)
     }
 
     const extractNutrition = async (meal) => {
@@ -208,11 +229,7 @@ const DashboardDayScreen = ({ navigation }) => {
         React.useCallback(() => {
             fetchData()
             getDailyMenuById();
-            // if (breakfast.carbohydrates) {
-            console.log("--------breakfast:", breakfast.carbohydrates);
-            chartInfo();
-            // }
-        }, [renderItem, cal, carb, fat, protein])
+        }, [renderItem])
     );
 
     const font = useFont(require("../../../assets/font/Roboto-Bold.ttf"), 20);
@@ -251,7 +268,10 @@ const DashboardDayScreen = ({ navigation }) => {
                             {/* ) : null} */}
 
                             <View style={styles.innerCircle}>
+                                {/* {breakfast.carbohydrates ? ( */}
                                 <Text className="text-xl font-bold text-white text-center">{cal} /{tdee} </Text>
+                                {/* ) : null} */}
+
                                 <Text className="text-sm font-medium text-white text-center">calories</Text>
                             </View>
 
