@@ -31,6 +31,8 @@ const History = (props) => {
   const isvisible = props.isVisible;
 
   const [showProcess, setShowProcess] = useState([]);
+  console.log(">>>>>>>>>>>>> ", showProcess[0])
+  // console.log(">>>>>>>>>>>>> ", showProcess[0].weight)
   const getHistory = async () => {
     const userId = await getUserId();
     try {
@@ -64,37 +66,6 @@ const History = (props) => {
 
   const hideDialog = () => {
     props.setVisible((prev) => !prev);
-  };
-
-  const renderData = ({ item }) => {
-    return (
-      <View style={{}}>
-        <View className="flex-row items-center ">
-          <View className="rounded-full bg-[#EC744A] w-3 h-3 absolute left-[1px]"></View>
-          <Text
-            style={{
-              color: "#025146",
-              marginLeft: 30,
-              fontWeight: "bold",
-              fontSize: 16,
-            }}
-          >
-            {item.weight} Kg
-          </Text>
-        </View>
-        <Text
-          style={{
-            color: "#4B4B4B",
-            marginLeft: 30,
-            fontWeight: "bold",
-            fontSize: 16,
-            marginBottom: 7,
-          }}
-        >
-          {item.date}
-        </Text>
-      </View>
-    );
   };
 
   return (
@@ -131,7 +102,7 @@ const History = (props) => {
                 marginTop: 4,
               }}
             >
-              {processInfo.weight} Kg
+              {/* {showProcess[0]} Kg */}
             </Text>
           </View>
 
@@ -156,7 +127,7 @@ const History = (props) => {
             <View>
               {showProcess.map((item, index) => (
                 <View key={index} style={{}}>
-                   {(index === 0) ? null : (
+                  {(index === 0) ? null : (
                   <View>
                   <View className="flex-row items-center mt-3">
                     <View className="rounded-full bg-[#EC744A] w-3 h-3 absolute left-[-7px]"></View>

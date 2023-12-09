@@ -74,6 +74,9 @@ const ProfileScreen = ({ navigation }) => {
 
       }
       if (goalweightDB - startWeight !== 0) {
+        console.log("INFO CURRENT --------------- ", processInfo.currentweight)
+        console.log("INFO START --------------- ", startWeight)
+        console.log("INFO Goal --------------- ", goalweightDB)
         const calculatedProgress = parseFloat(Math.max(
           Math.min(
             ((processInfo.currentweight - startWeight) / (goalweightDB - startWeight
@@ -85,7 +88,7 @@ const ProfileScreen = ({ navigation }) => {
         console.log("calculatedProgress: ", calculatedProgress, typeof calculatedProgress);
         setResult(calculatedProgress); // กำหนดค่า result ที่ถูกคำนวณ
       }
-    }, [])
+    })
   );
 
 

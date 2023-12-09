@@ -213,7 +213,7 @@ const processInfoSlice1 = createSlice({
     },
     setCurrentWeight: (state, action) => {
       state.currentweight = action.payload;
-      console.log(state.currentweight);
+      console.log("CURRENT >>>> ", state.currentweight);
     },
     setHeight: (state, action) => {
       state.height = action.payload;

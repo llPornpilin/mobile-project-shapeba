@@ -273,8 +273,9 @@ const AddMealsSegment = (props) => {
             />
             {/* เงื่อนไขแสดงหน้า All menu หรือ My menu */}
             {
-                selectedIndex === 0 ?
+                selectedIndex === 0 ? (
                     // All
+                    props.setBtnSearch === true ? (
                     <FlatList
                         style={{ padding: 40, paddingTop: 5, width: '100%' }}
                         // data={allMeals}
@@ -282,9 +283,12 @@ const AddMealsSegment = (props) => {
                         renderItem={renderData}
                         keyExtractor={item => item.name}
                         ItemSeparatorComponent={renderItemSeparator}
-                    /> :
+                    />) : (
+                        <Text>000</Text>
+                    )
+                    ):
                     // My Menu
-                    <View style={{ width: '100%', height: '100%' }}>
+                    (<View style={{ width: '100%', height: '100%' }}>
                         <SwipeableFlatList
                             keyExtractor={(item) => item.key}
                             data={myMenu}
@@ -305,7 +309,7 @@ const AddMealsSegment = (props) => {
                         >
                             <FontAwesome5 name="plus" size={20} color="white" />
                         </TouchableHighlight>
-                    </View>
+                    </View>)
             }
             <AddMealBottomModal isAddedMenu={isAddedMenu} setIsAddedMenu={setIsAddedMenu} isOpen={isOpenAdd} setIsOpen={setIsOpenAdd} bottomSheetModalRef={bottomSheetModalRefAdd} selectedMenu={selectedMenu} mealName={props.mealName} />
             <CreateMealBottomModal isOpen={isOpenCreate} setIsOpen={setIsOpenCreate} bottomSheetModalRef={bottomSheetModalRefCreate} getMyMenuById={getMyMenuById} />
