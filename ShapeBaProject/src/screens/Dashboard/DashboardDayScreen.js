@@ -40,7 +40,7 @@ const listMeal = (icon, meal, cal = 0, navigation) => {
                     style={{ width: 40, height: 40 }} />
                 <Text className="font-medium text-base text-Darkgray">{meal}</Text>
             </View>
-            <Text className="font-medium text-base text-Darkgray mr-4 mt-2">{cal} cals</Text>
+            <Text className="font-medium text-base text-Darkgray mr-4 mt-2">{cal == 0 ? 0 : cal} cals</Text>
         </TouchableOpacity>
     )
 }
@@ -68,12 +68,14 @@ const DashboardDayScreen = ({ navigation }) => {
     const [protein, setProtein] = useState(0);
     const [cal, setCal] = useState(0);
 
-    const [breakfast, setBreakfast] = useState({});
-    const [brunch, setBrunch] = useState({});
-    const [lunch, setLunch] = useState({});
-    const [afternoonlunch, setAfternoonlunch] = useState({});
-    const [dinner, setDinner] = useState({});
-    const [afterdinner, setAfterdinner] = useState({});
+    const [calMeals, setCalMeals] = useState({
+        breakfast: 0,
+        brunch: 0,
+        lunch: 0,
+        afternoonlunch: 0,
+        dinner: 0,
+        afterdinner: 0,
+    });
 
     //for donut chart
     const innerRadius = radius - STROKE_WIDTH / 2;
@@ -123,27 +125,14 @@ const DashboardDayScreen = ({ navigation }) => {
             console.log("tempdoc ", tempDoc)
 
             const mealsName = ["breakfast", "brunch", "lunch", "afternoonlunch", "dinner", "afterdinner"];
-            // Flatten the array if each category is an array of meals
-            const meals1 = tempDoc.map((day) => day["breakfast"]);
-            const meals2 = tempDoc.map((day) => day["brunch"]);
-            const meals3 = tempDoc.map((day) => day["lunch"]);
-            const meals4 = tempDoc.map((day) => day["afternoonlunch"]);
-            const meals5 = tempDoc.map((day) => day["dinner"]);
-            const meals6 = tempDoc.map((day) => day["afterdinner"]);
-            setBreakfast(await extractNutrition(meals1.flat()))
-            setBrunch(await extractNutrition(meals2.flat()))
-            setLunch(await extractNutrition(meals3.flat()))
-            setAfternoonlunch(await extractNutrition(meals4.flat()))
-            setDinner(await extractNutrition(meals5.flat()))
-            setAfterdinner(await extractNutrition(meals6.flat()))
             //trigger re-render
             setRenderItem(true)
             //for chart
-            // Loop through each meal category
             let totalCalories = 0;
             let totalFat = 0;
             let totalProtein = 0;
             let totalCarbohydrates = 0;
+            let calPerMeal = 0;
             // Loop through each meal category
 
             for (const i in mealsName) {
@@ -152,13 +141,20 @@ const DashboardDayScreen = ({ navigation }) => {
                 if (meal.length > 0) {
                     console.log(">>>>>calll", meal[0].calories);
                     for (const j in meal) {
+                        calPerMeal += Number(meal[j].calories) || 0;
                         totalCalories += Number(meal[j].calories) || 0;
                         totalFat += Number(meal[j].fat_total_g) || 0;
                         totalProtein += Number(meal[j].protein_g) || 0;
                         totalCarbohydrates += Number(meal[j].carbohydrates_total_g) || 0;
                     }
                 }
+                setCalMeals(prevCalMeals => ({
+                    ...prevCalMeals,
+                    [mealsName[i]]: calPerMeal.toFixed(1),
+                }));
+                calPerMeal = 0;
             }
+            console.log("calMeals", calMeals.breakfast);
             // Update totals state
             setCal(totalCalories.toFixed(0))
             console.log("totalCalories", totalCalories, typeof totalCalories)
@@ -297,17 +293,17 @@ const DashboardDayScreen = ({ navigation }) => {
                         <Text className="font-bold p-5 text-lg text-Orange " >MEALS TODAY</Text>
 
                         <View className="gap-4">
-                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", breakfast.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-sunny-side-up-eggs-96.png"), "BreakFast", calMeals.breakfast, navigation)}
                             <View className="border-b  border-Darkgray opacity-20" />
-                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", brunch.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-vegetarian-food.png"), "Brunch", calMeals.brunch, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", lunch.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-thanksgiving-96.png"), "Lunch", calMeals.lunch, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", afternoonlunch.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-pie-96.png"), "Afternoon Lunch", calMeals.afternoonlunch, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", dinner.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-steak-96.png"), "Dinner", calMeals.dinner, navigation)}
                             <View className="border-b border-Darkgray opacity-20 " />
-                            {listMeal(require("../../../assets/img/icons8-vegan-food-96.png"), "After Dinner", afterdinner.calories, navigation)}
+                            {listMeal(require("../../../assets/img/icons8-vegan-food-96.png"), "After Dinner", calMeals.afterdinner, navigation)}
                         </View>
 
 
