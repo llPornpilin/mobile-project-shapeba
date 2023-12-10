@@ -16,7 +16,7 @@ import * as d3 from "d3";
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
+import { setUserId, setUserEmail, userSelector, getUserId } from '../store/slice/userSlice';
 import { useFocusEffect } from "@react-navigation/native";
 
 
@@ -49,12 +49,12 @@ const graphWidth = CanvasWidth - 2;
 export const BarChart = (props) => {
     const [dataChart, setDataChart] = useState([])
     let collectMenuInWeek = []
-    
+
     // ---------------- get data from database ----------------
     // reduct store
     const userStore = useSelector(userSelector);
     const userId = userStore.userId
-    
+
     const getCalsDataPerDay = async () => {
         console.log("BEGINNNNNN ......... ", collectMenuInWeek)
         let sumCalsPerWeek = [] // collect sum of calories per each day in each week
@@ -62,8 +62,9 @@ export const BarChart = (props) => {
         // let mealsInDay = []
 
         try {
+            const userId = await getUserId()
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
-            const getCalsData = await(getDocs(querySnapshot))
+            const getCalsData = await (getDocs(querySnapshot))
 
             // change date format from string -> date
             const parseDate = (dateString) => {
@@ -91,7 +92,7 @@ export const BarChart = (props) => {
                 const sumObject = { dayOfWeek: dayWeek, sumCalPerDay: 0 };
                 sumCalsPerWeek.push(sumObject)
             })
-            
+
             let sum = 0
             let mealsInDay = []
             tempDocsOneWeek.forEach((docPerDay) => {
@@ -102,7 +103,7 @@ export const BarChart = (props) => {
                     if (docPerDay[mealTypes].length !== 0) {
                         docPerDay[mealTypes].forEach((menuMeal) => {
                             sumCalPerDay += parseFloat(menuMeal.calories)
-                            mealsInDay.push({name: menuMeal.name, calories: menuMeal.calories})
+                            mealsInDay.push({ name: menuMeal.name, calories: menuMeal.calories })
                         })
                     }
                 })
@@ -202,7 +203,7 @@ export const BarChart = (props) => {
         <View style={styles.container}>
             <Canvas style={styles.canvas}>
                 {dataChart.map((dataPoint) => (
-                    dataPoint.sumCalPerDay > props.getTDEE ? 
+                    dataPoint.sumCalPerDay > props.getTDEE ?
                         <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#FBBB57" />
                         : <Path key={dataPoint.dayOfWeek} path={Bar(dataPoint.dayOfWeek, dataPoint.sumCalPerDay)} color="#EC744A" />
                 ))}

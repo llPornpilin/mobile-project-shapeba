@@ -32,7 +32,7 @@ import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, wher
 import { set } from 'react-hook-form';
 
 
-const listMeal = (icon, meal, cal, navigation) => {
+const listMeal = (icon, meal, cal = 0, navigation) => {
     return (
         <TouchableOpacity className="flex-row justify-between" onPress={() => navigation.navigate('DetailMealsScreen', { header: meal })}>
             <View className="flex-row gap-5 pl-3 items-center">
@@ -75,13 +75,6 @@ const DashboardDayScreen = ({ navigation }) => {
     const [dinner, setDinner] = useState({});
     const [afterdinner, setAfterdinner] = useState({});
 
-    // const [totalsChart, setTotalsChart] = useState({
-    //     calories: 0,
-    //     fat: 0,
-    //     protein: 0,
-    //     carbohydrates: 0,
-    // });
-
     //for donut chart
     const innerRadius = radius - STROKE_WIDTH / 2;
     const targetText = `${targetPercentage * 100}`;
@@ -120,6 +113,9 @@ const DashboardDayScreen = ({ navigation }) => {
 
             const querySnapshot = await getDocs(query(collection(db, "dailyMeal"), where("user_id", "==", userId), where("dateInfo.date", "==", today))); // Use the user's ID passed as an argument
             console.log("Total menu: ", querySnapshot.size);
+            if (querySnapshot.size == 0) {
+                return;
+            }
             const tempDoc = [];
             querySnapshot.forEach((doc) => {
                 tempDoc.push({ ...doc.data(), key: doc.id });
