@@ -130,7 +130,7 @@ export const LineChart = (props) => {
             console.log(">>>>>>>> ", sum)
             props.setCollectSumCalPerDay(sum / 30)
             setDataChart(sumCalsPerMonth)
-            console.log("................ Month ", dataChart)
+            // console.log("................ Month ", dataChart)
             setRenderItem(true)
         }
         catch (error) {
@@ -187,8 +187,9 @@ export const LineChart = (props) => {
     };
 
 
-        useFocusEffect(
-            React.useCallback(() => {
+    useFocusEffect(
+        React.useCallback(() => {
+            if (dataChart.length !== 0) {
                 console.log("INNNNNNNN COU")
                 getCalsDataPerDay()
                 console.log(">>>>>> SUCCESSa >>>>>>>  ", successDay)
@@ -198,9 +199,13 @@ export const LineChart = (props) => {
                 const result = start.interpolate(end, transition.current);
                 const svgString = result?.toSVGString() ?? "0";
                 setPathGraph(svgString)
-            }, [dataChart.length, state, transition, props.collectSumCalPerDay])
-        )
-        console.log(".....................................", dataChart)
+            }
+            else {
+                getCalsDataPerDay()
+            }
+        }, [dataChart.length, state, transition, props.collectSumCalPerDay])
+    )
+    // console.log(".....................................", dataChart)
 
     return (
         <View style={styles.container}>
