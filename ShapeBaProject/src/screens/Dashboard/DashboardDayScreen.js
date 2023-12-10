@@ -171,27 +171,6 @@ const DashboardDayScreen = ({ navigation }) => {
 
     }
 
-    const extractNutrition = async (meal) => {
-        //calculate total nutrition & calories
-        const totalNutrition = meal.reduce((acc, food) => {
-            if (!food) return acc;
-            // Convert the values to numbers for calculations
-            const calories = parseFloat(food.calories);
-            const fat = parseFloat(food.fat_total_g);
-            const protein = parseFloat(food.protein_g);
-            const carbohydrates = parseFloat(food.carbohydrates_total_g);
-
-            // Sum the values
-            acc.calories += calories;
-            acc.fat += fat;
-            acc.protein += protein;
-            acc.carbohydrates += carbohydrates;
-
-            return acc;
-        }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
-        // console.log("Total Nutrition:", totalNutrition);
-        return totalNutrition;
-    }
 
     const [tdee, setTdee] = useState(0)
 
