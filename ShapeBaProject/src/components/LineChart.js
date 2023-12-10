@@ -48,6 +48,7 @@ export const LineChart = (props) => {
     const [dataChart, setDataChart] = useState([])
     const [pathGraph, setPathGraph] = useState(null)
     const [successDay, setSuccessDay] = useState(0)
+    const [renderItem, setRenderItem] = useState(false)
     
     // ---------------- get data from database ----------------
     // reduct store
@@ -55,8 +56,8 @@ export const LineChart = (props) => {
     const userId = userStore.userId
     
     const getCalsDataPerDay = async () => {
-        let sumCalsPerMonth = [] // collect sum of calories per each day in each week
-        let tempDocsOneMonth = [] // colect Meal data in this week
+        let sumCalsPerMonth = [] // collect sum of calories per each day in each month
+        let tempDocsOneMonth = [] // colect Meal data in this month
 
         try {
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
@@ -129,7 +130,8 @@ export const LineChart = (props) => {
             console.log(">>>>>>>> ", sum)
             props.setCollectSumCalPerDay(sum / 30)
             setDataChart(sumCalsPerMonth)
-
+            console.log("................ Month ", dataChart)
+            setRenderItem(true)
         }
         catch (error) {
             console.log("get cals Bar Chart >> ", error)
@@ -184,40 +186,21 @@ export const LineChart = (props) => {
         });
     };
 
-        console.log(".....................................")
-        // useEffect(() => {
-        //     console.log("INNNNNN")
-        //     if (dataChart.length !== 0) {
-        //         // getCalsDataPerDay()
-        //         const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
-        //         const start = graphData[state.current.current].curve;
-        //         const end = graphData[state.current.next].curve;
-        //         const result = start.interpolate(end, transition.current);
-        //         const svgString = result?.toSVGString() ?? "0";
-        //         setPathGraph(svgString)
-        //     }
-        //     else {
-        //         getCalsDataPerDay()
-        //     }
-        // }, [dataChart, state, transition, props.collectSumCalPerDay])
 
         useFocusEffect(
             React.useCallback(() => {
-                if (dataChart.length !== 0) {
-                    // getCalsDataPerDay()
-                    console.log("OOOOOOOO  ", successDay)
-                    const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
-                    const start = graphData[state.current.current].curve;
-                    const end = graphData[state.current.next].curve;
-                    const result = start.interpolate(end, transition.current);
-                    const svgString = result?.toSVGString() ?? "0";
-                    setPathGraph(svgString)
-                }
-                else {
-                    getCalsDataPerDay()
-                }
-            }, [dataChart, state, transition, props.collectSumCalPerDay])
+                console.log("INNNNNNNN COU")
+                getCalsDataPerDay()
+                console.log(">>>>>> SUCCESSa >>>>>>>  ", successDay)
+                const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
+                const start = graphData[state.current.current].curve;
+                const end = graphData[state.current.next].curve;
+                const result = start.interpolate(end, transition.current);
+                const svgString = result?.toSVGString() ?? "0";
+                setPathGraph(svgString)
+            }, [dataChart.length, state, transition, props.collectSumCalPerDay])
         )
+        console.log(".....................................", dataChart)
 
     return (
         <View style={styles.container}>
