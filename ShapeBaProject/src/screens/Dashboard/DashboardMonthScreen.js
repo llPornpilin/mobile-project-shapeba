@@ -8,6 +8,19 @@ import { db, collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from '../.
 import { getGoalById } from '../../store/slice/processInfoSlice1'
 
 
+const currentDate = new Date();
+const month = currentDate.getMonth()
+const year = currentDate.getFullYear();
+
+const monthNames = [
+    'January', 'February', 'March', 'April',
+    'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+]
+console.log("month -- ", month, typeof month)
+const monthName = monthNames[month]
+console.log("month name -- ", monthName)
+
 const DashboardMonthScreen = () => {
     const [collectSumCalPerDay, setCollectSumCalPerDay] = useState(0) // for caculate average cal
     const [getTDEE, setTDEE] = useState(0)
@@ -16,7 +29,7 @@ const DashboardMonthScreen = () => {
         try {
             const getUserGoal = await getGoalById()
             setTDEE(getUserGoal[0].TDEE) ;
-            console.log("tdee", getTDEE)
+            console.log("tdee --- ", getTDEE)
         }
         catch (error) {
             console.log("ERROR FETCH DATA")
@@ -66,8 +79,8 @@ const DashboardMonthScreen = () => {
                     <View className="flex-row">
                         <View style={[styles.content, styles.c2]}>
                             <Text className="text-white text-base font-bold text-center">Your Progress</Text>
-                            <Text className="text-white text-xl font-bold text-center mt-4">March</Text>
-                            <Text className="text-white text-xl font-bold text-center">2023</Text>
+                            <Text className="text-white text-xl font-bold text-center mt-4">{monthName}</Text>
+                            <Text className="text-white text-xl font-bold text-center">{year}</Text>
                         </View>
                         <View style={[styles.content, styles.c3]}>
                             <Text className="text-Green text-base font-bold text-center">Reach Goal</Text>
