@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import {
     Canvas,
@@ -66,13 +66,14 @@ export const LineChart = (props) => {
             // change date format from string -> date
             const parseDate = (dateString) => {
                 const parts = dateString.split("/")
-                if (parts.length == 3) {
+                if (parts.length === 3) {
                     const [day, month, year] = parts
-                    return new Date(year, month - 1, day)
+                    return new Date(year, month - 1 , day)
                 }
                 return null
             }
 
+            // to collect detail meal data in this month
             getCalsData.forEach((doc) => {
                 const docDate = parseDate(doc.data().dateInfo.date)
                 if (docDate) {
@@ -85,12 +86,11 @@ export const LineChart = (props) => {
                 }
             })
 
-            let sumCalPerDay = 0
             let currentYear = currentDate.getFullYear();
             let currentMonth = currentDate.getMonth();
             console.log("MONTH ... ", currentMonth)
 
-            for (let dayy = 2; dayy <= numberOfDaysInMonth + 2; dayy++) { // FIXME: month 31 days must plus 2 ??
+            for (let dayy = 2; dayy <= numberOfDaysInMonth + 2; dayy++) {
                 if (currentMonth < 0) {
                     currentMonth = 11; // 0-based, so December is 11
                     currentYear--;
@@ -104,7 +104,9 @@ export const LineChart = (props) => {
             
             let sum = 0
             let success = 0
+            console.log("------ temp: ", tempDocsOneMonth)
             tempDocsOneMonth.forEach((docPerDay) => {
+                let sumCalPerDay = 0
                 console.log("IMNNNN")
                 // sum cal in each doc
                 const mealTypes = ['breakfast', 'brunch', 'lunch', 'afternoonlunch', 'dinner', 'afterdinner']
@@ -115,29 +117,31 @@ export const LineChart = (props) => {
                         })
                     }
                 })
+                console.log("Per Day ======= ", sumCalPerDay)
                 if (sumCalPerDay === 1975) {
                     success += 1
                 }
-                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ", success)
+                console.log("NUMBER OF SUCCESS DAY ------------  ", success)
                 setSuccessDay(success)
-                console.log("MMMMMMMMMMMMMMMMMM")
+                // console.log("------------------ SUM Before Filter: ", sumCalsPerMonth)
+
                 const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
                 if (matchingDay) {
+                    console.log("Matching: ------ ", matchingDay)
                     matchingDay.value = sumCalPerDay
                 }
                 sum += sumCalPerDay
+                // console.log("------------------ SUM After Filter: ", sumCalsPerMonth)
             })
             console.log(">>>>>>>> ", sum)
             props.setCollectSumCalPerDay(sum / 30)
             setDataChart(sumCalsPerMonth)
-            // console.log("................ Month ", dataChart)
             setRenderItem(true)
         }
         catch (error) {
             console.log("get cals Bar Chart >> ", error)
         }
     }
-    // console.log("DATA MONTH >>>> ", dataChart)
     // -----------------------------------------------------------------------------------
 
     const transition = useValue(1);
@@ -172,40 +176,29 @@ export const LineChart = (props) => {
         };
     };
 
-    //animate graph
-    const end = 1
-    const transitionStart = (end) => {
-        state.current = {
-            current: end,
-            next: state.current.current,
-        };
-        transition.current = 0;
-        runTiming(transition, 1, {
-            duration: 750,
-            easing: Easing.inOut(Easing.cubic),
-        });
-    };
-
 
     useFocusEffect(
         React.useCallback(() => {
-            if (dataChart.length !== 0) {
-                console.log("INNNNNNNN COU")
-                getCalsDataPerDay()
-                console.log(">>>>>> SUCCESSa >>>>>>>  ", successDay)
-                const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
-                const start = graphData[state.current.current].curve;
-                const end = graphData[state.current.next].curve;
-                const result = start.interpolate(end, transition.current);
-                const svgString = result?.toSVGString() ?? "0";
-                setPathGraph(svgString)
+            const fetchData = async () => {
+                await getCalsDataPerDay()
             }
-            else {
-                getCalsDataPerDay()
-            }
-        }, [dataChart.length, state, transition, props.collectSumCalPerDay])
+        
+            fetchData()
+            }, [dataChart.length, state, transition, props.collectSumCalPerDay, pathGraph])
     )
-    // console.log(".....................................", dataChart)
+        
+    React.useEffect(() => {
+        if (dataChart.length !== 0) {
+            const graphData = [makeGraph(dataChart), makeGraph(dataChart)]
+            const start = graphData[state.current.current].curve
+            const end = graphData[state.current.next].curve
+            const result = start.interpolate(end, transition.current)
+            const svgString = result?.toSVGString() ?? "0"
+            setPathGraph(svgString)
+            console.log("<<<<<<<<<<<< MAKE GRAPH SUCCESS >>>>>>>>>>>>>")
+        }
+    }, [dataChart, state, transition, props.collectSumCalPerDay, pathGraph])
+    
 
     return (
         <View style={styles.container}>
