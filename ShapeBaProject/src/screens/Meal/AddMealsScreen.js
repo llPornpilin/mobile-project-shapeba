@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable } from 'react-native';
 import { Button, Header } from 'react-native-elements';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
 // Segment
@@ -15,7 +15,7 @@ import { setMenus } from '../../store/slice/mealsSlice';
 const AddMealsScreen = ({ navigation, route }) => {
     const [searchInput, setSearchInput] = useState("")
     const [btnSearch, setBtnSearch] = useState(false)
-    
+
     const toggleBtnSearch = () => {
         setBtnSearch(true)
         console.log("handle button search")
@@ -40,7 +40,7 @@ const AddMealsScreen = ({ navigation, route }) => {
                         <Text className="text-white mb-2 text-xl font-bold">What do you eat ?</Text>
                     </View>
                     <Text className="text-white mb-6 ml-10 text-base">Let see the calories !</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '93%' }}>
                         <TextInput
                             className="bg-white rounded-3xl pl-4 h-10 mb-5"
                             style={{ flex: 1, }}
@@ -49,7 +49,7 @@ const AddMealsScreen = ({ navigation, route }) => {
                             onChangeText={(text) => setSearchInput(text)}
                         />
                         <TouchableOpacity onPress={toggleBtnSearch}>
-                            <Feather style={{marginLeft: -35, marginBottom: 20}} name="search" size={24} color="#025146" />
+                            <Feather style={{ marginLeft: -35, marginBottom: 20 }} name="search" size={24} color="#025146" />
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -15,30 +15,17 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import InformationScreen from "./src/screens/Profile/InformationScreen";
-import SignUpScreen from "./src/screens/SignUpScreen";
-import SignInScreen from "./src/screens/SignInScreen";
-import Backtoprofile from "./src/screens/Profile/Backtoprofile";
-
 
 export default function App() {
-  // return (
-  //   <TestNavigator />
-  // )
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }} >
         <BottomSheetModalProvider>
-          {/* <Calendar /> */}
           <AppNavigator />
-
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </Provider>
   )
-  // return (
-  //   <Backtoprofile/>
-  // )
 
 }
 
