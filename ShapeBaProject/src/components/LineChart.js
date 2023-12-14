@@ -21,6 +21,7 @@ import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
 import { useFocusEffect } from "@react-navigation/native";
+import { getGoalById } from "../store/slice/processInfoSlice1";
 
 // ---------------- get current date --------------------------
 const currentDate = new Date();
@@ -47,8 +48,7 @@ const numberOfDaysInMonth = lastDateMonth.getDate()
 export const LineChart = (props) => {
     const [dataChart, setDataChart] = useState([])
     const [pathGraph, setPathGraph] = useState(null)
-    const [successDay, setSuccessDay] = useState(0)
-    const [renderItem, setRenderItem] = useState(false)
+    const [getTDEE, setTDEE] = useState(0)
     
     // ---------------- get data from database ----------------
     // reduct store
@@ -58,6 +58,8 @@ export const LineChart = (props) => {
     const getCalsDataPerDay = async () => {
         let sumCalsPerMonth = [] // collect sum of calories per each day in each month
         let tempDocsOneMonth = [] // colect Meal data in this month
+        const getUserGoal = await getGoalById()
+        setTDEE(getUserGoal[0].TDEE)
 
         try {
             const querySnapshot = query(collection(db, "dailyMeal"), where("user_id", "==", userId))
@@ -118,11 +120,11 @@ export const LineChart = (props) => {
                     }
                 })
                 console.log("Per Day ======= ", sumCalPerDay)
-                if (sumCalPerDay === 1975) {
+                if (sumCalPerDay === getTDEE) {
                     success += 1
                 }
                 console.log("NUMBER OF SUCCESS DAY ------------  ", success)
-                setSuccessDay(success)
+                props.setSuccessDay(success)
                 // console.log("------------------ SUM Before Filter: ", sumCalsPerMonth)
 
                 const matchingDay = sumCalsPerMonth.find((day) => day.date === parseDate(docPerDay.dateInfo.date).toISOString())
@@ -136,7 +138,6 @@ export const LineChart = (props) => {
             console.log(">>>>>>>> ", sum)
             props.setCollectSumCalPerDay(sum / 30)
             setDataChart(sumCalsPerMonth)
-            setRenderItem(true)
         }
         catch (error) {
             console.log("get cals Bar Chart >> ", error)

@@ -24,6 +24,10 @@ console.log("month name -- ", monthName)
 const DashboardMonthScreen = () => {
     const [collectSumCalPerDay, setCollectSumCalPerDay] = useState(0) // for caculate average cal
     const [getTDEE, setTDEE] = useState(0)
+    const [getSuccessDay, setSuccessDay] = useState(0)
+
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const numOfDays = lastDayOfMonth.getDate();
 
     const fetchData = async () => {
         try {
@@ -71,7 +75,7 @@ const DashboardMonthScreen = () => {
                         {/* <View className="border-b  border-Darkgray opacity-50 " /> */}
 
                         <View className="mr-5" style={styles.chart}>
-                            <LineChart setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} />
+                            <LineChart setSuccessDay={setSuccessDay} setCollectSumCalPerDay = {setCollectSumCalPerDay} collectSumCalPerDay={collectSumCalPerDay} />
                         </View>
 
 
@@ -84,7 +88,7 @@ const DashboardMonthScreen = () => {
                         </View>
                         <View style={[styles.content, styles.c3]}>
                             <Text className="text-Green text-base font-bold text-center">Reach Goal</Text>
-                            <Text className="text-Green text-xl font-bold text-center mt-4">0/31</Text>
+                            <Text className="text-Green text-xl font-bold text-center mt-4">{getSuccessDay}/{numOfDays}</Text>
                             <Text className="text-Green text-xl font-bold text-center">Days</Text>
                         </View>
                     </View>
