@@ -157,11 +157,11 @@ const HistoryScreen = ({ navigation }) => {
                 keyExtractor={(item) => item.key}
                 className="mt-4"
             />
-            <View style={{ width: '100%', alignItems: 'center', marginBottom: 0, }}>
+            {/* <View style={{ width: '100%', alignItems: 'center', marginBottom: 0, }}>
                 <TouchableOpacity style={styles.btnClearHistory}>
                     <Text className="font-bold text-white test-base" >Clear History</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
     )
 }
