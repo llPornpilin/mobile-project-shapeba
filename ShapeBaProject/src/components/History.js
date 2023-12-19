@@ -90,7 +90,7 @@ const History = (props) => {
                 fontWeight: "bold",
               }}
             >
-              Start:
+              Start
             </Text>
             <Text
               className="text-sm"
@@ -169,7 +169,7 @@ const History = (props) => {
                 fontWeight: "bold",
               }}
             >
-              Goal:
+              Goal
             </Text>
             <Text
               style={{
@@ -179,7 +179,7 @@ const History = (props) => {
                 fontWeight: "bold",
               }}
             >
-              {processInfo.goalweight} Kg
+              {/* {processInfo.goalweight} Kg */}
             </Text>
           </View>
         </Dialog.Content>
