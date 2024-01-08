@@ -19,7 +19,7 @@ import { Easing, View, Pressable, Text, StyleSheet } from "react-native";
 import { db, collection, getDocs, query, where, deleteDoc, doc, updateDoc } from '../../firebase-cofig'
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserId, setUserEmail, userSelector } from '../store/slice/userSlice';
+import { setUserId, setUserEmail, userSelector, getUserId } from '../store/slice/userSlice';
 import { useFocusEffect } from "@react-navigation/native";
 import { getGoalById } from "../store/slice/processInfoSlice1";
 
@@ -52,10 +52,12 @@ export const LineChart = (props) => {
     
     // ---------------- get data from database ----------------
     // reduct store
-    const userStore = useSelector(userSelector);
-    const userId = userStore.userId
+    // const userStore = useSelector(userSelector);
+    // const userId = userStore.userId
+
     
     const getCalsDataPerDay = async () => {
+        const userId = await getUserId()
         let sumCalsPerMonth = [] // collect sum of calories per each day in each month
         let tempDocsOneMonth = [] // colect Meal data in this month
         const getUserGoal = await getGoalById()
